@@ -1,0 +1,47 @@
+//******************* Checklist
+*	opção de antecipar
+*	adicionar opção de pix no cartão onde ele adiciona o valor contratado na conta corrente e adiciona na fatura do cartão o valor com os juros
+*	inverter a ordem de despesas e receitas em "nova transação" pois a maior parte dos lançamentos são despesa e quero que fique primeiro
+*	criar tela de investimentos
+*	criar tela de categorias
+*	botão de apagar transação de cartão não funciona
+
+//******************* VULNERABILIDADES:
+
+1. Chave API do Firebase Exposta Publicamente
+	Remova localhost em produção
+	Adicione apenas seus domínios (ex: seudominio.com, app.seudominio.com)
+	Usar Variáveis de Ambiente (Build Time) - OBS1
+
+2. Falta de Validação de Dados no Frontend
+3. Regras de Segurança do Firestore Inexistentes
+4. Injeção de HTML/JavaScript
+5. Validação Insuficiente de Parcelamentos
+6. Informações Sensíveis em Payload
+7. Autenticação Frágil com Link por Email
+8. Operações em Lote sem Transações
+9. Acesso Direto ao Firestore sem Middleware
+
+//******************* Recomendações Avançadas:
+
+*Nunca confie no frontend - Todas as regras de negócio devem estar no backend
+*Use Cloud Functions para operações complexas (parcelamentos, metas)
+*Implemente rate limiting via Firebase Extensions ou middleware
+*Valide inputs no backend usando validate() functions
+*Use Content Security Policy (CSP) para prevenir XSS
+*Remova chaves do código - use variáveis de ambiente ou Firebase Hosting config
+
+//******************* OBS1: 
+// Crie um arquivo .env.local (não commit ao git)
+VITE_FIREBASE_API_KEY=AIzaSyBFm...
+VITE_FIREBASE_AUTH_DOMAIN=contacomigopro.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=contacomigopro
+// etc...
+
+// No seu código:
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  // ...
+};

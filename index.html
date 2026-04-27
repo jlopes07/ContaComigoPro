@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
     <!-- Overlay de Autenticação -->
     <div class="auth-overlay active" id="auth-overlay">
@@ -20,14 +22,14 @@
             </div>
             <h2>Acesse sua Conta</h2>
             <p class="auth-subtitle">Sincronize finanças em qualquer lugar</p>
-            
+
             <button class="btn-provider google-btn" id="btn-google-login">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
                 Entrar com Google
             </button>
-            
+
             <div class="divider"><span>OU USE SEU E-MAIL</span></div>
-            
+
             <form id="form-auth-email">
                 <div class="form-group">
                     <label for="auth-email">E-mail</label>
@@ -37,7 +39,7 @@
                     <label for="auth-password">Senha (mín. 6 letras)</label>
                     <input type="password" id="auth-password" placeholder="Sua senha">
                 </div>
-                
+
                 <button type="submit" class="btn btn-primary w-100" id="btn-email-setup">
                     <i class="fa-solid fa-key"></i> Entrar ou Criar com Senha
                 </button>
@@ -59,12 +61,20 @@
             </div>
             <nav>
                 <ul id="nav-menu">
-                    <li class="active" data-title="Visão Geral"><a href="#" data-page="page-dashboard"><i class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
-                    <li data-title="Histórico Completo"><a href="#" data-page="page-transacoes"><i class="fa-solid fa-money-bill-transfer"></i> Transações</a></li>
-                    <li data-title="Transações Fixas"><a href="#" data-page="page-fixas"><i class="fa-solid fa-repeat"></i> Fixas</a></li>
-                    <li data-title="Meus Cartões"><a href="#" data-page="page-cartoes"><i class="fa-solid fa-credit-card"></i> Cartões</a></li>
-                    <li data-title="Minhas Metas"><a href="#" data-page="page-metas"><i class="fa-solid fa-bullseye"></i> Metas</a></li>
-                    <li data-title="Gerenciar Conta"><a href="#" data-page="page-configuracoes"><i class="fa-solid fa-gear"></i> Configurações</a></li>
+                    <li class="active" data-title="Visão Geral"><a href="#" data-page="page-dashboard"><i
+                                class="fa-solid fa-chart-pie"></i> Dashboard</a></li>
+                    <li data-title="Histórico Completo"><a href="#" data-page="page-transacoes"><i
+                                class="fa-solid fa-money-bill-transfer"></i> Transações</a></li>
+                    <li data-title="Transações Fixas"><a href="#" data-page="page-fixas"><i
+                                class="fa-solid fa-repeat"></i> Fixas</a></li>
+                    <li data-title="Meus Cartões"><a href="#" data-page="page-cartoes"><i
+                                class="fa-solid fa-credit-card"></i> Cartões</a></li>
+                    <li data-title="Minhas Metas"><a href="#" data-page="page-metas"><i
+                                class="fa-solid fa-bullseye"></i> Metas</a></li>
+                    <li data-title="Categorias Personalizadas"><a href="#" data-page="page-categorias"><i
+                                class="fa-solid fa-tags"></i> Categorias</a></li>
+                    <li data-title="Gerenciar Conta"><a href="#" data-page="page-configuracoes"><i
+                                class="fa-solid fa-gear"></i> Configurações</a></li>
                 </ul>
             </nav>
             <div class="user-card" id="user-profile">
@@ -75,7 +85,8 @@
                     <p class="name" id="user-name">-</p>
                     <p class="email" id="user-email">-</p>
                 </div>
-                <button id="btn-logout" class="btn-icon" style="margin-left:auto;" title="Sair"><i class="fa-solid fa-right-from-bracket"></i></button>
+                <button id="btn-logout" class="btn-icon" style="margin-left:auto;" title="Sair"><i
+                        class="fa-solid fa-right-from-bracket"></i></button>
             </div>
         </aside>
 
@@ -90,7 +101,8 @@
                     <button class="btn btn-primary" id="btn-new-transaction">
                         <i class="fa-solid fa-plus"></i> Nova Transação
                     </button>
-                    <button class="btn btn-primary" id="btn-new-fixed-transaction" style="display:none; background: var(--warning)">
+                    <button class="btn btn-primary" id="btn-new-fixed-transaction"
+                        style="display:none; background: var(--warning)">
                         <i class="fa-solid fa-repeat"></i> Nova Fixa
                     </button>
                     <button class="btn btn-primary" id="btn-new-card" style="display:none; background: var(--primary)">
@@ -98,6 +110,9 @@
                     </button>
                     <button class="btn btn-primary" id="btn-new-goal" style="display:none; background: var(--success)">
                         <i class="fa-solid fa-bullseye"></i> Nova Meta
+                    </button>
+                    <button class="btn btn-primary" id="btn-new-category" style="display:none; background: #8b5cf6">
+                        <i class="fa-solid fa-tags"></i> Nova Categoria
                     </button>
                     <div class="theme-toggle" id="theme-toggle" title="Alternar tema">
                         <i class="fa-solid fa-moon"></i>
@@ -107,7 +122,7 @@
 
             <!-- CONTAINER DE TELAS (SPA) -->
             <div id="pages-container">
-            
+
                 <!-- ================== PAGE: DASHBOARD ================== -->
                 <div class="page-section active" id="page-dashboard">
                     <!-- Cards Summary -->
@@ -142,9 +157,11 @@
                         <div class="section-header">
                             <h3>Últimas Transações</h3>
                             <!-- Este botão simulará o clique no menu lateral -->
-                            <a href="#" class="view-all" onclick="document.querySelector('[data-page=page-transacoes]').click()">Ver todo o histórico</a>
+                            <a href="#" class="view-all"
+                                onclick="document.querySelector('[data-page=page-transacoes]').click()">Ver todo o
+                                histórico</a>
                         </div>
-                        
+
                         <div class="transactions-list" id="transaction-list-recent">
                             <!-- Transactions dinâmicas (limite ~5) -->
                         </div>
@@ -155,42 +172,45 @@
                 <div class="page-section" id="page-transacoes">
                     <section class="transactions-section filter-container">
                         <div class="filters">
-                            <input type="text" id="filter-search" class="form-input" placeholder="Buscar por descrição...">
+                            <input type="text" id="filter-search" class="form-input"
+                                placeholder="Buscar por descrição...">
                             <select id="filter-type" class="form-input">
                                 <option value="all">Todas as transações</option>
                                 <option value="income">Apenas Receitas</option>
                                 <option value="expense">Apenas Despesas</option>
                             </select>
                             <input type="date" id="filter-date-start" class="form-input" title="Data Inicial">
-                            <span style="display:flex;align-items:center;color:var(--text-muted);font-weight:bold;">a</span>
+                            <span
+                                style="display:flex;align-items:center;color:var(--text-muted);font-weight:bold;">a</span>
                             <input type="date" id="filter-date-end" class="form-input" title="Data Final">
                             <select id="filter-category" class="form-input" title="Filtrar por Categoria">
                                 <option value="all">Todas Categ.</option>
-                                <option value="Salário">Salário</option>
-                                <option value="Alimentação">Alimentação</option>
-                                <option value="Moradia">Moradia</option>
-                                <option value="Transporte">Transporte</option>
-                                <option value="Lazer">Lazer</option>
-                                <option value="Saúde">Saúde</option>
-                                <option value="Investimentos">Investimentos</option>
-                                <option value="Outros">Outros</option>
+                                <!-- JS Populated -->
                             </select>
-                            <button id="btn-clear-filters" class="btn-icon" title="Limpar Filtros" style="padding: 0 16px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-body);"><i class="fa-solid fa-eraser"></i></button>
+                            <button id="btn-clear-filters" class="btn-icon" title="Limpar Filtros"
+                                style="padding: 0 16px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-body);"><i
+                                    class="fa-solid fa-eraser"></i></button>
                         </div>
                     </section>
 
                     <!-- Resumo dos Filtros -->
                     <div class="summary-cards" style="gap: 16px; margin: 16px 0;">
                         <div class="card balance-card" style="padding: 16px;">
-                            <div class="card-header" style="margin-bottom: 12px;"><h3>Saldo Filtrado</h3><i class="fa-solid fa-wallet"></i></div>
+                            <div class="card-header" style="margin-bottom: 12px;">
+                                <h3>Saldo Filtrado</h3><i class="fa-solid fa-wallet"></i>
+                            </div>
                             <div class="amount" id="filtered-balance" style="font-size: 1.5rem;">R$ 0,00</div>
                         </div>
                         <div class="card income-card" style="padding: 16px;">
-                            <div class="card-header" style="margin-bottom: 12px;"><h3>Receitas</h3><i class="fa-solid fa-arrow-up"></i></div>
+                            <div class="card-header" style="margin-bottom: 12px;">
+                                <h3>Receitas</h3><i class="fa-solid fa-arrow-up"></i>
+                            </div>
                             <div class="amount" id="filtered-income" style="font-size: 1.5rem;">R$ 0,00</div>
                         </div>
                         <div class="card expense-card" style="padding: 16px;">
-                            <div class="card-header" style="margin-bottom: 12px;"><h3>Despesas</h3><i class="fa-solid fa-arrow-down"></i></div>
+                            <div class="card-header" style="margin-bottom: 12px;">
+                                <h3>Despesas</h3><i class="fa-solid fa-arrow-down"></i>
+                            </div>
                             <div class="amount" id="filtered-expense" style="font-size: 1.5rem;">R$ 0,00</div>
                         </div>
                     </div>
@@ -225,45 +245,68 @@
 
                 <!-- ================== PAGE: METAS ================== -->
                 <div class="page-section" id="page-metas">
-                    <div class="goals-grid" id="goals-list">
-                        <!-- Metas vazias -->
-                        <div class="empty-state">
-                            <i class="fa-solid fa-piggy-bank"></i>
-                            <p>Você ainda não definiu nenhuma meta.</p>
-                            <span style="font-size: 0.9em; color: var(--text-muted)">Clique em 'Nova Meta' ali no topo para começar.</span>
+                    <section class="transactions-section">
+                        <div class="section-header">
+                            <h3>Minhas Metas</h3>
+                            <p style="color: var(--text-muted); font-size: 0.9rem;">Organize suas metas financeiras</p>
                         </div>
-                    </div>
+                        <div class="goals-grid" id="goals-list"></div>
+                    </section>
                 </div>
 
-                <!-- ================== PAGE: CONFIGURAÇÕES ================== -->
-                <div class="page-section" id="page-configuracoes">
-                    <div class="card settings-card" style="max-width: 600px; margin: 0 auto;">
-                        <h3 style="margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 12px;"><i class="fa-solid fa-user-pen"></i> Editar Perfil</h3>
-                        <form id="form-settings-profile">
-                            <div class="form-group">
-                                <label for="settings-name">Nome de exibição</label>
-                                <input type="text" id="settings-name" placeholder="Seu nome">
-                            </div>
-                            <div class="form-group">
-                                <label for="settings-photo">URL da foto (Avatar)</label>
-                                <input type="url" id="settings-photo" placeholder="https://...">
-                            </div>
-                            <div class="auth-message mb-3" id="settings-msg"></div>
-                            <button type="submit" class="btn btn-primary"><i class="fa-solid fa-cloud-arrow-up"></i> Atualizar Dados</button>
-                        </form>
-                    </div>
-                    
-                    <div class="card settings-card mt-3" style="max-width: 600px; margin: 24px auto;">
-                        <h3 style="margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 12px; color: var(--danger)"><i class="fa-solid fa-shield-halved"></i> Zona de Perigo</h3>
-                        <p style="color: var(--text-muted); margin-bottom: 16px;">Apagar todos os seus registros financeiros não pode ser desfeito.</p>
-                        <button class="btn btn-secondary" onclick="alert('Funcionalidade em desenvolvimento!')" style="color: var(--danger); border-color: var(--danger)">
-                            <i class="fa-solid fa-triangle-exclamation"></i> Limpar meus dados
-                        </button>
-                    </div>
+                <!-- ================== PAGE: CATEGORIAS ================== -->
+                <div class="page-section" id="page-categorias">
+                    <section class="transactions-section">
+                        <div class="section-header">
+                            <h3>Minhas Categorias</h3>
+                            <p style="color: var(--text-muted); font-size: 0.9rem;">Organize suas transações com pastas
+                                personalizadas</p>
+                        </div>
+                        <div class="cards-grid" id="categories-list"
+                            style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;">
+                        </div>
+                    </section>
                 </div>
-
             </div>
-        </main>
+    </div>
+
+    <!-- ================== PAGE: CONFIGURAÇÕES ================== -->
+    <div class="page-section" id="page-configuracoes">
+        <div class="card settings-card" style="max-width: 600px; margin: 0 auto;">
+            <h3 style="margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
+                <i class="fa-solid fa-user-pen"></i> Editar Perfil
+            </h3>
+            <form id="form-settings-profile">
+                <div class="form-group">
+                    <label for="settings-name">Nome de exibição</label>
+                    <input type="text" id="settings-name" placeholder="Seu nome">
+                </div>
+                <div class="form-group">
+                    <label for="settings-photo">URL da foto (Avatar)</label>
+                    <input type="url" id="settings-photo" placeholder="https://...">
+                </div>
+                <div class="auth-message mb-3" id="settings-msg"></div>
+                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-cloud-arrow-up"></i>
+                    Atualizar Dados</button>
+            </form>
+        </div>
+
+        <div class="card settings-card mt-3" style="max-width: 600px; margin: 24px auto;">
+            <h3
+                style="margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 12px; color: var(--danger)">
+                <i class="fa-solid fa-shield-halved"></i> Zona de Perigo
+            </h3>
+            <p style="color: var(--text-muted); margin-bottom: 16px;">Apagar todos os seus registros
+                financeiros não pode ser desfeito.</p>
+            <button class="btn btn-secondary" onclick="alert('Funcionalidade em desenvolvimento!')"
+                style="color: var(--danger); border-color: var(--danger)">
+                <i class="fa-solid fa-triangle-exclamation"></i> Limpar meus dados
+            </button>
+        </div>
+    </div>
+
+    </div>
+    </main>
     </div>
 
     <!-- Modal for New Transaction -->
@@ -277,11 +320,13 @@
                 <div class="form-group">
                     <label>Tipo</label>
                     <div class="type-selector">
-                        <input type="radio" id="type-income" name="type" value="income" checked>
-                        <label for="type-income" class="type-btn income-btn"><i class="fa-solid fa-arrow-up"></i> Receita</label>
-                        
-                        <input type="radio" id="type-expense" name="type" value="expense">
-                        <label for="type-expense" class="type-btn expense-btn"><i class="fa-solid fa-arrow-down"></i> Despesa</label>
+                        <input type="radio" id="type-income" name="type" value="income">
+                        <label for="type-income" class="type-btn income-btn"><i class="fa-solid fa-arrow-up"></i>
+                            Receita</label>
+
+                        <input type="radio" id="type-expense" name="type" value="expense" checked>
+                        <label for="type-expense" class="type-btn expense-btn"><i class="fa-solid fa-arrow-down"></i>
+                            Despesa</label>
                     </div>
                 </div>
                 <div class="form-group">
@@ -337,14 +382,7 @@
                     <label for="category">Categoria</label>
                     <select id="category" required>
                         <option value="" disabled selected>Selecione</option>
-                        <option value="Salário">Salário</option>
-                        <option value="Alimentação">Alimentação</option>
-                        <option value="Moradia">Moradia</option>
-                        <option value="Transporte">Transporte</option>
-                        <option value="Lazer">Lazer</option>
-                        <option value="Saúde">Saúde</option>
-                        <option value="Investimentos">Investimentos</option>
-                        <option value="Outros">Outros</option>
+                        <!-- Povoado por JS -->
                     </select>
                 </div>
                 <div class="modal-footer">
@@ -385,7 +423,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" id="btn-cancel-goal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary" style="background: var(--success)"><i class="fa-solid fa-flag-checkered"></i> Iniciar Meta</button>
+                    <button type="submit" class="btn btn-primary" style="background: var(--success)"><i
+                            class="fa-solid fa-flag-checkered"></i> Iniciar Meta</button>
                 </div>
             </form>
         </div>
@@ -403,10 +442,12 @@
                     <label>Tipo</label>
                     <div class="type-selector">
                         <input type="radio" id="fixed-type-income" name="fixed-type" value="income" checked>
-                        <label for="fixed-type-income" class="type-btn income-btn"><i class="fa-solid fa-arrow-up"></i> Receita</label>
-                        
+                        <label for="fixed-type-income" class="type-btn income-btn"><i class="fa-solid fa-arrow-up"></i>
+                            Receita</label>
+
                         <input type="radio" id="fixed-type-expense" name="fixed-type" value="expense">
-                        <label for="fixed-type-expense" class="type-btn expense-btn"><i class="fa-solid fa-arrow-down"></i> Despesa</label>
+                        <label for="fixed-type-expense" class="type-btn expense-btn"><i
+                                class="fa-solid fa-arrow-down"></i> Despesa</label>
                     </div>
                 </div>
                 <div class="form-group">
@@ -425,33 +466,34 @@
                         <label for="fixed-category">Categoria</label>
                         <select id="fixed-category" required>
                             <option value="" disabled selected>Selecione</option>
-                            <option value="Salário">Salário</option>
-                            <option value="Alimentação">Alimentação</option>
-                            <option value="Moradia">Moradia</option>
-                            <option value="Transporte">Transporte</option>
-                            <option value="Lazer">Lazer</option>
-                            <option value="Saúde">Saúde</option>
-                            <option value="Investimentos">Investimentos</option>
-                            <option value="Outros">Outros</option>
+                            <!-- Povoado por JS -->
                         </select>
                     </div>
                 </div>
-                <div class="form-group" style="background-color: var(--hover-bg); padding: 16px; border-radius: 8px; border: 1px solid var(--border);">
-                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--text-main); font-weight: 600;">
-                        <input type="checkbox" id="fixed-is-automatic" style="width: 18px; height: 18px; cursor: pointer;">
+                <div class="form-group"
+                    style="background-color: var(--hover-bg); padding: 16px; border-radius: 8px; border: 1px solid var(--border);">
+                    <label
+                        style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--text-main); font-weight: 600;">
+                        <input type="checkbox" id="fixed-is-automatic"
+                            style="width: 18px; height: 18px; cursor: pointer;">
                         Lançar automaticamente todo mês
                     </label>
-                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; margin-bottom: 12px; margin-left: 26px;">
-                        Se ativado, lançaremos essa transação na data certa para você. Se desativado, você poderá usar um botão para lançar manualmente quando quiser.
+                    <p
+                        style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; margin-bottom: 12px; margin-left: 26px;">
+                        Se ativado, lançaremos essa transação na data certa para você. Se desativado, você poderá usar
+                        um botão para lançar manualmente quando quiser.
                     </p>
-                    <div id="fixed-day-container" style="margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border);">
+                    <div id="fixed-day-container"
+                        style="margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border);">
                         <label for="fixed-day">Dia do lançamento (1 a 31):</label>
-                        <input type="number" id="fixed-day" min="1" max="31" placeholder="Hoje" style="max-width: 120px;">
+                        <input type="number" id="fixed-day" min="1" max="31" placeholder="Hoje"
+                            style="max-width: 120px;">
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" id="btn-cancel-fixed">Cancelar</button>
-                    <button type="submit" class="btn btn-primary" style="background: var(--warning)"><i class="fa-solid fa-save"></i> Salvar Fixa</button>
+                    <button type="submit" class="btn btn-primary" style="background: var(--warning)"><i
+                            class="fa-solid fa-save"></i> Salvar Fixa</button>
                 </div>
             </form>
         </div>
@@ -504,10 +546,40 @@
                         <input type="number" id="card-due" min="1" max="31" placeholder="Ex: 12" required>
                     </div>
                 </div>
-                
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" id="btn-cancel-card">Cancelar</button>
-                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save"></i> Salvar Cartão</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save"></i> Salvar
+                        Cartão</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for New Category -->
+    <div class="modal-overlay" id="category-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Nova Categoria</h2>
+                <button class="close-modal" id="close-category-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="form-category">
+                <div class="form-group">
+                    <label for="category-name">Nome da Categoria</label>
+                    <input type="text" id="category-name" placeholder="Ex: Viagem, Presentes, Estudos" required>
+                </div>
+                <div class="form-group">
+                    <label>Ícone</label>
+                    <div id="category-icons-grid"
+                        style="display: grid; grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); gap: 8px; margin-top: 8px;">
+                        <!-- JS renders icons here -->
+                    </div>
+                    <input type="hidden" id="category-icon" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="btn-cancel-category">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" style="background: #8b5cf6"><i
+                            class="fa-solid fa-save"></i> Salvar Categoria</button>
                 </div>
             </form>
         </div>
@@ -517,8 +589,9 @@
     <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
-    
+
     <!-- Lógica do App -->
     <script src="app.js"></script>
 </body>
+
 </html>
