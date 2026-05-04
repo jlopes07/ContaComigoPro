@@ -73,6 +73,8 @@
                                 class="fa-solid fa-bullseye"></i> Metas</a></li>
                     <li data-title="Categorias Personalizadas"><a href="#" data-page="page-categorias"><i
                                 class="fa-solid fa-tags"></i> Categorias</a></li>
+                    <li data-title="Meus Investimentos"><a href="#" data-page="page-investimentos"><i
+                                class="fa-solid fa-chart-line"></i> Investimentos</a></li>
                     <li data-title="Gerenciar Conta"><a href="#" data-page="page-configuracoes"><i
                                 class="fa-solid fa-gear"></i> Configurações</a></li>
                 </ul>
@@ -113,6 +115,9 @@
                     </button>
                     <button class="btn btn-primary" id="btn-new-category" style="display:none; background: #8b5cf6">
                         <i class="fa-solid fa-tags"></i> Nova Categoria
+                    </button>
+                    <button class="btn btn-primary" id="btn-new-investment" style="display:none; background: #10b981">
+                        <i class="fa-solid fa-chart-line"></i> Novo Investimento
                     </button>
                     <div class="theme-toggle" id="theme-toggle" title="Alternar tema">
                         <i class="fa-solid fa-moon"></i>
@@ -264,6 +269,47 @@
                         </div>
                         <div class="cards-grid" id="categories-list"
                             style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;">
+                        </div>
+                    </section>
+                </div>
+
+                <!-- ================== PAGE: INVESTIMENTOS ================== -->
+                <div class="page-section" id="page-investimentos">
+                    <section class="summary-cards" style="margin-bottom: 24px;">
+                        <div class="card balance-card">
+                            <div class="card-header">
+                                <h3>Total Investido</h3>
+                                <i class="fa-solid fa-piggy-bank"></i>
+                            </div>
+                            <div class="amount" id="total-investments">R$ 0,00</div>
+                        </div>
+
+                        <div class="card income-card">
+                            <div class="card-header">
+                                <h3>Rendimento Bruto Est.</h3>
+                                <i class="fa-solid fa-arrow-trend-up"></i>
+                            </div>
+                            <div class="amount" id="total-investments-yield">R$ 0,00</div>
+                        </div>
+
+                        <div class="card" style="background: var(--bg-secondary); border: 1px solid var(--border);">
+                            <div class="card-header" style="color: var(--text-main);">
+                                <h3>Taxas Atuais (API)</h3>
+                                <i class="fa-solid fa-globe"></i>
+                            </div>
+                            <div class="amount" id="market-rates-display" style="font-size: 1.2rem; color: var(--text-main); margin-top: 8px;">
+                                Carregando...
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="transactions-section">
+                        <div class="section-header">
+                            <h3>Meus Investimentos</h3>
+                            <p style="color: var(--text-muted); font-size: 0.9rem;">Acompanhe sua carteira e rendimentos</p>
+                        </div>
+                        <div class="investments-grid" id="investments-list" style="display: grid; grid-template-columns: 1fr; gap: 16px;">
+                            <!-- JS Renders Investments Here -->
                         </div>
                     </section>
                 </div>
@@ -580,6 +626,84 @@
                     <button type="button" class="btn btn-secondary" id="btn-cancel-category">Cancelar</button>
                     <button type="submit" class="btn btn-primary" style="background: #8b5cf6"><i
                             class="fa-solid fa-save"></i> Salvar Categoria</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for New Investment -->
+    <div class="modal-overlay" id="investment-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Novo Investimento</h2>
+                <button class="close-modal" id="close-investment-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="form-investment">
+                <div class="form-group row">
+                    <div class="form-group-half">
+                        <label for="invest-name">Nome do Ativo</label>
+                        <input type="text" id="invest-name" placeholder="Ex: CDB Nubank, Tesouro Direto" required>
+                    </div>
+                    <div class="form-group-half">
+                        <label for="invest-institution">Instituição / Banco</label>
+                        <input type="text" id="invest-institution" placeholder="Ex: Nubank, XP, Inter" required>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="form-group-half">
+                        <label for="invest-type">Tipo</label>
+                        <select id="invest-type" required>
+                            <option value="fixed">Renda Fixa</option>
+                            <option value="variable">Renda Variável</option>
+                            <option value="other">Outros</option>
+                        </select>
+                    </div>
+                    <div class="form-group-half">
+                        <label for="invest-date">Data de Aplicação</label>
+                        <input type="date" id="invest-date" required>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="form-group-half">
+                        <label for="invest-amount">Valor Aplicado</label>
+                        <div class="input-icon">
+                            <span>R$</span>
+                            <input type="number" id="invest-amount" step="0.01" min="0.01" required>
+                        </div>
+                    </div>
+                    <div class="form-group-half" id="invest-due-date-container">
+                        <label for="invest-due-date">Vencimento (Opcional)</label>
+                        <input type="date" id="invest-due-date">
+                    </div>
+                </div>
+
+                <!-- Campos Exclusivos de Renda Fixa -->
+                <div id="fixed-income-fields" style="background: var(--bg-secondary); padding: 12px; border-radius: 8px; border: 1px dashed var(--border); margin-bottom: 16px;">
+                    <h4 style="margin-bottom: 12px; font-size: 0.9rem; color: var(--text-main);">Parâmetros de Renda Fixa</h4>
+                    <div class="form-group row" style="margin-bottom: 0;">
+                        <div class="form-group-half">
+                            <label for="invest-rate-type">Indexador</label>
+                            <select id="invest-rate-type">
+                                <option value="cdi">% do CDI</option>
+                                <option value="selic">% da Selic</option>
+                                <option value="pre">Pré-fixado (a.a)</option>
+                            </select>
+                        </div>
+                        <div class="form-group-half">
+                            <label for="invest-rate-value">Taxa/Percentual</label>
+                            <div class="input-icon">
+                                <input type="number" id="invest-rate-value" step="0.01" min="0" placeholder="Ex: 110">
+                                <span>%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="btn-cancel-investment">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" style="background: #10b981"><i class="fa-solid fa-save"></i> Salvar Investimento</button>
                 </div>
             </form>
         </div>
