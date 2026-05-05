@@ -75,6 +75,8 @@
                                 class="fa-solid fa-bullseye"></i> Metas</a></li>
                     <li data-title="Categorias Personalizadas"><a href="#" data-page="page-categorias"><i
                                 class="fa-solid fa-tags"></i> Categorias</a></li>
+                    <li data-title="Meus Investimentos"><a href="#" data-page="page-investimentos"><i
+                                class="fa-solid fa-chart-line"></i> Investimentos</a></li>
                     <li data-title="Gerenciar Conta"><a href="#" data-page="page-configuracoes"><i
                                 class="fa-solid fa-gear"></i> Configurações</a></li>
                 </ul>
@@ -118,6 +120,9 @@
                     </button>
                     <button class="btn btn-primary" id="btn-new-category" style="display:none; background: #8b5cf6">
                         <i class="fa-solid fa-tags"></i> Nova Categoria
+                    </button>
+                    <button class="btn btn-primary" id="btn-new-investment" style="display:none; background: #10b981">
+                        <i class="fa-solid fa-chart-line"></i> Novo Investimento
                     </button>
                     <div class="theme-toggle" id="theme-toggle" title="Alternar tema">
                         <i class="fa-solid fa-moon"></i>
@@ -283,46 +288,108 @@
                         </div>
                     </section>
                 </div>
+
+                <!-- ================== PAGE: INVESTIMENTOS ================== -->
+                <div class="page-section" id="page-investimentos">
+                    <section class="summary-cards" style="margin-bottom: 24px;">
+                        <div class="card balance-card">
+                            <div class="card-header">
+                                <h3>Total Investido</h3>
+                                <i class="fa-solid fa-piggy-bank"></i>
+                            </div>
+                            <div class="amount" id="total-investments">R$ 0,00</div>
+                        </div>
+
+                        <div class="card income-card">
+                            <div class="card-header">
+                                <h3>Rendimento Bruto Est.</h3>
+                                <i class="fa-solid fa-arrow-trend-up"></i>
+                            </div>
+                            <div class="amount" id="total-investments-yield">R$ 0,00</div>
+                        </div>
+
+                        <div class="card" style="background: var(--bg-secondary); border: 1px solid var(--border);">
+                            <div class="card-header" style="color: var(--text-main);">
+                                <h3>Taxas Atuais (API)</h3>
+                                <i class="fa-solid fa-globe"></i>
+                            </div>
+                            <div class="amount" id="market-rates-display" style="font-size: 1.2rem; color: var(--text-main); margin-top: 8px;">
+                                Carregando...
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="transactions-section">
+                        <div class="section-header">
+                            <h3>Meus Investimentos</h3>
+                            <p style="color: var(--text-muted); font-size: 0.9rem;">Acompanhe sua carteira e rendimentos</p>
+                        </div>
+                        <div class="investments-grid" id="investments-list" style="display: grid; grid-template-columns: 1fr; gap: 16px;">
+                            <!-- JS Renders Investments Here -->
+                        </div>
+                    </section>
+                </div>
+
+                <!-- ================== PAGE: CONFIGURAÇÕES ================== -->
+                <div class="page-section" id="page-configuracoes">
+        <div class="card settings-card" style="max-width: 600px; margin: 0 auto; padding: 0; overflow: hidden;">
+            <div class="settings-header" style="padding: 24px; border-bottom: 1px solid var(--border); background: var(--bg-body);">
+                <h3 style="margin: 0;"><i class="fa-solid fa-sliders"></i> Ajustes da Conta</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">Gerencie suas preferências e segurança</p>
             </div>
-    </div>
-
-    <!-- ================== PAGE: CONFIGURAÇÕES ================== -->
-    <div class="page-section" id="page-configuracoes">
-        <div class="card settings-card" style="max-width: 600px; margin: 0 auto;">
-            <h3 style="margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
-                <i class="fa-solid fa-user-pen"></i> Editar Perfil
-            </h3>
-            <form id="form-settings-profile">
-                <div class="form-group">
-                    <label for="settings-name">Nome de exibição</label>
-                    <input type="text" id="settings-name" placeholder="Seu nome">
+            <div class="settings-menu">
+                <div class="settings-item" id="btn-menu-personal" style="display: flex; align-items: center; padding: 16px 24px; border-bottom: 1px solid var(--border); cursor: pointer; transition: 0.2s;">
+                    <div class="settings-icon" style="width: 40px; height: 40px; border-radius: 50%; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--primary); margin-right: 16px;"><i class="fa-solid fa-user"></i></div>
+                    <div class="settings-content" style="flex: 1;">
+                        <h4 style="margin: 0; font-size: 1rem;">Dados Pessoais</h4>
+                        <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">Nome, e-mail, telefone e foto</p>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="color: var(--text-muted);"></i>
                 </div>
-                <div class="form-group">
-                    <label for="settings-photo">URL da foto (Avatar)</label>
-                    <input type="url" id="settings-photo" placeholder="https://...">
+                <div class="settings-item" id="btn-menu-security" style="display: flex; align-items: center; padding: 16px 24px; border-bottom: 1px solid var(--border); cursor: pointer; transition: 0.2s;">
+                    <div class="settings-icon" style="width: 40px; height: 40px; border-radius: 50%; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--primary); margin-right: 16px;"><i class="fa-solid fa-shield-halved"></i></div>
+                    <div class="settings-content" style="flex: 1;">
+                        <h4 style="margin: 0; font-size: 1rem;">Segurança e Acesso</h4>
+                        <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">Alterar senha</p>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="color: var(--text-muted);"></i>
                 </div>
-                <div class="auth-message mb-3" id="settings-msg"></div>
-                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-cloud-arrow-up"></i>
-                    Atualizar Dados</button>
-            </form>
-        </div>
-
-        <div class="card settings-card mt-3" style="max-width: 600px; margin: 24px auto;">
-            <h3
-                style="margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 12px; color: var(--danger)">
-                <i class="fa-solid fa-shield-halved"></i> Zona de Perigo
-            </h3>
-            <p style="color: var(--text-muted); margin-bottom: 16px;">Apagar todos os seus registros
-                financeiros não pode ser desfeito.</p>
-            <button class="btn btn-secondary" onclick="alert('Funcionalidade em desenvolvimento!')"
-                style="color: var(--danger); border-color: var(--danger)">
-                <i class="fa-solid fa-triangle-exclamation"></i> Limpar meus dados
-            </button>
-        </div>
-    </div>
-
-    </div>
-    </main>
+                <div class="settings-item" id="btn-menu-devices" style="display: flex; align-items: center; padding: 16px 24px; border-bottom: 1px solid var(--border); cursor: pointer; transition: 0.2s;">
+                    <div class="settings-icon" style="width: 40px; height: 40px; border-radius: 50%; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--primary); margin-right: 16px;"><i class="fa-solid fa-laptop"></i></div>
+                    <div class="settings-content" style="flex: 1;">
+                        <h4 style="margin: 0; font-size: 1rem;">Dispositivos Conectados</h4>
+                        <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">Gerencie as sessões ativas</p>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="color: var(--text-muted);"></i>
+                </div>
+                <div class="settings-item" id="btn-menu-notifications" style="display: flex; align-items: center; padding: 16px 24px; border-bottom: 1px solid var(--border); cursor: pointer; transition: 0.2s;">
+                    <div class="settings-icon" style="width: 40px; height: 40px; border-radius: 50%; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--primary); margin-right: 16px;"><i class="fa-solid fa-bell"></i></div>
+                    <div class="settings-content" style="flex: 1;">
+                        <h4 style="margin: 0; font-size: 1rem;">Notificações</h4>
+                        <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">Lembretes de contas a pagar</p>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="color: var(--text-muted);"></i>
+                </div>
+                <div class="settings-item" id="btn-menu-report" style="display: flex; align-items: center; padding: 16px 24px; border-bottom: 1px solid var(--border); cursor: pointer; transition: 0.2s;">
+                    <div class="settings-icon" style="width: 40px; height: 40px; border-radius: 50%; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--primary); margin-right: 16px;"><i class="fa-solid fa-circle-info"></i></div>
+                    <div class="settings-content" style="flex: 1;">
+                        <h4 style="margin: 0; font-size: 1rem;">Reportar Problema</h4>
+                        <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">Encontrou um erro?</p>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="color: var(--text-muted);"></i>
+                </div>
+                <div class="settings-item" id="btn-menu-close-account" style="display: flex; align-items: center; padding: 16px 24px; cursor: pointer; transition: 0.2s; background: var(--danger-bg, rgba(239, 68, 68, 0.05));">
+                    <div class="settings-icon" style="width: 40px; height: 40px; border-radius: 50%; background: transparent; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--danger); margin-right: 16px;"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                    <div class="settings-content" style="flex: 1;">
+                        <h4 style="margin: 0; font-size: 1rem; color: var(--danger);">Encerrar Conta</h4>
+                        <p style="margin: 0; font-size: 0.85rem; color: var(--danger); opacity: 0.8;">Ação irreversível</p>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="color: var(--danger);"></i>
+                </div>
+            </div>
+                </div>
+            </div>
+        </main>
     </div>
 
     <!-- Modal for New Transaction -->
@@ -629,6 +696,230 @@
                             class="fa-solid fa-save"></i> Salvar Categoria</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Modal for New Investment -->
+    <div class="modal-overlay" id="investment-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Novo Investimento</h2>
+                <button class="close-modal" id="close-investment-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="form-investment">
+                <div class="form-group row">
+                    <div class="form-group-half">
+                        <label for="invest-name">Nome do Ativo</label>
+                        <input type="text" id="invest-name" placeholder="Ex: CDB Nubank, Tesouro Direto" required>
+                    </div>
+                    <div class="form-group-half">
+                        <label for="invest-institution">Instituição / Banco</label>
+                        <input type="text" id="invest-institution" placeholder="Ex: Nubank, XP, Inter" required>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="form-group-half">
+                        <label for="invest-type">Tipo</label>
+                        <select id="invest-type" required>
+                            <option value="fixed">Renda Fixa</option>
+                            <option value="variable">Renda Variável</option>
+                            <option value="other">Outros</option>
+                        </select>
+                    </div>
+                    <div class="form-group-half">
+                        <label for="invest-date">Data de Aplicação</label>
+                        <input type="date" id="invest-date" required>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="form-group-half">
+                        <label for="invest-amount">Valor Aplicado</label>
+                        <div class="input-icon">
+                            <span>R$</span>
+                            <input type="number" id="invest-amount" step="0.01" min="0.01" required>
+                        </div>
+                    </div>
+                    <div class="form-group-half" id="invest-due-date-container">
+                        <label for="invest-due-date">Vencimento (Opcional)</label>
+                        <input type="date" id="invest-due-date">
+                    </div>
+                </div>
+
+                <!-- Campos Exclusivos de Renda Fixa -->
+                <div id="fixed-income-fields" style="background: var(--bg-secondary); padding: 12px; border-radius: 8px; border: 1px dashed var(--border); margin-bottom: 16px;">
+                    <h4 style="margin-bottom: 12px; font-size: 0.9rem; color: var(--text-main);">Parâmetros de Renda Fixa</h4>
+                    <div class="form-group row" style="margin-bottom: 0;">
+                        <div class="form-group-half">
+                            <label for="invest-rate-type">Indexador</label>
+                            <select id="invest-rate-type">
+                                <option value="cdi">% do CDI</option>
+                                <option value="selic">% da Selic</option>
+                                <option value="pre">Pré-fixado (a.a)</option>
+                            </select>
+                        </div>
+                        <div class="form-group-half">
+                            <label for="invest-rate-value">Taxa/Percentual</label>
+                            <div class="input-icon">
+                                <input type="number" id="invest-rate-value" step="0.01" min="0" placeholder="Ex: 110">
+                                <span>%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="btn-cancel-investment">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" style="background: #10b981"><i class="fa-solid fa-save"></i> Salvar Investimento</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modals de Configurações -->
+    
+    <!-- Modal: Dados Pessoais -->
+    <div class="modal-overlay" id="modal-settings-personal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Dados Pessoais</h2>
+                <button class="close-modal" id="close-settings-personal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="form-settings-personal">
+                <div class="form-group">
+                    <label for="settings-name">Nome Completo</label>
+                    <input type="text" id="settings-name" placeholder="Seu nome">
+                </div>
+                <div class="form-group">
+                    <label for="settings-email">E-mail</label>
+                    <input type="email" id="settings-email" placeholder="seu@email.com" required>
+                    <small style="color: var(--warning); display: block; margin-top: 4px;"><i class="fa-solid fa-circle-exclamation"></i> Alterar o e-mail pode exigir reautenticação.</small>
+                </div>
+                <div class="form-group">
+                    <label for="settings-phone">Telefone</label>
+                    <input type="text" id="settings-phone" placeholder="(11) 99999-9999">
+                </div>
+                <div class="form-group">
+                    <label for="settings-photo">URL da foto de perfil</label>
+                    <input type="url" id="settings-photo" placeholder="https://...">
+                </div>
+                <div class="auth-message mb-3" id="settings-personal-msg"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="btn-cancel-personal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save"></i> Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Segurança -->
+    <div class="modal-overlay" id="modal-settings-security">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Segurança e Acesso</h2>
+                <button class="close-modal" id="close-settings-security"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="form-settings-security">
+                <div class="form-group">
+                    <label for="settings-new-password">Nova Senha</label>
+                    <input type="password" id="settings-new-password" placeholder="Mínimo de 6 caracteres" required minlength="6">
+                </div>
+                <div class="auth-message mb-3" id="settings-security-msg"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="btn-cancel-security">Cancelar</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-key"></i> Alterar Senha</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Dispositivos -->
+    <div class="modal-overlay" id="modal-settings-devices">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Dispositivos Conectados</h2>
+                <button class="close-modal" id="close-settings-devices"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body" style="padding: 16px 0;">
+                <div style="display: flex; align-items: center; padding: 12px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 16px;">
+                    <i class="fa-solid fa-laptop" style="font-size: 1.5rem; color: var(--primary); margin-right: 16px;"></i>
+                    <div style="flex: 1;">
+                        <h4 style="margin: 0; font-size: 1rem;">Navegador Atual</h4>
+                        <p style="margin: 0; font-size: 0.85rem; color: var(--success);">Ativo agora</p>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-secondary w-100" onclick="alert('Sessões de outros dispositivos encerradas com sucesso!')"><i class="fa-solid fa-right-from-bracket"></i> Sair de todos os outros dispositivos</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Notificações -->
+    <div class="modal-overlay" id="modal-settings-notifications">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Preferências de Notificações</h2>
+                <button class="close-modal" id="close-settings-notifications"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="form-settings-notifications">
+                <div class="form-group" style="display: flex; flex-direction: column; gap: 12px;">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="checkbox" id="notif-email" checked style="width: 18px; height: 18px;">
+                        Receber alertas de vencimento por E-mail
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="checkbox" id="notif-push" checked style="width: 18px; height: 18px;">
+                        Ativar notificações Push neste dispositivo
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="checkbox" id="notif-reports" style="width: 18px; height: 18px;">
+                        Relatório semanal de gastos
+                    </label>
+                </div>
+                <div class="modal-footer" style="margin-top: 24px;">
+                    <button type="button" class="btn btn-secondary" id="btn-cancel-notifications">Cancelar</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save"></i> Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Reportar Problema -->
+    <div class="modal-overlay" id="modal-settings-report">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Reportar Problema</h2>
+                <button class="close-modal" id="close-settings-report"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="form-settings-report">
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 16px;">Encontrou algum bug ou tem uma sugestão? Escreva abaixo.</p>
+                <div class="form-group">
+                    <textarea id="report-text" rows="5" placeholder="Descreva o problema em detalhes..." required style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-body); color: var(--text-main); font-family: inherit; resize: vertical;"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="btn-cancel-report">Cancelar</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-paper-plane"></i> Enviar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Encerrar Conta -->
+    <div class="modal-overlay" id="modal-settings-close-account">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 style="color: var(--danger);"><i class="fa-solid fa-triangle-exclamation"></i> Zona de Perigo</h2>
+                <button class="close-modal" id="close-settings-close"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body" style="padding: 16px 0;">
+                <p style="margin-bottom: 16px; line-height: 1.5;">Você está prestes a <strong>encerrar permanentemente</strong> sua conta. Isso irá apagar todo o seu histórico financeiro, transações, metas, cartões e categorias.</p>
+                <p style="margin-bottom: 24px; color: var(--danger); font-weight: bold;">Esta ação não pode ser desfeita.</p>
+                <div class="auth-message mb-3" id="settings-close-msg"></div>
+                <div style="display: flex; gap: 12px;">
+                    <button type="button" class="btn btn-secondary w-100" id="btn-cancel-close">Cancelar</button>
+                    <button type="button" class="btn btn-primary w-100" id="btn-confirm-close-account" style="background: var(--danger);"><i class="fa-solid fa-trash"></i> Sim, Apagar Tudo</button>
+                </div>
+            </div>
         </div>
     </div>
 
