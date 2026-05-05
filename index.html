@@ -67,6 +67,8 @@
                                 class="fa-solid fa-money-bill-transfer"></i> Transações</a></li>
                     <li data-title="Transações Fixas"><a href="#" data-page="page-fixas"><i
                                 class="fa-solid fa-repeat"></i> Fixas</a></li>
+                    <li data-title="Bancos & Contas"><a href="#" data-page="page-bancos"><i
+                                class="fa-solid fa-building-columns"></i> Bancos</a></li>
                     <li data-title="Meus Cartões"><a href="#" data-page="page-cartoes"><i
                                 class="fa-solid fa-credit-card"></i> Cartões</a></li>
                     <li data-title="Minhas Metas"><a href="#" data-page="page-metas"><i
@@ -107,6 +109,9 @@
                     </button>
                     <button class="btn btn-primary" id="btn-new-card" style="display:none; background: var(--primary)">
                         <i class="fa-solid fa-credit-card"></i> Novo Cartão
+                    </button>
+                    <button class="btn btn-primary" id="btn-new-bank" style="display:none; background: #0ea5e9">
+                        <i class="fa-solid fa-building-columns"></i> Novo Banco
                     </button>
                     <button class="btn btn-primary" id="btn-new-goal" style="display:none; background: var(--success)">
                         <i class="fa-solid fa-bullseye"></i> Nova Meta
@@ -232,6 +237,17 @@
                     </section>
                 </div>
 
+                <!-- ================== PAGE: BANCOS ================== -->
+                <div class="page-section" id="page-bancos">
+                    <section class="transactions-section">
+                        <div class="section-header">
+                            <h3>Bancos & Contas</h3>
+                            <p style="color: var(--text-muted); font-size: 0.9rem;">Controle seus saldos e extratos bancários</p>
+                        </div>
+                        <div class="cards-grid" id="banks-list"></div>
+                    </section>
+                </div>
+
                 <!-- ================== PAGE: CARTÕES ================== -->
                 <div class="page-section" id="page-cartoes">
                     <section class="transactions-section">
@@ -350,9 +366,8 @@
                 <!-- Forms de Pagamento Avançados (Novo) -->
                 <div class="form-group row" style="margin-top: -8px;">
                     <div class="form-group-half w-100">
-                        <label for="payment-method">Forma de Pagamento</label>
+                        <label for="payment-method">Forma de Pagamento / Banco</label>
                         <select id="payment-method" required>
-                            <option value="checking">Conta Corrente / Pix</option>
                             <!-- Povoado por JS -->
                         </select>
                     </div>
@@ -388,6 +403,38 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" id="btn-cancel">Cancelar</button>
                     <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for New Bank -->
+    <div class="modal-overlay" id="bank-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Nova Conta Bancária</h2>
+                <button class="close-modal" id="close-modal-bank"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="form-bank">
+                <div class="form-group">
+                    <label for="bank-name">Nome do Banco/Conta</label>
+                    <input type="text" id="bank-name" placeholder="Ex: Nubank, Caixa, Dinheiro Vivo" required>
+                </div>
+                <div class="form-group">
+                    <label for="bank-balance">Saldo Inicial</label>
+                    <div class="input-icon">
+                        <span>R$</span>
+                        <input type="number" id="bank-balance" step="0.01" value="0.00" required>
+                    </div>
+                    <small style="color: var(--text-muted); display:block; margin-top: 4px;">Este saldo será a base para o cálculo do extrato desta conta.</small>
+                </div>
+                <div class="form-group">
+                    <label for="bank-color">Cor Principal</label>
+                    <input type="color" id="bank-color" value="#0ea5e9" style="height: 40px; padding: 2px;">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="btn-cancel-bank">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" style="background: #0ea5e9"><i class="fa-solid fa-save"></i> Salvar Banco</button>
                 </div>
             </form>
         </div>

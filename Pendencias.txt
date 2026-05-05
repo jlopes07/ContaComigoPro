@@ -5,6 +5,7 @@
 *	criar tela de investimentos
 *	criar tela de categorias
 *	botão de apagar transação de cartão não funciona
+* criar tela de bancos com extratos individuais
 
 //******************* VULNERABILIDADES:
 
