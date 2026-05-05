@@ -1,33 +1,33 @@
 :root {
-    /* Color Palette */
-    --primary: #6366f1;
-    --primary-hover: #4f46e5;
-    --success: #10b981;
-    --success-bg: rgba(16, 185, 129, 0.1);
-    --danger: #ef4444;
-    --danger-bg: rgba(239, 68, 68, 0.1);
-    --warning: #f59e0b;
+    /* Color Palette - Finance Premium */
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --success: #059669;
+    --success-bg: rgba(5, 150, 105, 0.1);
+    --danger: #dc2626;
+    --danger-bg: rgba(220, 38, 38, 0.1);
+    --warning: #d97706;
     
     /* Light Theme (Default) */
-    --bg-body: #f8fafc;
+    --bg-body: #f1f5f9;
     --bg-card: #ffffff;
     --bg-sidebar: #ffffff;
     --text-main: #0f172a;
-    --text-muted: #64748b;
-    --border: #e2e8f0;
-    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-    --hover-bg: #f1f5f9;
+    --text-muted: #475569;
+    --border: #cbd5e1;
+    --card-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);
+    --hover-bg: #e2e8f0;
 }
 
 [data-theme="dark"] {
-    --bg-body: #0f172a;
-    --bg-card: #1e293b;
-    --bg-sidebar: #1e293b;
+    --bg-body: #020617;
+    --bg-card: #0f172a;
+    --bg-sidebar: #0f172a;
     --text-main: #f8fafc;
     --text-muted: #94a3b8;
-    --border: #334155;
-    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
-    --hover-bg: #334155;
+    --border: #1e293b;
+    --card-shadow: 0 1px 3px rgba(0,0,0,0.2), 0 1px 2px rgba(0,0,0,0.1);
+    --hover-bg: #1e293b;
 }
 
 * {
@@ -37,11 +37,15 @@
 }
 
 body {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Outfit', sans-serif;
     background-color: var(--bg-body);
     color: var(--text-main);
     transition: background-color 0.3s ease, color 0.3s ease;
     overflow-x: hidden;
+}
+
+input, select, textarea, button {
+    font-family: inherit;
 }
 
 .app-container {
@@ -76,13 +80,13 @@ body {
     width: 36px;
     height: 36px;
     background: linear-gradient(135deg, var(--primary), #818cf8);
-    border-radius: 10px;
+    border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
     font-size: 1.1rem;
-    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3);
 }
 
 .logo h1 {
@@ -112,7 +116,7 @@ nav a {
     text-decoration: none;
     color: var(--text-muted);
     font-weight: 500;
-    border-radius: 8px;
+    border-radius: 4px;
     transition: all 0.2s;
 }
 
@@ -216,7 +220,7 @@ nav li.active a {
 .btn {
     border: none;
     padding: 10px 20px;
-    border-radius: 8px;
+    border-radius: 4px;
     font-family: inherit;
     font-weight: 600;
     font-size: 0.95rem;
@@ -236,8 +240,8 @@ nav li.active a {
 .btn-primary:active { transform: scale(0.98); }
 .btn-primary:hover {
     background-color: var(--primary-hover);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.35);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(37, 99, 235, 0.25);
 }
 
 .btn-secondary {
@@ -254,7 +258,7 @@ nav li.active a {
     width: 40px;
     height: 40px;
     min-width: 40px;
-    border-radius: 8px;
+    border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -280,16 +284,16 @@ nav li.active a {
 
 .card {
     background-color: var(--bg-card);
-    border-radius: 16px;
+    border-radius: 6px;
     padding: 24px;
     box-shadow: var(--card-shadow);
     border: 1px solid var(--border);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 20px -8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .card-header {
@@ -336,7 +340,7 @@ nav li.active a {
 /* Transactions Section */
 .transactions-section {
     background-color: var(--bg-card);
-    border-radius: 16px;
+    border-radius: 6px;
     padding: 24px;
     box-shadow: var(--card-shadow);
     border: 1px solid var(--border);
@@ -381,9 +385,9 @@ nav li.active a {
 .transaction-item {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    overflow: hidden;
     padding: 16px;
-    border-radius: 12px;
+    border-radius: 4px;
     background-color: var(--bg-body);
     border: 1px solid var(--border);
     transition: all 0.2s;
@@ -403,7 +407,7 @@ nav li.active a {
 .tx-icon {
     width: 48px;
     height: 48px;
-    border-radius: 12px;
+    border-radius: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -495,7 +499,7 @@ nav li.active a {
 
 .goal-card {
     background-color: var(--bg-card);
-    border-radius: 16px;
+    border-radius: 6px;
     padding: 24px;
     border: 1px solid var(--border);
     box-shadow: var(--card-shadow);
@@ -521,15 +525,15 @@ nav li.active a {
     width: 100%;
     height: 12px;
     background-color: var(--bg-body);
-    border-radius: 6px;
+    border-radius: 2px;
     overflow: hidden;
     margin-bottom: 12px;
 }
 
 .progress-bar {
     height: 100%;
-    background: linear-gradient(90deg, #10b981, #34d399);
-    border-radius: 6px;
+    background: linear-gradient(90deg, var(--success), #34d399);
+    border-radius: 2px;
     transition: width 0.8s ease-out;
 }
 
@@ -572,7 +576,223 @@ nav li.active a {
 .modal {
     background-color: var(--bg-card);
     width: 100%; max-width: 500px;
-    border-radius: 20px;
+    border-radius: 6px;
+    padding: 32px;
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+    transform: translateY(20px);
+    transition: transform 0.3s;
+    border: 1px solid var(--border);
+}
+
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+}
+
+.transaction-item:hover {
+    border-color: var(--primary);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.tx-left {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-width: 0;
+}
+
+.tx-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.tx-icon.income {
+    background-color: var(--success-bg);
+    color: var(--success);
+}
+
+.tx-icon.expense {
+    background-color: var(--danger-bg);
+    color: var(--danger);
+}
+
+.tx-details {
+    min-width: 0;
+}
+
+.tx-details .tx-title {
+    font-weight: 600;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tx-details .tx-category {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tx-right {
+    text-align: right;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+}
+
+.tx-right .tx-amount {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 4px;
+}
+
+.tx-amount.positive { color: var(--success); }
+.tx-amount.negative { color: var(--danger); }
+
+.tx-right .tx-date {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.tx-actions {
+    display: flex;
+    gap: 8px;
+    max-width: 0;
+    margin-left: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-width 0.3s ease, margin-left 0.3s ease, opacity 0.3s ease;
+    flex-shrink: 0;
+}
+
+.transaction-item:hover .tx-actions {
+    max-width: 150px;
+    margin-left: 16px;
+    opacity: 1;
+}
+
+.btn-icon {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: color 0.2s;
+}
+
+.btn-icon:hover {
+    color: var(--danger);
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px 0;
+    color: var(--text-muted);
+    animation: fadeIn 0.4s;
+}
+
+.empty-state i {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+/* Goals Grid */
+.goals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+}
+
+.goal-card {
+    background-color: var(--bg-card);
+    border-radius: 6px;
+    padding: 24px;
+    border: 1px solid var(--border);
+    box-shadow: var(--card-shadow);
+}
+
+.goal-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.goal-header h3 {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.goal-header .percent {
+    font-weight: 700;
+    color: var(--success);
+}
+
+.progress-container {
+    width: 100%;
+    height: 12px;
+    background-color: var(--bg-body);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--success), #34d399);
+    border-radius: 2px;
+    transition: width 0.8s ease-out;
+}
+
+.goal-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.goal-footer .goal-values p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
+.goal-footer .goal-values strong {
+    color: var(--text-main);
+}
+
+
+/* Modal Gerais */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s;
+    backdrop-filter: blur(4px);
+}
+
+.modal-overlay.active {
+    opacity: 1; visibility: visible;
+}
+
+.modal {
+    background-color: var(--bg-card);
+    width: 100%; max-width: 500px;
+    border-radius: 6px;
     padding: 32px;
     box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
     transform: translateY(20px);
@@ -600,11 +820,11 @@ nav li.active a {
     display: block; margin-bottom: 8px; font-weight: 500; font-size: 0.95rem; color: var(--text-muted);
 }
 .form-group input, .form-group select {
-    width: 100%; padding: 12px 16px; border-radius: 8px; border: 1px solid var(--border); background-color: var(--bg-body); color: var(--text-main); font-family: inherit; font-size: 1rem; transition: all 0.2s;
+    width: 100%; padding: 12px 16px; border-radius: 4px; border: 1px solid var(--border); background-color: var(--bg-body); color: var(--text-main); font-family: inherit; font-size: 1rem; transition: all 0.2s;
 }
 
 .form-group input:focus, .form-group select:focus {
-    outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 .input-icon { position: relative; }
@@ -616,7 +836,7 @@ nav li.active a {
 .type-selector { display: flex; gap: 12px; }
 .type-selector input[type="radio"] { display: none; }
 .type-btn {
-    flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; font-weight: 500; transition: all 0.2s;
+    flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; border-radius: 4px; border: 1px solid var(--border); cursor: pointer; font-weight: 500; transition: all 0.2s;
 }
 
 #type-income:checked + .income-btn, #fixed-type-income:checked + .income-btn { background-color: var(--success-bg); border-color: var(--success); color: var(--success); }
@@ -624,23 +844,22 @@ nav li.active a {
 
 .modal-footer { display: flex; justify-content: flex-end; gap: 12px; margin-top: 32px; }
 
-
 /* Authentication Overlay UI */
 .auth-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background-color: var(--bg-body);
     display: flex; align-items: center; justify-content: center; z-index: 999;
     opacity: 0; visibility: hidden; transition: all 0.4s;
-    background-image: radial-gradient(circle at top right, rgba(99,102,241,0.1), transparent 400px), radial-gradient(circle at bottom left, rgba(16,185,129,0.05), transparent 400px);
+    background-image: radial-gradient(circle at top right, rgba(37,99,235,0.1), transparent 400px), radial-gradient(circle at bottom left, rgba(5,150,105,0.05), transparent 400px);
 }
 .auth-overlay.active { opacity: 1; visibility: visible; }
 .auth-card {
-    background-color: var(--bg-card); width: 100%; max-width: 440px; padding: 40px; border-radius: 24px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border: 1px solid var(--border); display: flex; flex-direction: column;
+    background-color: var(--bg-card); width: 100%; max-width: 440px; padding: 40px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); border: 1px solid var(--border); display: flex; flex-direction: column;
 }
 .auth-card h2 { text-align: center; font-size: 1.5rem; margin-bottom: 4px; }
 .auth-subtitle { text-align: center; color: var(--text-muted); font-size: 0.95rem; margin-bottom: 32px; }
 .btn-provider {
-    display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; padding: 12px; border-radius: 8px; font-family: inherit; font-weight: 500; font-size: 1rem; cursor: pointer; background-color: var(--bg-body); border: 1px solid var(--border); color: var(--text-main); transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; padding: 12px; border-radius: 4px; font-family: inherit; font-weight: 500; font-size: 1rem; cursor: pointer; background-color: var(--bg-body); border: 1px solid var(--border); color: var(--text-main); transition: all 0.2s;
 }
 .btn-provider:hover { background-color: var(--hover-bg); border-color: #94a3b8; }
 .btn-provider img { width: 20px; height: 20px; }
@@ -663,17 +882,17 @@ nav li.active a {
 }
 
 .credit-card-ui {
-    border-radius: 16px;
+    border-radius: 6px;
     padding: 24px;
     color: white;
     height: 200px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     position: relative;
     overflow: hidden;
-    transition: transform 0.3s ease;
+    transition: transform 0.2s ease;
 }
 
 .credit-card-ui:hover {
@@ -709,7 +928,7 @@ nav li.active a {
     width: 42px;
     height: 32px;
     background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
-    border-radius: 6px;
+    border-radius: 4px;
     opacity: 0.9;
     box-shadow: inset 0 0 4px rgba(0,0,0,0.2);
 }
@@ -739,7 +958,7 @@ nav li.active a {
     opacity: 0.8;
     background: rgba(0,0,0,0.15);
     padding: 8px 12px;
-    border-radius: 8px;
+    border-radius: 4px;
 }
 
 .cc-actions {
@@ -786,18 +1005,62 @@ nav li.active a {
 .bank-caixa { background: linear-gradient(135deg, #005CA9, #F39200); }
 .bank-default { background: linear-gradient(135deg, #6366f1, #4f46e5); }
 
+.mobile-menu-btn {
+    display: none;
+    background: transparent;
+    border: none;
+    font-size: 1.4rem;
+    color: var(--text-main);
+    cursor: pointer;
+    padding: 4px;
+}
+
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 998;
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.sidebar-overlay.active {
+    display: block;
+    opacity: 1;
+}
+
 @media (max-width: 768px) {
     .app-container { flex-direction: column; }
-    .sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
-    nav ul { display: flex; overflow-x: auto; padding-bottom: 8px; }
-    nav li { flex-shrink: 0; }
-    .user-card { display: none; }
-    .main-content { padding: 20px; }
-    .top-header { flex-direction: column; align-items: flex-start; gap: 16px; }
-    .header-actions { width: 100%; justify-content: space-between; }
+    
+    .sidebar { 
+        position: fixed;
+        top: 0; left: 0;
+        width: 260px;
+        height: 100vh;
+        z-index: 999;
+        transform: translateX(-100%);
+        border-right: 1px solid var(--border);
+        border-bottom: none;
+        transition: transform 0.3s ease;
+    }
+    
+    .sidebar.open {
+        transform: translateX(0);
+    }
+    
+    .mobile-menu-btn { display: block; }
+
+    nav ul { display: block; overflow-x: hidden; padding-bottom: 0; }
+    nav li { flex-shrink: 1; }
+    .user-card { display: flex; }
+    .main-content { padding: 16px; width: 100%; overflow-x: hidden; }
+    .top-header { flex-direction: row; align-items: center; justify-content: space-between; gap: 16px; }
+    .header-actions { width: auto; justify-content: flex-end; }
+    .header-title h2 { font-size: 1.2rem; }
     .auth-card { margin: 20px; padding: 24px; }
 }
- 
- . s e t t i n g s - i t e m : h o v e r   {   b a c k g r o u n d - c o l o r :   v a r ( - - h o v e r - b g ) ;   }  
- . d a n g e r - i t e m : h o v e r   {   b a c k g r o u n d - c o l o r :   v a r ( - - d a n g e r - b g )   ! i m p o r t a n t ;   }  
- 
+
+.settings-item:hover { background-color: var(--hover-bg); }
+.danger-item:hover { background-color: var(--danger-bg) !important; }
