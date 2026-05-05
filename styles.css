@@ -797,3 +797,7 @@ nav li.active a {
     .header-actions { width: 100%; justify-content: space-between; }
     .auth-card { margin: 20px; padding: 24px; }
 }
+ 
+ . s e t t i n g s - i t e m : h o v e r   {   b a c k g r o u n d - c o l o r :   v a r ( - - h o v e r - b g ) ;   }  
+ . d a n g e r - i t e m : h o v e r   {   b a c k g r o u n d - c o l o r :   v a r ( - - d a n g e r - b g )   ! i m p o r t a n t ;   }  
+ 
