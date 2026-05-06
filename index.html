@@ -719,6 +719,48 @@
         </div>
     </div>
 
+    <!-- Modal for Card Payment -->
+    <div class="modal-overlay" id="card-payment-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="card-payment-title">Pagar Fatura</h2>
+                <button class="close-modal" id="close-card-payment-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="form-card-payment">
+                <div class="form-group" style="text-align: center; margin-bottom: 24px; padding: 16px; background: rgba(220, 38, 38, 0.05); border-radius: 8px; border: 1px dashed var(--danger);">
+                    <p style="color: var(--danger); font-size: 0.9rem; font-weight: 600;">Valor Total da Fatura</p>
+                    <h3 id="card-payment-total-display" style="font-size: 2.2rem; color: var(--danger); margin-top: 4px;">R$ 0,00</h3>
+                </div>
+                <div class="form-group row">
+                    <div class="form-group-half">
+                        <label for="card-payment-amount">Valor a Pagar</label>
+                        <div class="input-icon">
+                            <span>R$</span>
+                            <input type="text" inputmode="numeric" id="card-payment-amount" step="0.01" min="0.01" required>
+                        </div>
+                    </div>
+                    <div class="form-group-half">
+                        <label for="card-payment-interest">Juros/Multa (Opcional)</label>
+                        <div class="input-icon">
+                            <span>R$</span>
+                            <input type="text" inputmode="numeric" id="card-payment-interest" step="0.01" min="0" placeholder="0,00">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="card-payment-source-bank">Conta de Origem (Onde o dinheiro vai sair)</label>
+                    <select id="card-payment-source-bank" required>
+                        <!-- Povoado por JS -->
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="btn-cancel-card-payment">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" style="background: var(--success)"><i class="fa-solid fa-check"></i> Efetuar Pagamento</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Modal for New Investment -->
     <div class="modal-overlay" id="investment-modal">
         <div class="modal">
