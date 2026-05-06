@@ -386,6 +386,7 @@ nav li.active a {
     display: flex;
     align-items: center;
     overflow: hidden;
+    flex-shrink: 0;
     padding: 16px;
     border-radius: 4px;
     background-color: var(--bg-body);
