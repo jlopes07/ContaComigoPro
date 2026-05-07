@@ -1057,9 +1057,10 @@ nav li.active a {
     nav li { flex-shrink: 1; }
     .user-card { display: flex; }
     .main-content { padding: 16px; width: 100%; overflow-x: hidden; }
-    .top-header { flex-direction: row; align-items: center; justify-content: space-between; gap: 16px; }
-    .header-actions { width: auto; justify-content: flex-end; }
-    .header-title h2 { font-size: 1.2rem; }
+    .top-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+    .header-actions { width: 100%; justify-content: flex-start; flex-wrap: wrap; gap: 8px; }
+    .header-actions .btn { flex: 1; justify-content: center; font-size: 0.85rem; padding: 8px 12px; }
+    .header-title h2 { font-size: 1.4rem; }
     .auth-card { margin: 20px; padding: 24px; }
 }
 
