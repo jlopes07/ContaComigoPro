@@ -80,6 +80,8 @@
                                 class="fa-solid fa-tags"></i> Categorias</a></li>
                     <li data-title="Meus Investimentos"><a href="#" data-page="page-investimentos"><i
                                 class="fa-solid fa-chart-line"></i> Investimentos</a></li>
+                    <li data-title="Relatórios & Gráficos"><a href="#" data-page="page-relatorios"><i
+                                class="fa-solid fa-file-invoice-dollar"></i> Relatórios</a></li>
                     <li data-title="Gerenciar Conta"><a href="#" data-page="page-configuracoes"><i
                                 class="fa-solid fa-gear"></i> Configurações</a></li>
                 </ul>
@@ -206,6 +208,9 @@
                             <button id="btn-clear-filters" class="btn-icon" title="Limpar Filtros"
                                 style="padding: 0 16px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-body);"><i
                                     class="fa-solid fa-eraser"></i></button>
+                            <button id="btn-show-pending-installments" class="btn btn-outline" style="height: 38px; padding: 0 16px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-body); color: var(--text-main); font-weight: 500; font-size: 0.9rem;" title="Compras Parceladas Pendentes">
+                                <i class="fa-solid fa-calendar-days" style="color: var(--primary);"></i> Parceladas Pendentes
+                            </button>
                         </div>
                     </section>
 
@@ -336,6 +341,66 @@
                     </section>
                 </div>
 
+                <!-- ================== PAGE: RELATÓRIOS ================== -->
+                <div class="page-section" id="page-relatorios">
+                    <div style="display: grid; grid-template-columns: 320px 1fr; gap: 24px; margin-top: 16px; align-items: start;">
+                        <!-- Coluna Lateral: Filtros e Emissão -->
+                        <aside class="card" style="padding: 20px; border: 1px solid var(--border);">
+                            <h3 style="margin-top: 0; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                                <i class="fa-solid fa-sliders" style="color: var(--primary);"></i> Opções de Emissão
+                            </h3>
+                            
+                            <div class="form-group" style="margin-bottom: 16px;">
+                                <label for="report-type" style="font-weight: 500; font-size: 0.9rem; color: var(--text-muted); display: block; margin-bottom: 6px;">Tipo de Relatório</label>
+                                <select id="report-type" class="form-input" style="width: 100%; padding: 8px; border-radius: 6px; background: var(--bg-main); border: 1px solid var(--border); color: var(--text-main);" onchange="window.handleReportTypeChange()">
+                                    <option value="monthly-summary">Resumo Mensal (DRE)</option>
+                                    <option value="category-expenses">Gastos por Categoria</option>
+                                    <option value="bank-statement">Extrato de Conta/Banco</option>
+                                    <option value="credit-card">Relatório de Cartões</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group" id="report-period-container" style="margin-bottom: 16px;">
+                                <label for="report-month" style="font-weight: 500; font-size: 0.9rem; color: var(--text-muted); display: block; margin-bottom: 6px;">Mês de Referência</label>
+                                <input type="month" id="report-month" class="form-input" style="width: 100%; padding: 8px; border-radius: 6px; background: var(--bg-main); border: 1px solid var(--border); color: var(--text-main);">
+                            </div>
+                            
+                            <div class="form-group" id="report-bank-container" style="display: none; margin-bottom: 16px;">
+                                <label for="report-bank" style="font-weight: 500; font-size: 0.9rem; color: var(--text-muted); display: block; margin-bottom: 6px;">Selecionar Conta/Banco</label>
+                                <select id="report-bank" class="form-input" style="width: 100%; padding: 8px; border-radius: 6px; background: var(--bg-main); border: 1px solid var(--border); color: var(--text-main);">
+                                    <!-- JS Populated -->
+                                </select>
+                            </div>
+                            
+                            <button class="btn btn-primary w-100 mt-3" onclick="window.generateReport()" style="justify-content: center; width: 100%;">
+                                <i class="fa-solid fa-gears"></i> Gerar Relatório
+                            </button>
+                        </aside>
+                        
+                        <!-- Coluna Principal: Visualização -->
+                        <section class="card" style="padding: 24px; border: 1px solid var(--border); min-height: 450px; display: flex; flex-direction: column;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 20px;">
+                                <h3 style="margin: 0; display: flex; align-items: center; gap: 8px;">
+                                    <i class="fa-solid fa-receipt" style="color: var(--primary);"></i> Visualização do Relatório
+                                </h3>
+                                <div style="display: flex; gap: 8px;">
+                                    <button class="btn btn-outline" id="btn-print-report" onclick="window.printReport()" disabled style="padding: 6px 12px; font-size: 0.85rem;">
+                                        <i class="fa-solid fa-print"></i> Imprimir
+                                    </button>
+                                    <button class="btn btn-outline" id="btn-export-csv" onclick="window.exportReportCSV()" disabled style="padding: 6px 12px; font-size: 0.85rem;">
+                                        <i class="fa-solid fa-file-csv"></i> Exportar CSV
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Container do Conteúdo do Relatório -->
+                            <div id="report-preview-content" style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; color: var(--text-muted);">
+                                <i class="fa-solid fa-chart-pie" style="font-size: 3rem; margin-bottom: 16px; opacity: 0.5;"></i>
+                                <p style="margin: 0; font-weight: 500;">Selecione as opções ao lado e clique em "Gerar Relatório".</p>
+                            </div>
+                        </section>
+                    </div>
+
                 <!-- ================== PAGE: CONFIGURAÇÕES ================== -->
                 <div class="page-section" id="page-configuracoes">
         <div class="card settings-card" style="max-width: 600px; margin: 0 auto; padding: 0; overflow: hidden;">
@@ -410,80 +475,109 @@
 
     <!-- Modal for New Transaction -->
     <div class="modal-overlay" id="transaction-modal">
-        <div class="modal">
+        <div class="modal" style="transition: max-width 0.3s ease;">
             <div class="modal-header">
                 <h2>Nova Transação</h2>
                 <button class="close-modal" id="close-modal"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <form id="form-transaction">
-                <div class="form-group">
-                    <label>Tipo</label>
-                    <div class="type-selector">
-                        <input type="radio" id="type-income" name="type" value="income">
-                        <label for="type-income" class="type-btn income-btn"><i class="fa-solid fa-arrow-up"></i>
-                            Receita</label>
+            
+            <!-- Tabs de Seleção de Modo -->
+            <div class="modal-tabs" id="tx-modal-tabs" style="display: flex; gap: 12px; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
+                <button type="button" class="tab-btn active" id="tab-tx-single" style="background: none; border: none; border-bottom: 2px solid var(--primary); padding: 6px 12px; color: var(--text-main); cursor: pointer; font-weight: 600; font-family: inherit; font-size: 0.95rem;">Individual</button>
+                <button type="button" class="tab-btn" id="tab-tx-bulk" style="background: none; border: none; padding: 6px 12px; color: var(--text-muted); cursor: pointer; font-weight: 600; font-family: inherit; font-size: 0.95rem;">Em Lote (Várias)</button>
+            </div>
 
-                        <input type="radio" id="type-expense" name="type" value="expense" checked>
-                        <label for="type-expense" class="type-btn expense-btn"><i class="fa-solid fa-arrow-down"></i>
-                            Despesa</label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="description">Descrição</label>
-                    <input type="text" id="description" placeholder="Ex: Salário, Aluguel, Mercado" required>
-                </div>
-                <div class="form-group row">
-                    <div class="form-group-half">
-                        <label for="amount">Valor</label>
-                        <div class="input-icon">
-                            <span>R$</span>
-                            <input type="number" id="amount" step="0.01" min="0.01" required>
+            <form id="form-transaction">
+                <!-- Modo Individual -->
+                <div id="single-tx-container">
+                    <div class="form-group">
+                        <label>Tipo</label>
+                        <div class="type-selector">
+                            <input type="radio" id="type-income" name="type" value="income">
+                            <label for="type-income" class="type-btn income-btn"><i class="fa-solid fa-arrow-up"></i>
+                                Receita</label>
+    
+                            <input type="radio" id="type-expense" name="type" value="expense" checked>
+                            <label for="type-expense" class="type-btn expense-btn"><i class="fa-solid fa-arrow-down"></i>
+                                Despesa</label>
                         </div>
                     </div>
-                    <div class="form-group-half">
-                        <label for="date">Data da Transação</label>
-                        <input type="date" id="date" required>
+                    <div class="form-group">
+                        <label for="description">Descrição</label>
+                        <input type="text" id="description" placeholder="Ex: Salário, Aluguel, Mercado">
                     </div>
-                </div>
-
-                <!-- Forms de Pagamento Avançados (Novo) -->
-                <div class="form-group row" style="margin-top: -8px;">
-                    <div class="form-group-half w-100">
-                        <label for="payment-method">Forma de Pagamento / Banco</label>
-                        <select id="payment-method" required>
+                    <div class="form-group row">
+                        <div class="form-group-half">
+                            <label for="amount">Valor</label>
+                            <div class="input-icon">
+                                <span>R$</span>
+                                <input type="number" id="amount" step="0.01" min="0.01">
+                            </div>
+                        </div>
+                        <div class="form-group-half">
+                            <label for="date">Data da Transação</label>
+                            <input type="date" id="date">
+                        </div>
+                    </div>
+    
+                    <!-- Forms de Pagamento Avançados (Novo) -->
+                    <div class="form-group row" style="margin-top: -8px;">
+                        <div class="form-group-half w-100">
+                            <label for="payment-method">Forma de Pagamento / Banco</label>
+                            <select id="payment-method">
+                                <!-- Povoado por JS -->
+                            </select>
+                        </div>
+                    </div>
+    
+                    <div class="form-group row" id="installments-container" style="display: none; margin-top: -8px;">
+                        <div class="form-group-half w-100">
+                            <label for="installments">Parcelas (Vezes)</label>
+                            <select id="installments">
+                                <option value="1">1x (À vista)</option>
+                                <option value="2">2x</option>
+                                <option value="3">3x</option>
+                                <option value="4">4x</option>
+                                <option value="5">5x</option>
+                                <option value="6">6x</option>
+                                <option value="7">7x</option>
+                                <option value="8">8x</option>
+                                <option value="9">9x</option>
+                                <option value="10">10x</option>
+                                <option value="11">11x</option>
+                                <option value="12">12x</option>
+                            </select>
+                        </div>
+                    </div>
+    
+                    <div class="form-group">
+                        <label for="category">Categoria</label>
+                        <select id="category">
+                            <option value="" disabled selected>Selecione</option>
                             <!-- Povoado por JS -->
                         </select>
                     </div>
                 </div>
 
-                <div class="form-group row" id="installments-container" style="display: none; margin-top: -8px;">
-                    <div class="form-group-half w-100">
-                        <label for="installments">Parcelas (Vezes)</label>
-                        <select id="installments">
-                            <option value="1">1x (À vista)</option>
-                            <option value="2">2x</option>
-                            <option value="3">3x</option>
-                            <option value="4">4x</option>
-                            <option value="5">5x</option>
-                            <option value="6">6x</option>
-                            <option value="7">7x</option>
-                            <option value="8">8x</option>
-                            <option value="9">9x</option>
-                            <option value="10">10x</option>
-                            <option value="11">11x</option>
-                            <option value="12">12x</option>
-                        </select>
+                <!-- Modo Em Lote (Várias por dia) -->
+                <div id="bulk-tx-container" style="display: none;">
+                    <div class="form-group row">
+                        <div class="form-group-half" style="width: 100%;">
+                            <label for="bulk-date">Data da Transação</label>
+                            <input type="date" id="bulk-date" class="form-input" style="width: 100%;">
+                        </div>
                     </div>
+                    
+                    <div id="bulk-rows-container" style="display: flex; flex-direction: column; gap: 12px; margin-top: 16px;">
+                        <!-- JS populated dynamic rows -->
+                    </div>
+                    
+                    <button type="button" class="btn btn-outline w-100 mt-2" id="btn-add-bulk-row" style="border-style: dashed; justify-content: center;">
+                        <i class="fa-solid fa-plus"></i> Adicionar Mais Uma Transação
+                    </button>
                 </div>
 
-                <div class="form-group">
-                    <label for="category">Categoria</label>
-                    <select id="category" required>
-                        <option value="" disabled selected>Selecione</option>
-                        <!-- Povoado por JS -->
-                    </select>
-                </div>
-                <div class="modal-footer">
+                <div class="modal-footer" style="margin-top: 24px;">
                     <button type="button" class="btn btn-secondary" id="btn-cancel">Cancelar</button>
                     <button type="submit" class="btn btn-primary">Salvar</button>
                 </div>
@@ -1059,6 +1153,39 @@
                     <button type="submit" class="btn btn-primary"><i class="fa-solid fa-arrow-right-arrow-left"></i> Realizar Transferência</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Modal de Compras Parceladas Pendentes -->
+    <div class="modal-overlay" id="installments-pending-modal">
+        <div class="modal" style="max-width: 850px; width: 95%;">
+            <div class="modal-header">
+                <h2>Compras Parceladas Pendentes</h2>
+                <button class="close-modal" id="close-installments-pending-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body" style="padding-top: 16px;">
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                        <thead>
+                            <tr style="border-bottom: 2px solid var(--border); color: var(--text-muted); font-size: 0.9rem;">
+                                <th style="padding: 12px 8px;">Descrição</th>
+                                <th style="padding: 12px 8px;">Banco/Cartão</th>
+                                <th style="padding: 12px 8px;">Categoria</th>
+                                <th style="padding: 12px 8px;">Progresso</th>
+                                <th style="padding: 12px 8px;">Próxima Parcela</th>
+                                <th style="padding: 12px 8px;">Saldo Restante</th>
+                                <th style="padding: 12px 8px;">Total Compra</th>
+                            </tr>
+                        </thead>
+                        <tbody id="installments-pending-tbody" style="font-size: 0.95rem; color: var(--text-main);">
+                            <!-- JS populated -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer" style="margin-top: 20px;">
+                <button type="button" class="btn btn-secondary" id="btn-close-pending-modal">Fechar</button>
+            </div>
         </div>
     </div>
 
