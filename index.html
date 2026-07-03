@@ -157,20 +157,18 @@
                             <div class="amount" id="total-balance">R$ 0,00</div>
                         </div>
 
-                        <div class="card income-card">
-                            <div class="card-header">
-                                <h3>Recebido</h3>
-                                <i class="fa-solid fa-arrow-up"></i>
+                        <div class="card chart-card" id="expense-chart-card" style="padding: 16px; display: flex; flex-direction: column;">
+                            <div class="card-header" style="margin-bottom: 12px;">
+                                <h3>Despesas por Categoria</h3>
+                                <i class="fa-solid fa-chart-pie"></i>
                             </div>
-                            <div class="amount" id="total-income">R$ 0,00</div>
-                        </div>
-
-                        <div class="card expense-card">
-                            <div class="card-header">
-                                <h3>Gasto</h3>
-                                <i class="fa-solid fa-arrow-down"></i>
+                            <div id="expense-chart-container" style="flex: 1; min-height: 220px; display: flex; justify-content: center; align-items: center; position: relative;">
+                                <canvas id="expense-chart"></canvas>
                             </div>
-                            <div class="amount" id="total-expense">R$ 0,00</div>
+                            <div id="expense-chart-empty" style="display: none; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: var(--text-muted); min-height: 220px;">
+                                <i class="fa-solid fa-chart-pie" style="font-size: 2rem; opacity: 0.5;"></i>
+                                <p style="margin: 0; font-size: 0.9rem;">Nenhuma despesa para exibir.</p>
+                            </div>
                         </div>
                     </section>
 
@@ -628,6 +626,14 @@
                         <label for="category">Categoria</label>
                         <select id="category">
                             <option value="" disabled selected>Selecione</option>
+                            <!-- Povoado por JS -->
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 8px;">
+                        <label for="transaction-goal">Vincular a uma Meta (Opcional)</label>
+                        <select id="transaction-goal" style="width: 100%; padding: 8px; border-radius: 6px; background: var(--bg-main); border: 1px solid var(--border); color: var(--text-main);">
+                            <option value="">Nenhuma Meta</option>
                             <!-- Povoado por JS -->
                         </select>
                     </div>
@@ -1304,6 +1310,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
 
     <!-- Lógica do App -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="app.js"></script>
 </body>
 

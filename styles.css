@@ -994,6 +994,8 @@ nav li.active a {
     transform: translateY(20px);
     transition: transform 0.3s;
     border: 1px solid var(--border);
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 .modal-overlay.active .modal {
