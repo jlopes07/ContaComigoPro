@@ -11,6 +11,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js para gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
@@ -145,21 +147,57 @@
             <!-- CONTAINER DE TELAS (SPA) -->
             <div id="pages-container">
 
-                <!-- Dashboard Simplificado -->
+                <!-- Dashboard com Saldo e Gráfico lado a lado -->
                 <div class="page-section active" id="page-dashboard">
-                    <!-- Apenas o card de Saldo -->
-                    <section class="summary-cards"
-                        style="grid-template-columns: 1fr; max-width: 400px; margin: 0 auto 40px;">
-                        <div class="card balance-card">
-                            <div class="card-header">
-                                <h3>Saldo Total</h3>
-                                <i class="fa-solid fa-wallet"></i>
-                            </div>
-                            <div class="amount" id="total-balance">R$ 0,00</div>
-                        </div>
-                    </section>
+                    <!-- Container com grid de 2 colunas -->
+                    <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 24px; margin-bottom: 40px;">
+                        <!-- Card de Saldo Total com Fatura do Cartão -->
+                        <section class="summary-cards" style="grid-template-columns: 1fr; margin-bottom: 0;">
+                            <div class="card balance-card"
+                                style="height: 100%; display: flex; flex-direction: column; justify-content: center;">
+                                <div class="card-header">
+                                    <h3>Saldo Total</h3>
+                                    <i class="fa-solid fa-wallet"></i>
+                                </div>
+                                <div class="amount" id="total-balance" style="font-size: 2.5rem;">R$ 0,00</div>
 
-                    <!-- Lista de Transações (mantenha os IDs) -->
+                                <!-- Nova seção: Total da Fatura do Cartão -->
+                                <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <div>
+                                            <span style="font-size: 0.85rem; color: var(--text-muted);">💳 Fatura do
+                                                Cartão (mês atual)</span>
+                                        </div>
+                                        <div>
+                                            <span id="total-card-invoice"
+                                                style="font-weight: 700; font-size: 1.1rem; color: var(--danger);">R$
+                                                0,00</span>
+                                        </div>
+                                    </div>
+                                    <div
+                                        style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px; font-size: 0.75rem; color: var(--text-muted);">
+                                        <span id="card-invoice-detail">Nenhum gasto no cartão este mês</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Gráfico de Pizza -->
+                        <section class="transactions-section" style="margin-bottom: 0;">
+                            <div class="section-header">
+                                <h3>Distribuição de Despesas por Categoria</h3>
+                            </div>
+                            <div style="position: relative; max-width: 300px; margin: 0 auto;">
+                                <canvas id="category-chart"></canvas>
+                            </div>
+                            <div id="chart-legend"
+                                style="margin-top: 12px; display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;">
+                                <!-- Legenda será gerada pelo JavaScript -->
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- Últimas Transações -->
                     <section class="transactions-section">
                         <div class="section-header">
                             <h3>Últimas Transações</h3>
@@ -167,7 +205,6 @@
                                 onclick="document.querySelector('[data-page=page-transacoes]').click()">Ver todo o
                                 histórico</a>
                         </div>
-
                         <div class="transactions-list" id="transaction-list-recent">
                             <!-- O JavaScript preenche aqui -->
                         </div>

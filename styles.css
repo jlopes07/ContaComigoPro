@@ -18,7 +18,7 @@
  *   9. Seção de Transações             — .transactions-section, .transaction-item
  *  10. Filtros                         — .filters
  *  11. Formulários & Inputs            — .form-group, .form-row, input, select
- *  12. Modais                          — .modal-overlay, .modal-box
+ *  12. Modais                          — .modal-overlay, .modal-box, scroll
  *  13. Metas Financeiras               — .goal-card, .progress-bar
  *  14. Cartões de Crédito              — .credit-card-visual, .card-invoice
  *  15. Bancos                          — .bank-card, .bank-transactions-inline
@@ -31,6 +31,8 @@
  *  22. Relatórios                      — .report-layout, .report-preview
  *  23. Responsivo (Mobile)             — @media queries
  *  24. Animações                       — @keyframes
+ *  25. Utilitários Adicionais          — .card-invoice-info, .icon-option
+ *  26. Estilos de Impressão            — @media print
  *
  * Tipografia: 'Outfit' do Google Fonts (importada no index.html)
  * Compatibilidade: Chrome, Firefox, Safari, Edge (versões modernas)
@@ -53,85 +55,55 @@
 :root {
     /* Cores semânticas — usadas em todo o app */
     --primary: #2563eb;
-    /* Azul principal para botões e destaques */
     --primary-hover: #1d4ed8;
-    /* Variante mais escura para estado hover */
     --success: #059669;
-    /* Verde para receitas e feedback positivo */
     --success-bg: rgba(5, 150, 105, 0.1);
-    /* Fundo suave verde (badges/ícones) */
     --danger: #dc2626;
-    /* Vermelho para despesas e erros */
     --danger-bg: rgba(220, 38, 38, 0.1);
-    /* Fundo suave vermelho */
     --warning: #d97706;
-    /* Âmbar para alertas e avisos */
 
     /* Tema Claro (padrão) — superfícies e texto */
     --bg-body: #f1f5f9;
-    /* Cinza azulado suave — fundo da página */
     --bg-card: #ffffff;
-    /* Branco — superfície dos cards */
     --bg-sidebar: #ffffff;
-    /* Branco — fundo da barra lateral */
     --text-main: #0f172a;
-    /* Quase preto — texto primário */
     --text-muted: #475569;
-    /* Cinza azulado — texto secundário/labels */
     --border: #cbd5e1;
-    /* Cinza claro — bordas e separadores */
     --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
-    /* Sombra sutil */
     --hover-bg: #e2e8f0;
-    /* Fundo ao fazer hover em itens de lista */
 }
 
-/* Tema Escuro — sobrescreve apenas as variáveis de superfície e texto.
-   Ativado adicionando data-theme="dark" ao elemento <html>. */
+/* Tema Escuro — sobrescreve apenas as variáveis de superfície e texto */
 [data-theme="dark"] {
     --bg-body: #020617;
-    /* Azul quase preto — fundo da página */
     --bg-card: #0f172a;
-    /* Azul muito escuro — superfície dos cards */
     --bg-sidebar: #0f172a;
-    /* Mesmo tom dos cards */
     --text-main: #f8fafc;
-    /* Branco gelo — texto primário */
     --text-muted: #94a3b8;
-    /* Cinza azulado claro — texto secundário */
     --border: #1e293b;
-    /* Azul escuro — bordas sutis */
     --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.1);
-    /* Sombra mais intensa */
     --hover-bg: #1e293b;
-    /* Fundo de hover no tema escuro */
 }
 
 /* =============================================================================
    SEÇÃO 2 — RESET & BASE
    =============================================================================
-   Reset mínimo para consistência cross-browser. Usa box-sizing: border-box
-   globalmente para facilitar cálculos de layout.
+   Reset mínimo para consistência cross-browser.
 */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    /* Padding e border incluídos na largura/altura */
 }
 
 body {
     font-family: 'Outfit', sans-serif;
-    /* Fonte premium carregada do Google Fonts */
     background-color: var(--bg-body);
     color: var(--text-main);
     transition: background-color 0.3s ease, color 0.3s ease;
-    /* Transição suave ao mudar tema */
     overflow-x: hidden;
-    /* Previne scroll horizontal indesejado */
 }
 
-/* Herda a fonte do body para todos os elementos de formulário */
 input,
 select,
 textarea,
@@ -142,14 +114,11 @@ button {
 /* =============================================================================
    SEÇÃO 3 — LAYOUT PRINCIPAL
    =============================================================================
-   O app usa um layout flexbox de duas colunas:
-     Coluna 1: .sidebar (largura fixa 260px)
-     Coluna 2: .main-content (flex: 1, ocupa o restante)
+   Layout flexbox de duas colunas: sidebar (260px) + main-content (flex: 1)
 */
 .app-container {
     display: flex;
     height: 100vh;
-    /* Ocupa a altura total da viewport */
 }
 
 /* Sidebar */
@@ -191,10 +160,7 @@ button {
 /* =============================================================================
    SEÇÃO 4 — LOGO & NAVEGAÇÃO
    =============================================================================
-   O nav é o menu principal de navegação da sidebar.
-   O item ativo recebe a classe .active no <li> via JavaScript (SPA routing).
 */
-
 .logo h1 {
     font-size: 1.2rem;
     font-weight: 700;
@@ -203,7 +169,6 @@ button {
 
 nav {
     flex: 1;
-    /* Ocupa o espaço vertical disponível empurrando o user-card para baixo */
     padding: 0 16px;
 }
 
@@ -229,7 +194,6 @@ nav a {
 
 nav a i {
     width: 20px;
-    /* Largura fixa para alinhar textos dos links */
     font-size: 1.1rem;
 }
 
@@ -238,13 +202,12 @@ nav a:hover {
     color: var(--text-main);
 }
 
-/* Item ativo: destaca com cor primária e fundo suave */
 nav li.active a {
     background-color: rgba(99, 102, 241, 0.1);
     color: var(--primary);
 }
 
-/* Card do usuário no rodapé da sidebar */
+/* User Card no rodapé da sidebar */
 .user-card {
     padding: 20px;
     border-top: 1px solid var(--border);
@@ -262,10 +225,8 @@ nav li.active a {
 
 .user-card .user-info {
     overflow: hidden;
-    /* Necessário para o text-overflow funcionar */
 }
 
-/* Nome truncado com elliípsis se muito longo */
 .user-card .user-info .name {
     font-weight: 600;
     font-size: 0.9rem;
@@ -286,18 +247,13 @@ nav li.active a {
    SEÇÃO 5 — CONTEÚDO PRINCIPAL & HEADER DA PÁGINA
    =============================================================================
 */
-
-/* Área de conteúdo principal: scrollable e flex-growing */
 .main-content {
     flex: 1;
-    /* Ocupa todo o espaço restante após a sidebar */
     padding: 32px;
     overflow-y: auto;
-    /* Permite scroll vertical quando o conteúdo for maior que a tela */
     position: relative;
 }
 
-/* Cabeçalho superior da página (título + botões de ação) */
 .top-header {
     display: flex;
     justify-content: space-between;
@@ -316,7 +272,6 @@ nav li.active a {
     font-size: 0.95rem;
 }
 
-/* Grupo de botões à direita do cabeçalho (Nova Transação, Transferência, etc.) */
 .header-actions {
     display: flex;
     align-items: center;
@@ -326,9 +281,6 @@ nav li.active a {
 /* =============================================================================
    SEÇÃO 6 — SISTEMA DE PÁGINAS SPA
    =============================================================================
-   As 'páginas' do app são divs com .page-section.
-   Apenas a que tiver .active fica visível. As demais são ocultas via display:none.
-   A animação fadeIn suaviza a transição ao navegar entre páginas.
 */
 #pages-container {
     width: 100%;
@@ -336,24 +288,17 @@ nav li.active a {
 
 .page-section {
     display: none;
-    /* Oculto por padrão */
     animation: fadeIn 0.4s ease forwards;
-    /* Anima ao tornar visível */
 }
 
 .page-section.active {
     display: block;
-    /* Exibido quando ativo (gerenciado pelo SPA router em app.js) */
 }
 
 /* =============================================================================
    SEÇÃO 7 — UTILITÁRIOS & BOTÕES
    =============================================================================
-   Classes utilititárias de layout e spacing (similar a Tailwind, mas minimal).
-   Botões seguem o padrão: .btn (base) + variante (.btn-primary, .btn-secondary)
 */
-
-/* Classes utilitárias de layout e espaçamento */
 .w-100 {
     width: 100%;
     justify-content: center;
@@ -375,7 +320,6 @@ nav li.active a {
     text-align: center;
 }
 
-/* Botão base: define layout, tipografia e transição comuns a todas as variantes */
 .btn {
     border: none;
     padding: 10px 20px;
@@ -390,7 +334,6 @@ nav li.active a {
     transition: all 0.2s;
 }
 
-/* Variante primária: ação principal, como "Nova Transação" */
 .btn-primary {
     background-color: var(--primary);
     color: white;
@@ -401,15 +344,12 @@ nav li.active a {
     transform: scale(0.98);
 }
 
-/* Feedback tátil ao clicar */
 .btn-primary:hover {
     background-color: var(--primary-hover);
     transform: translateY(-1px);
-    /* Leve elevação no hover */
     box-shadow: 0 4px 8px rgba(37, 99, 235, 0.25);
 }
 
-/* Variante secundária: ações neutras como "Cancelar" */
 .btn-secondary {
     background-color: var(--hover-bg);
     border: 1px solid var(--border);
@@ -420,7 +360,6 @@ nav li.active a {
     background-color: var(--border);
 }
 
-/* Botão de alternância de tema (lua/sol) no cabeçalho */
 .theme-toggle {
     width: 40px;
     height: 40px;
@@ -441,12 +380,15 @@ nav li.active a {
     background-color: var(--hover-bg);
 }
 
-/* Summary Cards */
+/* =============================================================================
+   SEÇÃO 8 — CARDS DE RESUMO
+   =============================================================================
+*/
 .summary-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 24px;
-    margin-bottom: 40px;
+    margin-bottom: 1rem;
 }
 
 .card {
@@ -504,13 +446,17 @@ nav li.active a {
     letter-spacing: -0.02em;
 }
 
-/* Transactions Section */
+/* =============================================================================
+   SEÇÃO 9 — SEÇÃO DE TRANSAÇÕES
+   =============================================================================
+*/
 .transactions-section {
     background-color: var(--bg-card);
     border-radius: 6px;
     padding: 24px;
     box-shadow: var(--card-shadow);
     border: 1px solid var(--border);
+    margin-bottom: 1rem;
 }
 
 .section-header {
@@ -536,26 +482,6 @@ nav li.active a {
     text-decoration: underline;
 }
 
-/* Filters */
-.filters {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-}
-
-.form-input {
-    border: 1px solid;
-    border-radius: 6px;
-    transition: box-shadow 0.3s ease;
-    border-color: dimgray;
-    padding: 4px;
-}
-
-.filters input,
-.filters select {
-    flex: 1 1 1;
-}
-
 .transactions-list {
     display: flex;
     flex-direction: column;
@@ -567,10 +493,7 @@ nav li.active a {
     align-items: center;
     overflow: hidden;
     flex-shrink: 0;
-    padding-right: 8px;
-    padding-left: 8px;
-    padding-bottom: 4px;
-    padding-top: 4px;
+    padding: 4px 8px;
     border-radius: 4px;
     background-color: var(--bg-body);
     border: 1px solid var(--border);
@@ -586,6 +509,8 @@ nav li.active a {
     display: flex;
     align-items: center;
     gap: 16px;
+    flex: 1;
+    min-width: 0;
 }
 
 .tx-icon {
@@ -596,209 +521,6 @@ nav li.active a {
     align-items: center;
     justify-content: center;
     font-size: 1rem;
-}
-
-.tx-icon.income {
-    background-color: var(--success-bg);
-    color: var(--success);
-}
-
-.tx-icon.expense {
-    background-color: var(--danger-bg);
-    color: var(--danger);
-}
-
-.tx-details .tx-title {
-    font-weight: 600;
-    margin-bottom: 4px;
-}
-
-.tx-details .tx-category {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-}
-
-.tx-right {
-    text-align: right;
-}
-
-.tx-right .tx-amount {
-    font-weight: 600;
-    font-size: 1.1rem;
-    margin-bottom: 4px;
-}
-
-.tx-amount.positive {
-    color: var(--success);
-}
-
-.tx-amount.negative {
-    color: var(--danger);
-}
-
-.tx-right .tx-date {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-}
-
-.tx-actions {
-    display: flex;
-    gap: 8px;
-    margin-left: 16px;
-    opacity: 0;
-    transition: opacity 0.2s;
-}
-
-.transaction-item:hover .tx-actions {
-    opacity: 1;
-}
-
-.btn-icon {
-    background: transparent;
-    border: none;
-    color: var(--text-muted);
-    cursor: pointer;
-    font-size: 1.2rem;
-    transition: color 0.2s;
-}
-
-.btn-icon:hover {
-    color: var(--danger);
-}
-
-.empty-state {
-    text-align: center;
-    padding: 40px 0;
-    color: var(--text-muted);
-    animation: fadeIn 0.4s;
-}
-
-.empty-state i {
-    font-size: 3rem;
-    margin-bottom: 16px;
-    opacity: 0.5;
-}
-
-/* Goals Grid */
-.goals-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 24px;
-}
-
-.goal-card {
-    background-color: var(--bg-card);
-    border-radius: 6px;
-    padding: 24px;
-    border: 1px solid var(--border);
-    box-shadow: var(--card-shadow);
-}
-
-.goal-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 16px;
-}
-
-.goal-header h3 {
-    font-weight: 600;
-    font-size: 1.1rem;
-}
-
-.goal-header .percent {
-    font-weight: 700;
-    color: var(--success);
-}
-
-.progress-container {
-    width: 100%;
-    height: 12px;
-    background-color: var(--bg-body);
-    border-radius: 2px;
-    overflow: hidden;
-    margin-bottom: 12px;
-}
-
-.progress-bar {
-    height: 100%;
-    background: linear-gradient(90deg, var(--success), #34d399);
-    border-radius: 2px;
-    transition: width 0.8s ease-out;
-}
-
-.goal-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-}
-
-.goal-footer .goal-values p {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    margin-top: 4px;
-}
-
-.goal-footer .goal-values strong {
-    color: var(--text-main);
-}
-
-
-/* Modal Gerais */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s;
-    backdrop-filter: blur(4px);
-}
-
-.modal-overlay.active {
-    opacity: 1;
-    visibility: visible;
-}
-
-.modal {
-    background-color: var(--bg-card);
-    width: 100%;
-    max-width: 500px;
-    border-radius: 6px;
-    padding: 32px;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    transform: translateY(20px);
-    transition: transform 0.3s;
-    border: 1px solid var(--border);
-}
-
-.transaction-item:hover {
-    border-color: var(--primary);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-}
-
-.tx-left {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    min-width: 0;
-}
-
-.tx-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
     flex-shrink: 0;
 }
 
@@ -836,7 +558,6 @@ nav li.active a {
     text-align: right;
     white-space: nowrap;
     flex-shrink: 0;
-    transition: transform 0.3s ease;
 }
 
 .tx-right .tx-amount {
@@ -901,133 +622,41 @@ nav li.active a {
     opacity: 0.5;
 }
 
-/* Goals Grid */
-.goals-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 24px;
-}
-
-.goal-card {
-    background-color: var(--bg-card);
-    border-radius: 6px;
-    padding: 24px;
-    border: 1px solid var(--border);
-    box-shadow: var(--card-shadow);
-}
-
-.goal-header {
+/* =============================================================================
+   SEÇÃO 10 — FILTROS
+   =============================================================================
+*/
+.filters {
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 16px;
+    gap: 16px;
+    flex-wrap: wrap;
 }
 
-.goal-header h3 {
-    font-weight: 600;
-    font-size: 1.1rem;
-}
-
-.goal-header .percent {
-    font-weight: 700;
-    color: var(--success);
-}
-
-.progress-container {
-    width: 100%;
-    height: 12px;
+.form-input {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    transition: box-shadow 0.3s ease;
+    padding: 8px 12px;
     background-color: var(--bg-body);
-    border-radius: 2px;
-    overflow: hidden;
-    margin-bottom: 12px;
-}
-
-.progress-bar {
-    height: 100%;
-    background: linear-gradient(90deg, var(--success), #34d399);
-    border-radius: 2px;
-    transition: width 0.8s ease-out;
-}
-
-.goal-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-}
-
-.goal-footer .goal-values p {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    margin-top: 4px;
-}
-
-.goal-footer .goal-values strong {
     color: var(--text-main);
 }
 
-
-/* Modal Gerais */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s;
-    backdrop-filter: blur(4px);
+.form-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
-.modal-overlay.active {
-    opacity: 1;
-    visibility: visible;
+.filters input,
+.filters select {
+    flex: 1 1 1;
+    min-width: 120px;
 }
 
-.modal {
-    background-color: var(--bg-card);
-    width: 100%;
-    max-width: 500px;
-    border-radius: 6px;
-    padding: 32px;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    transform: translateY(20px);
-    transition: transform 0.3s;
-    border: 1px solid var(--border);
-}
-
-.modal-overlay.active .modal {
-    transform: translateY(0);
-}
-
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 24px;
-}
-
-.modal-header h2 {
-    font-size: 1.4rem;
-}
-
-.close-modal {
-    background: transparent;
-    border: none;
-    font-size: 1.2rem;
-    color: var(--text-muted);
-    cursor: pointer;
-    transition: color 0.2s;
-}
-
-.close-modal:hover {
-    color: var(--text-main);
-}
-
+/* =============================================================================
+   SEÇÃO 11 — FORMULÁRIOS & INPUTS
+   =============================================================================
+*/
 .form-group {
     margin-bottom: 20px;
 }
@@ -1123,130 +752,182 @@ nav li.active a {
     color: var(--danger);
 }
 
-.modal-footer {
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
-    margin-top: 32px;
-}
-
-/* Authentication Overlay UI */
-.auth-overlay {
+/* =============================================================================
+   SEÇÃO 12 — MODAIS (COM BARRA DE ROLAGEM)
+   =============================================================================
+*/
+.modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: var(--bg-body);
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 999;
+    z-index: 100;
     opacity: 0;
     visibility: hidden;
-    transition: all 0.4s;
-    background-image: radial-gradient(circle at top right, rgba(37, 99, 235, 0.1), transparent 400px), radial-gradient(circle at bottom left, rgba(5, 150, 105, 0.05), transparent 400px);
+    transition: all 0.3s;
+    backdrop-filter: blur(4px);
+    padding: 20px;
 }
 
-.auth-overlay.active {
+.modal-overlay.active {
     opacity: 1;
     visibility: visible;
 }
 
-.auth-card {
+.modal {
     background-color: var(--bg-card);
     width: 100%;
-    max-width: 440px;
-    padding: 40px;
-    border-radius: 8px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    max-width: 500px;
+    max-height: 90vh;
+    border-radius: 6px;
+    padding: 32px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    transform: translateY(20px);
+    transition: transform 0.3s, max-width 0.3s ease;
     border: 1px solid var(--border);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Scrollbar styling para WebKit (Chrome, Safari, Edge) */
+.modal::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modal::-webkit-scrollbar-track {
+    background: var(--bg-body);
+    border-radius: 3px;
+}
+
+.modal::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 3px;
+}
+
+.modal::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-hover);
+}
+
+/* Scrollbar styling para Firefox */
+.modal {
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) var(--bg-body);
+}
+
+.modal-overlay.active .modal {
+    transform: translateY(0);
+}
+
+.modal-header {
     display: flex;
-    flex-direction: column;
-}
-
-.auth-card h2 {
-    text-align: center;
-    font-size: 1.5rem;
-    margin-bottom: 4px;
-}
-
-.auth-subtitle {
-    text-align: center;
-    color: var(--text-muted);
-    font-size: 0.95rem;
-    margin-bottom: 32px;
-}
-
-.btn-provider {
-    display: flex;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
-    gap: 12px;
-    width: 100%;
-    padding: 12px;
-    border-radius: 4px;
-    font-family: inherit;
-    font-weight: 500;
-    font-size: 1rem;
+    margin-bottom: 24px;
+    flex-shrink: 0;
+}
+
+.modal-header h2 {
+    font-size: 1.4rem;
+}
+
+.close-modal {
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    color: var(--text-muted);
     cursor: pointer;
-    background-color: var(--bg-body);
-    border: 1px solid var(--border);
+    transition: color 0.2s;
+}
+
+.close-modal:hover {
     color: var(--text-main);
-    transition: all 0.2s;
 }
 
-.btn-provider:hover {
-    background-color: var(--hover-bg);
-    border-color: #94a3b8;
-}
-
-.btn-provider img {
-    width: 20px;
-    height: 20px;
-}
-
-.divider {
+.modal-footer {
     display: flex;
-    align-items: center;
-    text-align: center;
-    margin: 24px 0;
-    color: var(--text-muted);
-    font-size: 0.8rem;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 32px;
+    flex-shrink: 0;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+}
+
+/* =============================================================================
+   SEÇÃO 13 — METAS FINANCEIRAS
+   =============================================================================
+*/
+.goals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+}
+
+.goal-card {
+    background-color: var(--bg-card);
+    border-radius: 6px;
+    padding: 24px;
+    border: 1px solid var(--border);
+    box-shadow: var(--card-shadow);
+}
+
+.goal-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.goal-header h3 {
     font-weight: 600;
+    font-size: 1.1rem;
 }
 
-.divider::before,
-.divider::after {
-    content: '';
-    flex: 1;
-    border-bottom: 1px solid var(--border);
+.goal-header .percent {
+    font-weight: 700;
+    color: var(--success);
 }
 
-.divider span {
-    padding: 0 16px;
+.progress-container {
+    width: 100%;
+    height: 12px;
+    background-color: var(--bg-body);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 12px;
 }
 
-.auth-message {
-    font-size: 0.9rem;
-    color: var(--primary);
-    font-weight: 500;
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--success), #34d399);
+    border-radius: 2px;
+    transition: width 0.8s ease-out;
 }
 
-/* Animations */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.goal-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
 }
 
-/* Credit Cards Specific Styling */
+.goal-footer .goal-values p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
+.goal-footer .goal-values strong {
+    color: var(--text-main);
+}
+
+/* =============================================================================
+   SEÇÃO 14 — CARTÕES DE CRÉDITO
+   =============================================================================
+*/
 .cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -1420,6 +1101,203 @@ nav li.active a {
     background: linear-gradient(135deg, #6366f1, #4f46e5);
 }
 
+/* =============================================================================
+   SEÇÃO 15 — BANCOS
+   =============================================================================
+   Estilos para a página de bancos e contas.
+*/
+.bank-card {
+    /* Estilos adicionais para cards de banco */
+}
+
+.bank-transactions-inline {
+    /* Estilos para transações inline de bancos */
+}
+
+/* =============================================================================
+   SEÇÃO 16 — TRANSAÇÕES FIXAS
+   =============================================================================
+*/
+.fixed-item {
+    /* Estilos para itens de transações fixas */
+}
+
+/* =============================================================================
+   SEÇÃO 17 — INVESTIMENTOS
+   =============================================================================
+*/
+.investment-card {
+    /* Estilos para cards de investimento */
+}
+
+/* =============================================================================
+   SEÇÃO 18 — CATEGORIAS
+   =============================================================================
+*/
+.category-card {
+    /* Estilos para cards de categorias */
+}
+
+.icon-picker {
+    /* Estilos para seletor de ícones */
+}
+
+/* =============================================================================
+   SEÇÃO 19 — TELA DE LOGIN (AUTH)
+   =============================================================================
+*/
+.auth-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-body);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s;
+    background-image:
+        radial-gradient(circle at top right, rgba(37, 99, 235, 0.1), transparent 400px),
+        radial-gradient(circle at bottom left, rgba(5, 150, 105, 0.05), transparent 400px);
+}
+
+.auth-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.auth-card {
+    background-color: var(--bg-card);
+    width: 100%;
+    max-width: 440px;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+}
+
+.auth-card h2 {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-bottom: 4px;
+}
+
+.auth-subtitle {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 32px;
+}
+
+.btn-provider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    padding: 12px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-weight: 500;
+    font-size: 1rem;
+    cursor: pointer;
+    background-color: var(--bg-body);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    transition: all 0.2s;
+}
+
+.btn-provider:hover {
+    background-color: var(--hover-bg);
+    border-color: #94a3b8;
+}
+
+.btn-provider img {
+    width: 20px;
+    height: 20px;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 24px 0;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--border);
+}
+
+.divider span {
+    padding: 0 16px;
+}
+
+.auth-message {
+    font-size: 0.9rem;
+    color: var(--primary);
+    font-weight: 500;
+}
+
+/* =============================================================================
+   SEÇÃO 20 — CONFIGURAÇÕES
+   =============================================================================
+*/
+.settings-item {
+    transition: background-color 0.2s;
+}
+
+.settings-item:hover {
+    background-color: var(--hover-bg);
+}
+
+.danger-item:hover {
+    background-color: var(--danger-bg) !important;
+}
+
+.settings-card {
+    /* Estilos para o card de configurações */
+}
+
+.settings-menu {
+    /* Estilos para o menu de configurações */
+}
+
+/* =============================================================================
+   SEÇÃO 21 — COMPRAS PARCELADAS PENDENTES
+   =============================================================================
+*/
+.installment-pending-item {
+    /* Estilos para itens de parcelas pendentes */
+}
+
+/* =============================================================================
+   SEÇÃO 22 — RELATÓRIOS
+   =============================================================================
+*/
+.report-layout {
+    /* Estilos para o layout de relatórios */
+}
+
+.report-preview {
+    /* Estilos para a pré-visualização de relatórios */
+}
+
+/* =============================================================================
+   SEÇÃO 23 — RESPONSIVO (MOBILE)
+   =============================================================================
+*/
 .mobile-menu-btn {
     display: none;
     background: transparent;
@@ -1523,12 +1401,344 @@ nav li.active a {
         margin: 20px;
         padding: 24px;
     }
+
+    /* Ajustes para modais em mobile */
+    .modal {
+        max-height: 85vh;
+        padding: 20px;
+        margin: 10px;
+    }
+
+    .modal-header h2 {
+        font-size: 1.2rem;
+    }
+
+    .form-group.row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .filters {
+        flex-direction: column;
+    }
+
+    .filters input,
+    .filters select {
+        flex: none;
+        width: 100%;
+    }
+
+    .summary-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .cards-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .goals-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
-.settings-item:hover {
+/* =============================================================================
+   SEÇÃO 24 — ANIMAÇÕES
+   =============================================================================
+*/
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =============================================================================
+   SEÇÃO 25 — UTILITÁRIOS ADICIONAIS
+   =============================================================================
+*/
+/* Estilos para o card de fatura do cartão no dashboard */
+.card-invoice-info {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+}
+
+.card-invoice-info .invoice-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-invoice-info .invoice-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.card-invoice-info .invoice-value {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--danger);
+}
+
+.card-invoice-info .invoice-detail {
+    margin-top: 4px;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-align: right;
+}
+
+/* Estilos para o seletor de ícones de categorias */
+.icon-option {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.icon-option:hover {
     background-color: var(--hover-bg);
+    transform: scale(1.05);
 }
 
-.danger-item:hover {
-    background-color: var(--danger-bg) !important;
+.icon-option.selected {
+    border-color: #8b5cf6;
+    border-width: 2px;
+}
+
+/* =============================================================================
+   SEÇÃO 26 — ESTILOS DE IMPRESSÃO
+   =============================================================================
+   Estilos específicos para impressão de relatórios e páginas.
+   Ocultam elementos de navegação e interface para uma impressão limpa.
+*/
+@media print {
+
+    /* Ocultar elementos de navegação e interface */
+    .sidebar,
+    .top-header,
+    .header-actions,
+    .header-title .date,
+    .btn,
+    .settings-menu,
+    .settings-header,
+    .settings-item,
+    .mobile-menu-btn,
+    .user-card,
+    .nav,
+    nav,
+    .filters,
+    .filter-container,
+    .summary-cards .card:not(.report-summary),
+    .modal-overlay,
+    .sidebar-overlay,
+    .tx-actions,
+    .btn-icon,
+    .view-all,
+    .close-modal,
+    #btn-print-report,
+    #btn-export-csv,
+    .no-print {
+        display: none !important;
+    }
+
+    /* Reset de cores e fundos para impressão */
+    body {
+        background-color: white !important;
+        color: black !important;
+    }
+
+    .main-content {
+        padding: 20px !important;
+        margin: 0 !important;
+        overflow: visible !important;
+        background: white !important;
+    }
+
+    .page-section {
+        display: block !important;
+        animation: none !important;
+        background: white !important;
+    }
+
+    .page-section:not(.active) {
+        display: none !important;
+    }
+
+    /* Estilos para cards e relatórios */
+    .card {
+        border: 1px solid #ccc !important;
+        box-shadow: none !important;
+        background: white !important;
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    .transactions-section {
+        border: 1px solid #ccc !important;
+        box-shadow: none !important;
+        background: white !important;
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    .transaction-item {
+        border: 1px solid #ddd !important;
+        background: white !important;
+        box-shadow: none !important;
+    }
+
+    .report-content {
+        padding: 20px;
+        background: white !important;
+    }
+
+    /* Tabelas e dados */
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    table th,
+    table td {
+        border: 1px solid #ddd !important;
+        padding: 8px !important;
+    }
+
+    table th {
+        background: #f5f5f5 !important;
+        color: black !important;
+    }
+
+    /* Cores de status em preto e branco */
+    .positive {
+        color: black !important;
+        font-weight: bold !important;
+    }
+
+    .negative {
+        color: black !important;
+        font-weight: bold !important;
+        text-decoration: underline !important;
+    }
+
+    .tx-amount.positive,
+    .tx-amount.negative {
+        color: black !important;
+    }
+
+    /* Forçar quebra de página onde necessário */
+    .page-break {
+        page-break-before: always;
+        break-before: page;
+    }
+
+    /* Evitar quebras dentro de cards importantes */
+    .goal-card,
+    .credit-card-ui,
+    .investment-card,
+    .bank-card {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    /* Gráficos e imagens */
+    canvas {
+        max-width: 100% !important;
+        height: auto !important;
+    }
+
+    img {
+        max-width: 100% !important;
+        height: auto !important;
+    }
+
+    /* Cabeçalho de impressão */
+    .print-header {
+        display: block !important;
+        text-align: center;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #333;
+    }
+
+    .print-header h1 {
+        font-size: 1.5rem;
+        margin: 0;
+    }
+
+    .print-header p {
+        margin: 4px 0;
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    /* Rodapé de impressão */
+    .print-footer {
+        display: block !important;
+        text-align: center;
+        margin-top: 30px;
+        padding-top: 10px;
+        border-top: 1px solid #ddd;
+        font-size: 0.8rem;
+        color: #999;
+    }
+
+    /* Ajustes para o relatório de cartões */
+    .credit-card-ui {
+        height: auto !important;
+        min-height: 150px;
+        padding: 16px !important;
+        background: #f9f9f9 !important;
+        color: black !important;
+    }
+
+    .credit-card-ui .cc-bank,
+    .credit-card-ui .cc-name,
+    .credit-card-ui .cc-limit,
+    .credit-card-ui .cc-dates {
+        color: black !important;
+    }
+
+    .credit-card-ui .cc-chip {
+        background: #ddd !important;
+    }
+
+    .credit-card-ui .cc-actions {
+        display: none !important;
+    }
+
+    /* Estilos específicos para o relatório de cartões em impressão */
+    #page-relatorios .card {
+        border: 1px solid #ddd !important;
+    }
+
+    #page-relatorios .section-header {
+        margin-bottom: 16px !important;
+    }
+
+    #page-relatorios .section-header h3 {
+        color: black !important;
+    }
+
+    /* Esconder o card de opções do relatório */
+    #page-relatorios aside.card {
+        display: none !important;
+    }
+
+    /* Mostrar apenas o preview do relatório */
+    #page-relatorios .card:last-child {
+        grid-column: 1 / -1 !important;
+        border: none !important;
+        padding: 0 !important;
+    }
 }
