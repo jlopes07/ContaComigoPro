@@ -34,6 +34,8 @@
  *  25. Utilitários Adicionais          — .card-invoice-info, .icon-option
  *  26. Estilos de Impressão            — @media print
  *  27. Estilos do Modal de Contribuição — .contribution-option
+ *  28. Estilos do Modo em Lote         — .bulk-row, #bulk-rows-container
+ *  29. Estilos de Navegação de Meses   — .month-navigation, #cc-filter-month
  *
  * Tipografia: 'Outfit' do Google Fonts (importada no index.html)
  * Compatibilidade: Chrome, Firefox, Safari, Edge (versões modernas)
@@ -1866,7 +1868,11 @@ nav li.active a {
     box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
 }
 
-/* Estilos para navegação de meses do cartão */
+/* =============================================================================
+   SEÇÃO 28 — ESTILOS DE NAVEGAÇÃO DE MESES DO CARTÃO
+   =============================================================================
+   Estilos para a navegação entre meses na fatura do cartão.
+*/
 #cc-filter-month {
     font-weight: 600;
     text-align: center;
@@ -1919,7 +1925,7 @@ nav li.active a {
     border: 1px solid var(--border);
 }
 
-/* Responsivo */
+/* Responsivo da navegação */
 @media (max-width: 768px) {
     .month-navigation {
         width: 100%;
@@ -1935,6 +1941,261 @@ nav li.active a {
     .nav-month-btn {
         padding: 4px 6px;
         font-size: 0.9rem;
+    }
+}
+
+/* =============================================================================
+   SEÇÃO 29 — ESTILOS DO MODO EM LOTE
+   =============================================================================
+   Estilos para o modo de transações em lote no modal.
+*/
+
+/* Container do modo em lote */
+#bulk-rows-container {
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 4px;
+    margin-top: 12px;
+}
+
+/* Scrollbar do container */
+#bulk-rows-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+#bulk-rows-container::-webkit-scrollbar-track {
+    background: var(--bg-body);
+    border-radius: 3px;
+}
+
+#bulk-rows-container::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 3px;
+}
+
+#bulk-rows-container::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-hover);
+}
+
+#bulk-rows-container {
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) var(--bg-body);
+}
+
+/* Estilo da linha do lote - Layout em Grid */
+.bulk-row {
+    display: grid;
+    grid-template-columns: 100px 1fr 120px 130px 1fr 1.2fr 40px;
+    gap: 8px;
+    align-items: center;
+    background: var(--bg-body);
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    margin-bottom: 8px;
+    transition: all 0.2s ease;
+}
+
+.bulk-row:hover {
+    border-color: var(--primary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.bulk-row.error {
+    border-color: var(--danger) !important;
+    border-width: 2px !important;
+    background-color: var(--danger-bg) !important;
+}
+
+/* Campos da linha do lote */
+.bulk-row .form-input {
+    width: 100%;
+    padding: 6px 8px;
+    border-radius: 6px;
+    background: var(--bg-main);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+}
+
+.bulk-row .form-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+}
+
+.bulk-row .bulk-row-amount {
+    text-align: right;
+}
+
+.bulk-row .bulk-row-date {
+    cursor: pointer;
+}
+
+.bulk-row .bulk-row-date::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.6;
+}
+
+.bulk-row .bulk-row-date::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+}
+
+/* Botão de remover da linha - Substitui a lixeira por um X */
+.bulk-row .btn-remove-row {
+    color: var(--text-muted);
+    padding: 4px;
+    font-size: 1rem;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+}
+
+.bulk-row .btn-remove-row:hover {
+    color: var(--danger);
+    background: var(--danger-bg);
+}
+
+.bulk-row .btn-remove-row:active {
+    transform: scale(0.9);
+}
+
+/* Botão de adicionar linha */
+#btn-add-bulk-row {
+    border-style: dashed;
+    justify-content: center;
+    padding: 12px;
+    transition: all 0.2s ease;
+    width: 100%;
+    margin-top: 12px;
+}
+
+#btn-add-bulk-row:hover {
+    border-color: var(--primary);
+    background-color: rgba(37, 99, 235, 0.05);
+}
+
+/* Container de controle de data do lote */
+.bulk-date-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.bulk-date-controls .form-input {
+    flex: 1;
+    min-width: 150px;
+}
+
+.bulk-date-controls .btn {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+}
+
+/* =============================================================================
+   RESPONSIVO PARA MODO EM LOTE
+   =============================================================================
+*/
+@media (max-width: 1024px) {
+    .bulk-row {
+        grid-template-columns: 90px 1fr 100px 120px 1fr 1fr 35px;
+        gap: 6px;
+        padding: 6px 10px;
+    }
+
+    .bulk-row .form-input {
+        font-size: 0.8rem;
+        padding: 4px 6px;
+    }
+}
+
+@media (max-width: 768px) {
+    .bulk-row {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch !important;
+        gap: 6px !important;
+        padding: 10px;
+        position: relative;
+    }
+
+    .bulk-row select,
+    .bulk-row input {
+        width: 100% !important;
+        min-width: unset !important;
+    }
+
+    .bulk-row .bulk-row-date {
+        width: 100% !important;
+    }
+
+    .bulk-row .btn-remove-row {
+        width: 100%;
+        padding: 6px;
+        font-size: 0.85rem;
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        margin-top: 4px;
+        justify-content: center;
+    }
+
+    .bulk-row .btn-remove-row i {
+        margin-right: 4px;
+    }
+
+    .bulk-row .btn-remove-row:hover {
+        background: var(--danger-bg);
+        border-color: var(--danger);
+    }
+
+    #bulk-date {
+        width: 100% !important;
+    }
+
+    .bulk-date-controls {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .bulk-date-controls .form-input {
+        width: 100% !important;
+        min-width: unset;
+    }
+
+    .bulk-date-controls .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .form-group-half>div {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .form-group-half>div button {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .bulk-row {
+        gap: 4px;
+        padding: 8px;
+    }
+
+    .bulk-row .form-input {
+        font-size: 0.75rem;
+        padding: 4px 6px;
     }
 }
 
