@@ -324,7 +324,7 @@
                                 personalizadas</p>
                         </div>
                         <div class="cards-grid" id="categories-list"
-                            style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;">
+                            style="display: grid; grid-template-columns: repeat; gap: 16px;">
                         </div>
                     </section>
                 </div>
@@ -901,10 +901,11 @@
     <div class="modal-overlay" id="category-modal">
         <div class="modal">
             <div class="modal-header">
-                <h2>Nova Categoria</h2>
+                <h2 id="category-modal-title">Nova Categoria</h2>
                 <button class="close-modal" id="close-category-modal"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <form id="form-category">
+                <input type="hidden" id="category-id">
                 <div class="form-group">
                     <label for="category-name">Nome da Categoria</label>
                     <input type="text" id="category-name" placeholder="Ex: Viagem, Presentes, Estudos" required>
@@ -919,8 +920,9 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" id="btn-cancel-category">Cancelar</button>
-                    <button type="submit" class="btn btn-primary" style="background: #8b5cf6"><i
-                            class="fa-solid fa-save"></i> Salvar Categoria</button>
+                    <button type="submit" class="btn btn-primary" id="btn-save-category" style="background: #8b5cf6">
+                        <i class="fa-solid fa-save"></i> <span id="category-submit-text">Salvar Categoria</span>
+                    </button>
                 </div>
             </form>
         </div>
