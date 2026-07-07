@@ -1326,6 +1326,87 @@
         </div>
     </div>
 
+    <!-- Modal para Aporte em Metas -->
+    <div class="modal-overlay" id="goal-contribution-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Adicionar Aporte à Meta</h2>
+                <button class="close-modal" id="close-goal-contribution-modal"><i
+                        class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="form-goal-contribution">
+                <div class="form-group">
+                    <label for="goal-contribution-amount">Valor do Aporte</label>
+                    <div class="input-icon">
+                        <span>R$</span>
+                        <input type="number" id="goal-contribution-amount" step="0.01" min="0.01" placeholder="0,00"
+                            required>
+                    </div>
+                </div>
+
+                <!-- Opções lado a lado -->
+                <div class="form-group">
+                    <label>Origem do Valor</label>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px;">
+                        <!-- Opção 1 -->
+                        <label
+                            style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; transition: all 0.2s; background: var(--bg-body); text-align: center;"
+                            id="contribution-option-source">
+                            <input type="radio" name="contribution-source" value="source" checked>
+                            <i class="fa-solid fa-arrow-right-arrow-left"
+                                style="font-size: 1.5rem; color: var(--primary);"></i>
+                            <div>
+                                <span style="font-weight: 500; display: block;">Banco ou Cartão</span>
+                                <p style="margin: 0; font-size: 0.75rem; color: var(--text-muted);">Debitar da conta</p>
+                            </div>
+                        </label>
+
+                        <!-- Opção 2 -->
+                        <label
+                            style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; transition: all 0.2s; background: var(--bg-body); text-align: center;"
+                            id="contribution-option-none">
+                            <input type="radio" name="contribution-source" value="none">
+                            <i class="fa-solid fa-circle-plus" style="font-size: 1.5rem; color: var(--success);"></i>
+                            <div>
+                                <span style="font-weight: 500; display: block;">Não alterar</span>
+                                <p style="margin: 0; font-size: 0.75rem; color: var(--text-muted);">Apenas adicionar</p>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Select de Banco/Cartão -->
+                <div class="form-group" id="contribution-source-select-container" style="display: block;">
+                    <label for="contribution-source-select">Selecione a conta ou cartão de origem</label>
+                    <select id="contribution-source-select" class="form-input" style="width: 100%; padding: 10px 12px;">
+                        <option value="" disabled selected>Selecione uma conta ou cartão...</option>
+                        <!-- Populado por JS -->
+                    </select>
+                </div>
+
+                <div class="form-group" id="contribution-category-container" style="display: block;">
+                    <label for="contribution-category">Categoria da transação</label>
+                    <select id="contribution-category" class="form-input" style="width: 100%; padding: 10px 12px;">
+                        <option value="Investimentos">Investimentos</option>
+                        <option value="Metas">Metas</option>
+                        <option value="Outros">Outros</option>
+                    </select>
+                </div>
+
+                <input type="hidden" id="contribution-goal-id">
+                <input type="hidden" id="contribution-goal-current">
+                <input type="hidden" id="contribution-goal-max">
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="btn-cancel-contribution">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" style="background: var(--success);">
+                        <i class="fa-solid fa-hand-holding-dollar"></i> Adicionar Aporte
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Bibliotecas do Firebase Compat -->
     <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-auth-compat.js"></script>
