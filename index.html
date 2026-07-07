@@ -161,7 +161,7 @@
                                 </div>
                                 <div class="amount" id="total-balance" style="font-size: 2.5rem;">R$ 0,00</div>
 
-                                <!-- Nova seção: Total da Fatura do Cartão -->
+                                <!-- Seção: Total da Fatura do Cartão -->
                                 <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);">
                                     <div style="display: flex; justify-content: space-between; align-items: center;">
                                         <div>
@@ -182,12 +182,31 @@
                             </div>
                         </section>
 
-                        <!-- Gráfico de Pizza -->
+                        <!-- Gráfico de Pizza com Filtro -->
                         <section class="transactions-section" style="margin-bottom: 0;">
                             <div class="section-header">
-                                <h3>Distribuição de Despesas por Categoria</h3>
+                                <h3>Distribuição de Despesas</h3>
                             </div>
-                            <div style="position: relative; max-width: 300px; margin: 0 auto;">
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <span style="font-size: 0.8rem; color: var(--text-muted);">Período:</span>
+                                <select id="chart-period" onchange="generateCategoryChart()"
+                                    style="padding: 4px 8px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg-body); color: var(--text-main); font-size: 0.8rem;">
+                                    <option value="7">Últimos 7 dias</option>
+                                    <option value="15">Últimos 15 dias</option>
+                                    <option value="30" selected>Últimos 30 dias</option>
+                                    <option value="60">Últimos 60 dias</option>
+                                    <option value="90">Últimos 90 dias</option>
+                                    <option value="all">Todo o período</option>
+                                </select>
+                                <input type="date" id="chart-date-start" onchange="generateCategoryChart()"
+                                    style="padding: 4px 8px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg-body); color: var(--text-main); font-size: 0.8rem; width: 130px;"
+                                    title="Data Inicial">
+                                <span style="font-size: 0.8rem; color: var(--text-muted);">até</span>
+                                <input type="date" id="chart-date-end" onchange="generateCategoryChart()"
+                                    style="padding: 4px 8px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg-body); color: var(--text-main); font-size: 0.8rem; width: 130px;"
+                                    title="Data Final">
+                            </div>
+                            <div style="position: relative; max-width: 300px; margin: 1rem auto;">
                                 <canvas id="category-chart"></canvas>
                             </div>
                             <div id="chart-legend"
