@@ -1866,6 +1866,78 @@ nav li.active a {
     box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
 }
 
+/* Estilos para navegação de meses do cartão */
+#cc-filter-month {
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+#cc-filter-month:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+}
+
+/* Botões de navegação com hover */
+.nav-month-btn {
+    transition: all 0.2s;
+    border-radius: 4px;
+    padding: 4px 8px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--text-muted);
+}
+
+.nav-month-btn:hover {
+    background-color: var(--hover-bg);
+    color: var(--text-main);
+}
+
+.nav-month-btn:active {
+    transform: scale(0.9);
+}
+
+.nav-month-btn.reset-btn {
+    color: var(--primary);
+}
+
+.nav-month-btn.reset-btn:hover {
+    background-color: rgba(37, 99, 235, 0.1);
+}
+
+/* Container de navegação */
+.month-navigation {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-body);
+    padding: 4px 8px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .month-navigation {
+        width: 100%;
+        justify-content: center;
+    }
+
+    #cc-filter-month {
+        width: 100px !important;
+        font-size: 0.85rem;
+        padding: 2px 4px;
+    }
+
+    .nav-month-btn {
+        padding: 4px 6px;
+        font-size: 0.9rem;
+    }
+}
+
 /* =============================================================================
    FIM DO ARQUIVO
    =============================================================================
