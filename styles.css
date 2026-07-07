@@ -2101,6 +2101,48 @@ nav li.active a {
     font-size: 0.85rem;
 }
 
+/* Estilos para o resumo do extrato bancário */
+.bank-extract-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+    padding: 16px;
+    background: var(--bg-body);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+
+.bank-extract-summary .summary-item {
+    text-align: center;
+}
+
+.bank-extract-summary .summary-item .label {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.bank-extract-summary .summary-item .value {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.bank-extract-summary .summary-item .value.positive {
+    color: var(--success);
+}
+
+.bank-extract-summary .summary-item .value.negative {
+    color: var(--danger);
+}
+
+.bank-extract-summary .summary-item.divider {
+    border-left: 1px solid var(--border);
+    padding-left: 12px;
+}
+
 /* =============================================================================
    RESPONSIVO PARA MODO EM LOTE
    =============================================================================
@@ -2185,6 +2227,20 @@ nav li.active a {
         width: 100%;
         justify-content: center;
     }
+
+    .bank-extract-summary {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        padding: 12px;
+    }
+
+    .bank-extract-summary .summary-item.divider {
+        border-left: none;
+        padding-left: 0;
+        border-top: 1px solid var(--border);
+        padding-top: 8px;
+        grid-column: 1 / -1;
+    }
 }
 
 @media (max-width: 480px) {
@@ -2198,6 +2254,8 @@ nav li.active a {
         padding: 4px 6px;
     }
 }
+
+
 
 /* =============================================================================
    FIM DO ARQUIVO
