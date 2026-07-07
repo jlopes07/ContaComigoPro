@@ -145,47 +145,31 @@
             <!-- CONTAINER DE TELAS (SPA) -->
             <div id="pages-container">
 
-                <!-- ================== PAGE: DASHBOARD ================== -->
+                <!-- Dashboard Simplificado -->
                 <div class="page-section active" id="page-dashboard">
-                    <!-- Cards Summary -->
-                    <section class="summary-cards">
+                    <!-- Apenas o card de Saldo -->
+                    <section class="summary-cards"
+                        style="grid-template-columns: 1fr; max-width: 400px; margin: 0 auto 40px;">
                         <div class="card balance-card">
                             <div class="card-header">
-                                <h3>Saldo Atual</h3>
+                                <h3>Saldo Total</h3>
                                 <i class="fa-solid fa-wallet"></i>
                             </div>
                             <div class="amount" id="total-balance">R$ 0,00</div>
                         </div>
-
-                        <div class="card income-card">
-                            <div class="card-header">
-                                <h3>Recebido</h3>
-                                <i class="fa-solid fa-arrow-up"></i>
-                            </div>
-                            <div class="amount" id="total-income">R$ 0,00</div>
-                        </div>
-
-                        <div class="card expense-card">
-                            <div class="card-header">
-                                <h3>Gasto</h3>
-                                <i class="fa-solid fa-arrow-down"></i>
-                            </div>
-                            <div class="amount" id="total-expense">R$ 0,00</div>
-                        </div>
                     </section>
 
-                    <!-- Resumo Rápido Transações -->
+                    <!-- Lista de Transações (mantenha os IDs) -->
                     <section class="transactions-section">
                         <div class="section-header">
                             <h3>Últimas Transações</h3>
-                            <!-- Este botão simulará o clique no menu lateral -->
                             <a href="#" class="view-all"
                                 onclick="document.querySelector('[data-page=page-transacoes]').click()">Ver todo o
                                 histórico</a>
                         </div>
 
                         <div class="transactions-list" id="transaction-list-recent">
-                            <!-- Transactions dinâmicas (limite ~5) -->
+                            <!-- O JavaScript preenche aqui -->
                         </div>
                     </section>
                 </div>
@@ -450,7 +434,8 @@
                                     style="display: flex; align-items: center; padding: 16px 24px; border-bottom: 1px solid var(--border); cursor: pointer; transition: 0.2s;">
                                     <div class="settings-icon"
                                         style="width: 40px; height: 40px; border-radius: 50%; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--primary); margin-right: 16px;">
-                                        <i class="fa-solid fa-moon"></i></div>
+                                        <i class="fa-solid fa-moon"></i>
+                                    </div>
                                     <div class="settings-content" style="flex: 1;">
                                         <h4 style="margin: 0; font-size: 1rem;">Modo Escuro</h4>
                                         <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">Alternar
@@ -467,7 +452,8 @@
                                     style="display: flex; align-items: center; padding: 16px 24px; border-bottom: 1px solid var(--border); cursor: pointer; transition: 0.2s;">
                                     <div class="settings-icon"
                                         style="width: 40px; height: 40px; border-radius: 50%; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--primary); margin-right: 16px;">
-                                        <i class="fa-solid fa-user"></i></div>
+                                        <i class="fa-solid fa-user"></i>
+                                    </div>
                                     <div class="settings-content" style="flex: 1;">
                                         <h4 style="margin: 0; font-size: 1rem;">Dados Pessoais</h4>
                                         <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">Nome,
@@ -479,7 +465,8 @@
                                     style="display: flex; align-items: center; padding: 16px 24px; border-bottom: 1px solid var(--border); cursor: pointer; transition: 0.2s;">
                                     <div class="settings-icon"
                                         style="width: 40px; height: 40px; border-radius: 50%; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--primary); margin-right: 16px;">
-                                        <i class="fa-solid fa-shield-halved"></i></div>
+                                        <i class="fa-solid fa-shield-halved"></i>
+                                    </div>
                                     <div class="settings-content" style="flex: 1;">
                                         <h4 style="margin: 0; font-size: 1rem;">Segurança e Acesso</h4>
                                         <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">Alterar
@@ -491,7 +478,8 @@
                                     style="display: flex; align-items: center; padding: 16px 24px; border-bottom: 1px solid var(--border); cursor: pointer; transition: 0.2s;">
                                     <div class="settings-icon"
                                         style="width: 40px; height: 40px; border-radius: 50%; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--primary); margin-right: 16px;">
-                                        <i class="fa-solid fa-laptop"></i></div>
+                                        <i class="fa-solid fa-laptop"></i>
+                                    </div>
                                     <div class="settings-content" style="flex: 1;">
                                         <h4 style="margin: 0; font-size: 1rem;">Dispositivos Conectados</h4>
                                         <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">Gerencie as
@@ -503,7 +491,8 @@
                                     style="display: flex; align-items: center; padding: 16px 24px; border-bottom: 1px solid var(--border); cursor: pointer; transition: 0.2s;">
                                     <div class="settings-icon"
                                         style="width: 40px; height: 40px; border-radius: 50%; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--primary); margin-right: 16px;">
-                                        <i class="fa-solid fa-bell"></i></div>
+                                        <i class="fa-solid fa-bell"></i>
+                                    </div>
                                     <div class="settings-content" style="flex: 1;">
                                         <h4 style="margin: 0; font-size: 1rem;">Notificações</h4>
                                         <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">Lembretes de
@@ -515,7 +504,8 @@
                                     style="display: flex; align-items: center; padding: 16px 24px; border-bottom: 1px solid var(--border); cursor: pointer; transition: 0.2s;">
                                     <div class="settings-icon"
                                         style="width: 40px; height: 40px; border-radius: 50%; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--primary); margin-right: 16px;">
-                                        <i class="fa-solid fa-circle-info"></i></div>
+                                        <i class="fa-solid fa-circle-info"></i>
+                                    </div>
                                     <div class="settings-content" style="flex: 1;">
                                         <h4 style="margin: 0; font-size: 1rem;">Reportar Problema</h4>
                                         <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">Encontrou um
@@ -527,7 +517,8 @@
                                     style="display: flex; align-items: center; padding: 16px 24px; cursor: pointer; transition: 0.2s; background: var(--danger-bg, rgba(239, 68, 68, 0.05));">
                                     <div class="settings-icon"
                                         style="width: 40px; height: 40px; border-radius: 50%; background: transparent; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--danger); margin-right: 16px;">
-                                        <i class="fa-solid fa-triangle-exclamation"></i></div>
+                                        <i class="fa-solid fa-triangle-exclamation"></i>
+                                    </div>
                                     <div class="settings-content" style="flex: 1;">
                                         <h4 style="margin: 0; font-size: 1rem; color: var(--danger);">Encerrar Conta
                                         </h4>
