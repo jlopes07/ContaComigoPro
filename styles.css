@@ -34,8 +34,9 @@
  *  25. Utilitários Adicionais          — .card-invoice-info, .icon-option
  *  26. Estilos de Impressão            — @media print
  *  27. Estilos do Modal de Contribuição — .contribution-option
- *  28. Estilos do Modo em Lote         — .bulk-row, #bulk-rows-container
- *  29. Estilos de Navegação de Meses   — .month-navigation, #cc-filter-month
+ *  28. Estilos de Navegação de Meses   — .month-navigation, #cc-filter-month
+ *  29. Estilos do Modo em Lote         — .bulk-row, #bulk-rows-container
+ *  30. Estilos do Extrato Bancário     — .bank-extract-summary
  *
  * Tipografia: 'Outfit' do Google Fonts (importada no index.html)
  * Compatibilidade: Chrome, Firefox, Safari, Edge (versões modernas)
@@ -45,18 +46,9 @@
 /* =============================================================================
    SEÇÃO 1 — DESIGN TOKENS (Variáveis CSS)
    =============================================================================
-   Todas as cores, sombras e superfícies são definidas aqui como variáveis.
-   Para adicionar um novo tema, basta criar outro seletor com os mesmos
-   nomes de variável redefinidos.
-
-   Paleta de cores (semântica):
-     --primary     → Azul de destaque para ações e links
-     --success     → Verde para receitas e confirmações
-     --danger      → Vermelho para despesas e erros
-     --warning     → Laranja/âmbar para alertas
 */
 :root {
-    /* Cores semânticas — usadas em todo o app */
+    /* Cores semânticas */
     --primary: #2563eb;
     --primary-hover: #1d4ed8;
     --success: #059669;
@@ -65,7 +57,7 @@
     --danger-bg: rgba(220, 38, 38, 0.1);
     --warning: #d97706;
 
-    /* Tema Claro (padrão) — superfícies e texto */
+    /* Tema Claro */
     --bg-body: #f1f5f9;
     --bg-card: #ffffff;
     --bg-sidebar: #ffffff;
@@ -76,12 +68,12 @@
     --hover-bg: #e2e8f0;
 }
 
-/* Tema Escuro — sobrescreve apenas as variáveis de superfície e texto */
+/* Tema Escuro */
 [data-theme="dark"] {
     --bg-body: #020617;
     --bg-card: #0f172a;
     --bg-sidebar: #0f172a;
-    --text-main: #f8fafc;
+    --text-main: #777f8b;
     --text-muted: #94a3b8;
     --border: #1e293b;
     --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.1);
@@ -91,7 +83,6 @@
 /* =============================================================================
    SEÇÃO 2 — RESET & BASE
    =============================================================================
-   Reset mínimo para consistência cross-browser.
 */
 * {
     margin: 0;
@@ -117,14 +108,12 @@ button {
 /* =============================================================================
    SEÇÃO 3 — LAYOUT PRINCIPAL
    =============================================================================
-   Layout flexbox de duas colunas: sidebar (260px) + main-content (flex: 1)
 */
 .app-container {
     display: flex;
     height: 100vh;
 }
 
-/* Sidebar */
 .sidebar {
     width: 260px;
     background-color: var(--bg-sidebar);
@@ -210,7 +199,6 @@ nav li.active a {
     color: var(--primary);
 }
 
-/* User Card no rodapé da sidebar */
 .user-card {
     padding: 20px;
     border-top: 1px solid var(--border);
@@ -247,7 +235,7 @@ nav li.active a {
 }
 
 /* =============================================================================
-   SEÇÃO 5 — CONTEÚDO PRINCIPAL & HEADER DA PÁGINA
+   SEÇÃO 5 — CONTEÚDO PRINCIPAL & HEADER
    =============================================================================
 */
 .main-content {
@@ -537,10 +525,6 @@ nav li.active a {
     color: var(--danger);
 }
 
-.tx-details {
-    min-width: 0;
-}
-
 .tx-details .tx-title {
     font-weight: 600;
     margin-bottom: 4px;
@@ -797,7 +781,6 @@ nav li.active a {
     overflow-x: hidden;
 }
 
-/* Scrollbar styling para WebKit (Chrome, Safari, Edge) */
 .modal::-webkit-scrollbar {
     width: 6px;
 }
@@ -816,7 +799,6 @@ nav li.active a {
     background: var(--primary-hover);
 }
 
-/* Scrollbar styling para Firefox */
 .modal {
     scrollbar-width: thin;
     scrollbar-color: var(--primary) var(--bg-body);
@@ -1107,14 +1089,13 @@ nav li.active a {
 /* =============================================================================
    SEÇÃO 15 — BANCOS
    =============================================================================
-   Estilos para a página de bancos e contas.
 */
-.bank-card {
-    /* Estilos adicionais para cards de banco */
+.bank-card .bank-balance-value {
+    transition: color 0.3s ease;
 }
 
 .bank-transactions-inline {
-    /* Estilos para transações inline de bancos */
+    margin-top: 12px;
 }
 
 /* =============================================================================
@@ -1122,7 +1103,7 @@ nav li.active a {
    =============================================================================
 */
 .fixed-item {
-    /* Estilos para itens de transações fixas */
+    border-left: 3px solid var(--primary);
 }
 
 /* =============================================================================
@@ -1130,19 +1111,27 @@ nav li.active a {
    =============================================================================
 */
 .investment-card {
-    /* Estilos para cards de investimento */
+    position: relative;
 }
 
 /* =============================================================================
    SEÇÃO 18 — CATEGORIAS
    =============================================================================
 */
-.category-card {
-    /* Estilos para cards de categorias */
+.category-ui {
+    transition: all 0.2s ease;
+}
+
+.category-ui:hover {
+    border-color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .icon-picker {
-    /* Estilos para seletor de ícones */
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+    gap: 8px;
 }
 
 /* =============================================================================
@@ -1163,8 +1152,7 @@ nav li.active a {
     opacity: 0;
     visibility: hidden;
     transition: all 0.4s;
-    background-image:
-        radial-gradient(circle at top right, rgba(37, 99, 235, 0.1), transparent 400px),
+    background-image: radial-gradient(circle at top right, rgba(37, 99, 235, 0.1), transparent 400px),
         radial-gradient(circle at bottom left, rgba(5, 150, 105, 0.05), transparent 400px);
 }
 
@@ -1259,6 +1247,7 @@ nav li.active a {
 */
 .settings-item {
     transition: background-color 0.2s;
+    cursor: pointer;
 }
 
 .settings-item:hover {
@@ -1270,11 +1259,12 @@ nav li.active a {
 }
 
 .settings-card {
-    /* Estilos para o card de configurações */
+    overflow: hidden;
 }
 
 .settings-menu {
-    /* Estilos para o menu de configurações */
+    display: flex;
+    flex-direction: column;
 }
 
 /* =============================================================================
@@ -1282,7 +1272,9 @@ nav li.active a {
    =============================================================================
 */
 .installment-pending-item {
-    /* Estilos para itens de parcelas pendentes */
+    background: var(--bg-body);
+    border-radius: 4px;
+    padding: 8px;
 }
 
 /* =============================================================================
@@ -1290,11 +1282,17 @@ nav li.active a {
    =============================================================================
 */
 .report-layout {
-    /* Estilos para o layout de relatórios */
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 24px;
+    margin-top: 16px;
+    align-items: start;
 }
 
 .report-preview {
-    /* Estilos para a pré-visualização de relatórios */
+    min-height: 450px;
+    display: flex;
+    flex-direction: column;
 }
 
 /* =============================================================================
@@ -1405,7 +1403,6 @@ nav li.active a {
         padding: 24px;
     }
 
-    /* Ajustes para modais em mobile */
     .modal {
         max-height: 85vh;
         padding: 20px;
@@ -1442,6 +1439,10 @@ nav li.active a {
     .goals-grid {
         grid-template-columns: 1fr;
     }
+
+    .report-layout {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* =============================================================================
@@ -1464,7 +1465,6 @@ nav li.active a {
    SEÇÃO 25 — UTILITÁRIOS ADICIONAIS
    =============================================================================
 */
-/* Estilos para o card de fatura do cartão no dashboard */
 .card-invoice-info {
     margin-top: 16px;
     padding-top: 16px;
@@ -1495,7 +1495,6 @@ nav li.active a {
     text-align: right;
 }
 
-/* Estilos para o seletor de ícones de categorias */
 .icon-option {
     display: flex;
     justify-content: center;
@@ -1521,12 +1520,9 @@ nav li.active a {
 /* =============================================================================
    SEÇÃO 26 — ESTILOS DE IMPRESSÃO
    =============================================================================
-   Estilos específicos para impressão de relatórios e páginas.
-   Ocultam elementos de navegação e interface para uma impressão limpa.
 */
 @media print {
 
-    /* Ocultar elementos de navegação e interface */
     .sidebar,
     .top-header,
     .header-actions,
@@ -1554,7 +1550,6 @@ nav li.active a {
         display: none !important;
     }
 
-    /* Reset de cores e fundos para impressão */
     body {
         background-color: white !important;
         color: black !important;
@@ -1577,7 +1572,6 @@ nav li.active a {
         display: none !important;
     }
 
-    /* Estilos para cards e relatórios */
     .card {
         border: 1px solid #ccc !important;
         box-shadow: none !important;
@@ -1605,7 +1599,6 @@ nav li.active a {
         background: white !important;
     }
 
-    /* Tabelas e dados */
     table {
         border-collapse: collapse;
         width: 100%;
@@ -1622,7 +1615,6 @@ nav li.active a {
         color: black !important;
     }
 
-    /* Cores de status em preto e branco */
     .positive {
         color: black !important;
         font-weight: bold !important;
@@ -1639,13 +1631,11 @@ nav li.active a {
         color: black !important;
     }
 
-    /* Forçar quebra de página onde necessário */
     .page-break {
         page-break-before: always;
         break-before: page;
     }
 
-    /* Evitar quebras dentro de cards importantes */
     .goal-card,
     .credit-card-ui,
     .investment-card,
@@ -1654,7 +1644,6 @@ nav li.active a {
         page-break-inside: avoid;
     }
 
-    /* Gráficos e imagens */
     canvas {
         max-width: 100% !important;
         height: auto !important;
@@ -1665,7 +1654,6 @@ nav li.active a {
         height: auto !important;
     }
 
-    /* Cabeçalho de impressão */
     .print-header {
         display: block !important;
         text-align: center;
@@ -1685,7 +1673,6 @@ nav li.active a {
         font-size: 0.9rem;
     }
 
-    /* Rodapé de impressão */
     .print-footer {
         display: block !important;
         text-align: center;
@@ -1696,7 +1683,6 @@ nav li.active a {
         color: #999;
     }
 
-    /* Ajustes para o relatório de cartões */
     .credit-card-ui {
         height: auto !important;
         min-height: 150px;
@@ -1720,7 +1706,6 @@ nav li.active a {
         display: none !important;
     }
 
-    /* Estilos específicos para o relatório de cartões em impressão */
     #page-relatorios .card {
         border: 1px solid #ddd !important;
     }
@@ -1733,12 +1718,10 @@ nav li.active a {
         color: black !important;
     }
 
-    /* Esconder o card de opções do relatório */
     #page-relatorios aside.card {
         display: none !important;
     }
 
-    /* Mostrar apenas o preview do relatório */
     #page-relatorios .card:last-child {
         grid-column: 1 / -1 !important;
         border: none !important;
@@ -1749,9 +1732,7 @@ nav li.active a {
 /* =============================================================================
    SEÇÃO 27 — ESTILOS DO MODAL DE CONTRIBUIÇÃO
    =============================================================================
-   Estilos específicos para o modal de contribuição/adição de aportes.
 */
-/* Estilos para as opções de origem no modal de contribuição */
 #contribution-option-source,
 #contribution-option-none {
     transition: all 0.2s ease;
@@ -1771,14 +1752,12 @@ nav li.active a {
     border-width: 2px !important;
 }
 
-/* Destaque para o ícone quando selecionado */
 #contribution-option-source:has(input:checked) i,
 #contribution-option-none:has(input:checked) i {
     opacity: 1;
     transform: scale(1.1);
 }
 
-/* Estilos para os selects do modal de contribuição */
 #contribution-source-select {
     width: 100%;
     padding: 10px 12px;
@@ -1815,7 +1794,6 @@ nav li.active a {
     background-color: var(--hover-bg);
 }
 
-/* Estilos para o botão de salvar */
 #btn-save-category {
     transition: all 0.3s ease;
 }
@@ -1824,7 +1802,16 @@ nav li.active a {
     transform: scale(0.95);
 }
 
-/* Ajustes para o modal de contribuição em mobile */
+#goal-contribution-amount {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+#goal-contribution-amount:focus {
+    border-color: var(--success);
+    box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+}
+
 @media (max-width: 768px) {
 
     #contribution-option-source,
@@ -1857,21 +1844,9 @@ nav li.active a {
     }
 }
 
-/* Estilos para o campo de valor no modal de contribuição */
-#goal-contribution-amount {
-    font-size: 1.1rem;
-    font-weight: 600;
-}
-
-#goal-contribution-amount:focus {
-    border-color: var(--success);
-    box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
-}
-
 /* =============================================================================
    SEÇÃO 28 — ESTILOS DE NAVEGAÇÃO DE MESES DO CARTÃO
    =============================================================================
-   Estilos para a navegação entre meses na fatura do cartão.
 */
 #cc-filter-month {
     font-weight: 600;
@@ -1886,7 +1861,6 @@ nav li.active a {
     box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
 }
 
-/* Botões de navegação com hover */
 .nav-month-btn {
     transition: all 0.2s;
     border-radius: 4px;
@@ -1914,7 +1888,6 @@ nav li.active a {
     background-color: rgba(37, 99, 235, 0.1);
 }
 
-/* Container de navegação */
 .month-navigation {
     display: flex;
     align-items: center;
@@ -1925,7 +1898,6 @@ nav li.active a {
     border: 1px solid var(--border);
 }
 
-/* Responsivo da navegação */
 @media (max-width: 768px) {
     .month-navigation {
         width: 100%;
@@ -1947,10 +1919,7 @@ nav li.active a {
 /* =============================================================================
    SEÇÃO 29 — ESTILOS DO MODO EM LOTE
    =============================================================================
-   Estilos para o modo de transações em lote no modal.
 */
-
-/* Container do modo em lote */
 #bulk-rows-container {
     max-height: 400px;
     overflow-y: auto;
@@ -1958,7 +1927,6 @@ nav li.active a {
     margin-top: 12px;
 }
 
-/* Scrollbar do container */
 #bulk-rows-container::-webkit-scrollbar {
     width: 6px;
 }
@@ -1982,7 +1950,6 @@ nav li.active a {
     scrollbar-color: var(--primary) var(--bg-body);
 }
 
-/* Estilo da linha do lote - Layout em Grid */
 .bulk-row {
     display: grid;
     grid-template-columns: 100px 1fr 120px 130px 1fr 1.2fr 40px;
@@ -2007,7 +1974,6 @@ nav li.active a {
     background-color: var(--danger-bg) !important;
 }
 
-/* Campos da linha do lote */
 .bulk-row .form-input {
     width: 100%;
     padding: 6px 8px;
@@ -2042,7 +2008,6 @@ nav li.active a {
     opacity: 1;
 }
 
-/* Botão de remover da linha - Substitui a lixeira por um X */
 .bulk-row .btn-remove-row {
     color: var(--text-muted);
     padding: 4px;
@@ -2068,7 +2033,6 @@ nav li.active a {
     transform: scale(0.9);
 }
 
-/* Botão de adicionar linha */
 #btn-add-bulk-row {
     border-style: dashed;
     justify-content: center;
@@ -2083,7 +2047,6 @@ nav li.active a {
     background-color: rgba(37, 99, 235, 0.05);
 }
 
-/* Container de controle de data do lote */
 .bulk-date-controls {
     display: flex;
     gap: 12px;
@@ -2101,7 +2064,10 @@ nav li.active a {
     font-size: 0.85rem;
 }
 
-/* Estilos para o resumo do extrato bancário */
+/* =============================================================================
+   SEÇÃO 30 — ESTILOS DO EXTRATO BANCÁRIO
+   =============================================================================
+*/
 .bank-extract-summary {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -2144,7 +2110,7 @@ nav li.active a {
 }
 
 /* =============================================================================
-   RESPONSIVO PARA MODO EM LOTE
+   RESPONSIVO PARA MODO EM LOTE E EXTRATO
    =============================================================================
 */
 @media (max-width: 1024px) {
@@ -2255,7 +2221,328 @@ nav li.active a {
     }
 }
 
+/* =============================================================================
+   SEÇÃO 31 — ESTILOS DO DASHBOARD - SALDO E GRÁFICO
+   =============================================================================
+*/
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 24px;
+    margin-bottom: 40px;
+}
 
+.dashboard-saldo-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.dashboard-saldo-card .amount {
+    font-size: 2.5rem;
+}
+
+.dashboard-grafico-card {
+    margin-bottom: 0;
+}
+
+.dashboard-grafico-card .chart-container {
+    position: relative;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.dashboard-grafico-card .chart-legend {
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+}
+
+.dashboard-grafico-card .chart-legend .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    padding: 4px 8px;
+    background: var(--bg-body);
+    border-radius: 4px;
+    border: 1px solid var(--border);
+}
+
+.dashboard-grafico-card .chart-legend .legend-item .color-dot {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.dashboard-grafico-card .chart-legend .legend-item .value {
+    color: var(--text-muted);
+}
+
+.dashboard-grafico-card .chart-legend .legend-item .percentage {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+}
+
+.dashboard-grafico-card .chart-legend .legend-total {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    padding: 4px 8px;
+    background: var(--bg-body);
+    border-radius: 4px;
+    border: 1px solid var(--border);
+}
+
+.dashboard-grafico-card .chart-legend .legend-total .total-value {
+    font-weight: 700;
+    color: var(--danger);
+}
+
+@media (max-width: 768px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .dashboard-saldo-card .amount {
+        font-size: 1.8rem;
+    }
+
+    .dashboard-grafico-card .chart-container {
+        max-width: 200px;
+    }
+}
+
+/* =============================================================================
+   SEÇÃO 32 — ESTILOS DO EXTRATO DO CARTÃO (card-extract-inline)
+   =============================================================================
+*/
+.card-extract-inline {
+    grid-column: 1 / -1;
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    animation: fadeIn 0.3s ease;
+}
+
+.card-extract-inline .extract-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.card-extract-inline .extract-header h3 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.card-extract-inline .extract-header h3 .bank-name {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--text-muted);
+}
+
+.card-extract-inline .extract-header .close-btn {
+    font-size: 1.3rem;
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+}
+
+.card-extract-inline .extract-filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.card-extract-inline .extract-filters .filter-input {
+    background: var(--bg-main);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px;
+}
+
+.card-extract-inline .extract-filters .filter-input.search {
+    flex: 1;
+    min-width: 150px;
+}
+
+.card-extract-inline .extract-filters .filter-input.date {
+    width: 130px;
+}
+
+.card-extract-inline .extract-filters .month-navigation {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg-body);
+    padding: 4px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+
+.card-extract-inline .extract-filters .month-navigation .nav-btn {
+    font-size: 0.9rem;
+    padding: 4px 6px;
+    border-radius: 4px;
+}
+
+.card-extract-inline .extract-filters .month-navigation .month-input {
+    background: var(--bg-main);
+    border: none;
+    border-radius: 4px;
+    padding: 4px 8px;
+    width: 140px;
+    text-align: center;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.card-extract-inline .extract-filters .month-navigation .divider {
+    width: 1px;
+    height: 24px;
+    background: var(--border);
+    margin: 0 4px;
+}
+
+.card-extract-inline .extract-filters .month-navigation .reset-btn {
+    font-size: 0.8rem;
+    padding: 4px 6px;
+    border-radius: 4px;
+    color: var(--primary);
+}
+
+.card-extract-inline .extract-filters .action-btn {
+    padding: 6px 14px;
+    font-size: 0.85rem;
+}
+
+.card-extract-inline .extract-filters .action-btn.anticipate {
+    border-color: var(--success);
+    color: var(--success);
+    margin-left: auto;
+}
+
+.card-extract-inline .extract-filters .action-btn.pay {
+    display: none;
+}
+
+.card-extract-inline .extract-filters .action-btn.report {
+    background: var(--primary);
+    color: white;
+}
+
+.card-extract-inline .transactions-list-container {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.card-extract-inline .transactions-list-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.card-extract-inline .transactions-list-container::-webkit-scrollbar-track {
+    background: var(--bg-body);
+    border-radius: 3px;
+}
+
+.card-extract-inline .transactions-list-container::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 3px;
+}
+
+.card-extract-inline .transactions-list-container::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-hover);
+}
+
+.card-extract-inline .transactions-list-container {
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) var(--bg-body);
+}
+
+.card-extract-inline .extract-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.card-extract-inline .extract-footer .info-group {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    .card-extract-inline {
+        padding: 12px !important;
+    }
+
+    .card-extract-inline .extract-header {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 8px;
+    }
+
+    .card-extract-inline .extract-filters .month-navigation {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .card-extract-inline .extract-filters .month-navigation .month-input {
+        width: 100px !important;
+        font-size: 0.85rem;
+        padding: 2px 4px;
+    }
+
+    .card-extract-inline .extract-filters .month-navigation .nav-btn {
+        padding: 4px 6px !important;
+        font-size: 0.8rem !important;
+    }
+
+    .card-extract-inline .extract-filters .action-btn {
+        font-size: 0.75rem !important;
+        padding: 4px 10px !important;
+    }
+
+    .card-extract-inline .extract-filters .action-btn.anticipate {
+        margin-left: 0;
+    }
+
+    .card-extract-inline .transactions-list-container {
+        max-height: 300px !important;
+    }
+
+    .card-extract-inline .extract-footer {
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+    }
+
+    .card-extract-inline .extract-footer .info-group {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+}
 
 /* =============================================================================
    FIM DO ARQUIVO

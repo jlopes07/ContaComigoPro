@@ -149,45 +149,34 @@
 
                 <!-- Dashboard com Saldo e Gráfico lado a lado -->
                 <div class="page-section active" id="page-dashboard">
-                    <!-- Container com grid de 2 colunas -->
-                    <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 24px; margin-bottom: 40px;">
+                    <div class="dashboard-grid">
                         <!-- Card de Saldo Total com Fatura do Cartão -->
                         <section class="summary-cards" style="grid-template-columns: 1fr; margin-bottom: 0;">
-                            <div class="card balance-card"
-                                style="height: 100%; display: flex; flex-direction: column; justify-content: center;">
+                            <div class="card balance-card dashboard-saldo-card">
                                 <div class="card-header">
                                     <h3>Saldo Total</h3>
                                     <i class="fa-solid fa-wallet"></i>
                                 </div>
-                                <div class="amount" id="total-balance" style="font-size: 2.5rem;">R$ 0,00</div>
+                                <div class="amount" id="total-balance">R$ 0,00</div>
 
-                                <!-- Seção: Total da Fatura do Cartão -->
-                                <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);">
-                                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                                        <div>
-                                            <span style="font-size: 0.85rem; color: var(--text-muted);">💳 Fatura do
-                                                Cartão (mês atual)</span>
-                                        </div>
-                                        <div>
-                                            <span id="total-card-invoice"
-                                                style="font-weight: 700; font-size: 1.1rem; color: var(--danger);">R$
-                                                0,00</span>
-                                        </div>
+                                <div class="card-invoice-info">
+                                    <div class="invoice-row">
+                                        <span class="invoice-label">💳 Fatura do Cartão (mês atual)</span>
+                                        <span class="invoice-value" id="total-card-invoice">R$ 0,00</span>
                                     </div>
-                                    <div
-                                        style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px; font-size: 0.75rem; color: var(--text-muted);">
-                                        <span id="card-invoice-detail">Nenhum gasto no cartão este mês</span>
+                                    <div class="invoice-detail" id="card-invoice-detail">Nenhum gasto no cartão este mês
                                     </div>
                                 </div>
                             </div>
                         </section>
 
                         <!-- Gráfico de Pizza com Filtro -->
-                        <section class="transactions-section" style="margin-bottom: 0;">
+                        <section class="transactions-section dashboard-grafico-card">
                             <div class="section-header">
                                 <h3>Distribuição de Despesas</h3>
                             </div>
-                            <div style="display: flex; gap: 8px; align-items: center;">
+                            <div
+                                style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 12px;">
                                 <span style="font-size: 0.8rem; color: var(--text-muted);">Período:</span>
                                 <select id="chart-period" onchange="generateCategoryChart()"
                                     style="padding: 4px 8px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg-body); color: var(--text-main); font-size: 0.8rem;">
@@ -206,12 +195,11 @@
                                     style="padding: 4px 8px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg-body); color: var(--text-main); font-size: 0.8rem; width: 130px;"
                                     title="Data Final">
                             </div>
-                            <div style="position: relative; max-width: 300px; margin: 1rem auto;">
+                            <div class="chart-container">
                                 <canvas id="category-chart"></canvas>
                             </div>
-                            <div id="chart-legend"
-                                style="margin-top: 12px; display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;">
-                                <!-- Legenda será gerada pelo JavaScript -->
+                            <div class="chart-legend" id="chart-legend">
+                                <!-- Legenda gerada pelo JavaScript -->
                             </div>
                         </section>
                     </div>
@@ -230,7 +218,7 @@
                     </section>
                 </div>
 
-                <!-- ================== PAGE: TRANSAÇÕES ================== -->
+                <!-- PAGE: TRANSAÇÕES -->
                 <div class="page-section" id="page-transacoes">
                     <section class="transactions-section filter-container">
                         <div class="filters">
@@ -247,11 +235,11 @@
                             <input type="date" id="filter-date-end" class="form-input" title="Data Final">
                             <select id="filter-category" class="form-input" title="Filtrar por Categoria">
                                 <option value="all">Todas Categ.</option>
-                                <!-- JS Populated -->
                             </select>
                             <button id="btn-clear-filters" class="btn-icon" title="Limpar Filtros"
-                                style="padding: 0 16px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-body);"><i
-                                    class="fa-solid fa-eraser"></i></button>
+                                style="padding: 0 16px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-body);">
+                                <i class="fa-solid fa-eraser"></i>
+                            </button>
                             <button id="btn-show-pending-installments" class="btn btn-outline"
                                 style="height: 38px; padding: 0 16px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-body); color: var(--text-main); font-weight: 500; font-size: 0.9rem;"
                                 title="Compras Parceladas Pendentes">
@@ -261,7 +249,6 @@
                         </div>
                     </section>
 
-                    <!-- Resumo dos Filtros -->
                     <div class="summary-cards" style="gap: 16px; margin: 16px 0;">
                         <div class="card balance-card" style="padding: 16px;">
                             <div class="card-header" style="margin-bottom: 12px;">
@@ -283,13 +270,12 @@
                         </div>
                     </div>
 
-                    <!-- Lista Completa -->
                     <section class="transactions-section">
                         <div class="transactions-list" id="transaction-list-complete"></div>
                     </section>
                 </div>
 
-                <!-- ================== PAGE: FIXAS ================== -->
+                <!-- PAGE: FIXAS -->
                 <div class="page-section" id="page-fixas">
                     <section class="transactions-section">
                         <div class="section-header">
@@ -300,7 +286,7 @@
                     </section>
                 </div>
 
-                <!-- ================== PAGE: BANCOS ================== -->
+                <!-- PAGE: BANCOS -->
                 <div class="page-section" id="page-bancos">
                     <section class="transactions-section">
                         <div class="section-header">
@@ -312,7 +298,7 @@
                     </section>
                 </div>
 
-                <!-- ================== PAGE: CARTÕES ================== -->
+                <!-- PAGE: CARTÕES -->
                 <div class="page-section" id="page-cartoes">
                     <section class="transactions-section">
                         <div class="section-header">
@@ -323,7 +309,7 @@
                     </section>
                 </div>
 
-                <!-- ================== PAGE: METAS ================== -->
+                <!-- PAGE: METAS -->
                 <div class="page-section" id="page-metas">
                     <section class="transactions-section">
                         <div class="section-header">
@@ -334,7 +320,7 @@
                     </section>
                 </div>
 
-                <!-- ================== PAGE: CATEGORIAS ================== -->
+                <!-- PAGE: CATEGORIAS -->
                 <div class="page-section" id="page-categorias">
                     <section class="transactions-section">
                         <div class="section-header">
@@ -343,12 +329,12 @@
                                 personalizadas</p>
                         </div>
                         <div class="cards-grid" id="categories-list"
-                            style="display: grid; grid-template-columns: repeat; gap: 16px;">
+                            style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;">
                         </div>
                     </section>
                 </div>
 
-                <!-- ================== PAGE: INVESTIMENTOS ================== -->
+                <!-- PAGE: INVESTIMENTOS -->
                 <div class="page-section" id="page-investimentos">
                     <section class="summary-cards" style="margin-bottom: 24px;">
                         <div class="card balance-card">
@@ -358,7 +344,6 @@
                             </div>
                             <div class="amount" id="total-investments">R$ 0,00</div>
                         </div>
-
                         <div class="card income-card">
                             <div class="card-header">
                                 <h3>Rendimento Bruto Est.</h3>
@@ -366,7 +351,6 @@
                             </div>
                             <div class="amount" id="total-investments-yield">R$ 0,00</div>
                         </div>
-
                         <div class="card" style="background: var(--bg-secondary); border: 1px solid var(--border);">
                             <div class="card-header" style="color: var(--text-main);">
                                 <h3>Taxas Atuais (API)</h3>
@@ -378,7 +362,6 @@
                             </div>
                         </div>
                     </section>
-
                     <section class="transactions-section">
                         <div class="section-header">
                             <h3>Meus Investimentos</h3>
@@ -387,22 +370,18 @@
                         </div>
                         <div class="investments-grid" id="investments-list"
                             style="display: grid; grid-template-columns: 1fr; gap: 16px;">
-                            <!-- JS Renders Investments Here -->
                         </div>
                     </section>
                 </div>
 
-                <!-- ================== PAGE: RELATÓRIOS ================== -->
+                <!-- PAGE: RELATÓRIOS -->
                 <div class="page-section" id="page-relatorios">
-                    <div
-                        style="display: grid; grid-template-columns: 320px 1fr; gap: 24px; margin-top: 16px; align-items: start;">
-                        <!-- Coluna Lateral: Filtros e Emissão -->
+                    <div class="report-layout">
                         <aside class="card" style="padding: 20px; border: 1px solid var(--border);">
                             <h3
                                 style="margin-top: 0; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
                                 <i class="fa-solid fa-sliders" style="color: var(--primary);"></i> Opções de Emissão
                             </h3>
-
                             <div class="form-group" style="margin-bottom: 16px;">
                                 <label for="report-type"
                                     style="font-weight: 500; font-size: 0.9rem; color: var(--text-muted); display: block; margin-bottom: 6px;">Tipo
@@ -416,7 +395,6 @@
                                     <option value="credit-card">Relatório de Cartões</option>
                                 </select>
                             </div>
-
                             <div class="form-group" id="report-period-container" style="margin-bottom: 16px;">
                                 <label for="report-month"
                                     style="font-weight: 500; font-size: 0.9rem; color: var(--text-muted); display: block; margin-bottom: 6px;">Mês
@@ -424,7 +402,6 @@
                                 <input type="month" id="report-month" class="form-input"
                                     style="width: 100%; padding: 8px; border-radius: 6px; background: var(--bg-main); border: 1px solid var(--border); color: var(--text-main);">
                             </div>
-
                             <div class="form-group" id="report-bank-container"
                                 style="display: none; margin-bottom: 16px;">
                                 <label for="report-bank"
@@ -432,19 +409,14 @@
                                     Conta/Banco</label>
                                 <select id="report-bank" class="form-input"
                                     style="width: 100%; padding: 8px; border-radius: 6px; background: var(--bg-main); border: 1px solid var(--border); color: var(--text-main);">
-                                    <!-- JS Populated -->
                                 </select>
                             </div>
-
                             <button class="btn btn-primary w-100 mt-3" onclick="window.generateReport()"
                                 style="justify-content: center; width: 100%;">
                                 <i class="fa-solid fa-gears"></i> Gerar Relatório
                             </button>
                         </aside>
-
-                        <!-- Coluna Principal: Visualização -->
-                        <section class="card"
-                            style="padding: 24px; border: 1px solid var(--border); min-height: 450px; display: flex; flex-direction: column;">
+                        <section class="card report-preview">
                             <div
                                 style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 20px;">
                                 <h3 style="margin: 0; display: flex; align-items: center; gap: 8px;">
@@ -463,8 +435,6 @@
                                     </button>
                                 </div>
                             </div>
-
-                            <!-- Container do Conteúdo do Relatório -->
                             <div id="report-preview-content"
                                 style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; color: var(--text-muted);">
                                 <i class="fa-solid fa-chart-pie"
@@ -474,141 +444,140 @@
                             </div>
                         </section>
                     </div>
+                </div>
 
-                    <!-- ================== PAGE: CONFIGURAÇÕES ================== -->
-                    <div class="page-section" id="page-configuracoes">
-                        <div class="card settings-card"
-                            style="max-width: 600px; margin: 0 auto; padding: 0; overflow: hidden;">
-                            <div class="settings-header"
-                                style="padding: 24px; border-bottom: 1px solid var(--border); background: var(--bg-body);">
-                                <h3 style="margin: 0;"><i class="fa-solid fa-sliders"></i> Ajustes da Conta</h3>
-                                <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">Gerencie suas
-                                    preferências e segurança</p>
+                <!-- PAGE: CONFIGURAÇÕES -->
+                <div class="page-section" id="page-configuracoes">
+                    <div class="card settings-card"
+                        style="max-width: 600px; margin: 0 auto; padding: 0; overflow: hidden;">
+                        <div class="settings-header"
+                            style="padding: 24px; border-bottom: 1px solid var(--border); background: var(--bg-body);">
+                            <h3 style="margin: 0;"><i class="fa-solid fa-sliders"></i> Ajustes da Conta</h3>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">Gerencie suas
+                                preferências e segurança</p>
+                        </div>
+                        <div class="settings-menu">
+                            <div class="settings-item" id="theme-toggle-settings"
+                                style="display: flex; align-items: center; padding: 16px 24px; border-bottom: 1px solid var(--border); cursor: pointer; transition: 0.2s;">
+                                <div class="settings-icon"
+                                    style="width: 40px; height: 40px; border-radius: 50%; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--primary); margin-right: 16px;">
+                                    <i class="fa-solid fa-moon"></i>
+                                </div>
+                                <div class="settings-content" style="flex: 1;">
+                                    <h4 style="margin: 0; font-size: 1rem;">Modo Escuro</h4>
+                                    <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">Alternar entre
+                                        tema claro e escuro</p>
+                                </div>
+                                <div id="theme-toggle-track"
+                                    style="width: 44px; height: 24px; background: var(--border); border-radius: 12px; position: relative; transition: background 0.3s;">
+                                    <div id="theme-toggle-circle"
+                                        style="width: 20px; height: 20px; background: white; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: transform 0.3s; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">
+                                    </div>
+                                </div>
                             </div>
-                            <div class="settings-menu">
-                                <div class="settings-item" id="theme-toggle-settings"
-                                    style="display: flex; align-items: center; padding: 16px 24px; border-bottom: 1px solid var(--border); cursor: pointer; transition: 0.2s;">
-                                    <div class="settings-icon"
-                                        style="width: 40px; height: 40px; border-radius: 50%; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--primary); margin-right: 16px;">
-                                        <i class="fa-solid fa-moon"></i>
-                                    </div>
-                                    <div class="settings-content" style="flex: 1;">
-                                        <h4 style="margin: 0; font-size: 1rem;">Modo Escuro</h4>
-                                        <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">Alternar
-                                            entre tema claro e escuro</p>
-                                    </div>
-                                    <div id="theme-toggle-track"
-                                        style="width: 44px; height: 24px; background: var(--border); border-radius: 12px; position: relative; transition: background 0.3s;">
-                                        <div id="theme-toggle-circle"
-                                            style="width: 20px; height: 20px; background: white; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: transform 0.3s; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">
-                                        </div>
-                                    </div>
+                            <div class="settings-item" id="btn-menu-personal"
+                                style="display: flex; align-items: center; padding: 16px 24px; border-bottom: 1px solid var(--border); cursor: pointer; transition: 0.2s;">
+                                <div class="settings-icon"
+                                    style="width: 40px; height: 40px; border-radius: 50%; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--primary); margin-right: 16px;">
+                                    <i class="fa-solid fa-user"></i>
                                 </div>
-                                <div class="settings-item" id="btn-menu-personal"
-                                    style="display: flex; align-items: center; padding: 16px 24px; border-bottom: 1px solid var(--border); cursor: pointer; transition: 0.2s;">
-                                    <div class="settings-icon"
-                                        style="width: 40px; height: 40px; border-radius: 50%; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--primary); margin-right: 16px;">
-                                        <i class="fa-solid fa-user"></i>
-                                    </div>
-                                    <div class="settings-content" style="flex: 1;">
-                                        <h4 style="margin: 0; font-size: 1rem;">Dados Pessoais</h4>
-                                        <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">Nome,
-                                            e-mail, telefone e foto</p>
-                                    </div>
-                                    <i class="fa-solid fa-chevron-right" style="color: var(--text-muted);"></i>
+                                <div class="settings-content" style="flex: 1;">
+                                    <h4 style="margin: 0; font-size: 1rem;">Dados Pessoais</h4>
+                                    <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">Nome, e-mail,
+                                        telefone e foto</p>
                                 </div>
-                                <div class="settings-item" id="btn-menu-security"
-                                    style="display: flex; align-items: center; padding: 16px 24px; border-bottom: 1px solid var(--border); cursor: pointer; transition: 0.2s;">
-                                    <div class="settings-icon"
-                                        style="width: 40px; height: 40px; border-radius: 50%; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--primary); margin-right: 16px;">
-                                        <i class="fa-solid fa-shield-halved"></i>
-                                    </div>
-                                    <div class="settings-content" style="flex: 1;">
-                                        <h4 style="margin: 0; font-size: 1rem;">Segurança e Acesso</h4>
-                                        <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">Alterar
-                                            senha</p>
-                                    </div>
-                                    <i class="fa-solid fa-chevron-right" style="color: var(--text-muted);"></i>
+                                <i class="fa-solid fa-chevron-right" style="color: var(--text-muted);"></i>
+                            </div>
+                            <div class="settings-item" id="btn-menu-security"
+                                style="display: flex; align-items: center; padding: 16px 24px; border-bottom: 1px solid var(--border); cursor: pointer; transition: 0.2s;">
+                                <div class="settings-icon"
+                                    style="width: 40px; height: 40px; border-radius: 50%; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--primary); margin-right: 16px;">
+                                    <i class="fa-solid fa-shield-halved"></i>
                                 </div>
-                                <div class="settings-item" id="btn-menu-devices"
-                                    style="display: flex; align-items: center; padding: 16px 24px; border-bottom: 1px solid var(--border); cursor: pointer; transition: 0.2s;">
-                                    <div class="settings-icon"
-                                        style="width: 40px; height: 40px; border-radius: 50%; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--primary); margin-right: 16px;">
-                                        <i class="fa-solid fa-laptop"></i>
-                                    </div>
-                                    <div class="settings-content" style="flex: 1;">
-                                        <h4 style="margin: 0; font-size: 1rem;">Dispositivos Conectados</h4>
-                                        <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">Gerencie as
-                                            sessões ativas</p>
-                                    </div>
-                                    <i class="fa-solid fa-chevron-right" style="color: var(--text-muted);"></i>
+                                <div class="settings-content" style="flex: 1;">
+                                    <h4 style="margin: 0; font-size: 1rem;">Segurança e Acesso</h4>
+                                    <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">Alterar senha
+                                    </p>
                                 </div>
-                                <div class="settings-item" id="btn-menu-notifications"
-                                    style="display: flex; align-items: center; padding: 16px 24px; border-bottom: 1px solid var(--border); cursor: pointer; transition: 0.2s;">
-                                    <div class="settings-icon"
-                                        style="width: 40px; height: 40px; border-radius: 50%; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--primary); margin-right: 16px;">
-                                        <i class="fa-solid fa-bell"></i>
-                                    </div>
-                                    <div class="settings-content" style="flex: 1;">
-                                        <h4 style="margin: 0; font-size: 1rem;">Notificações</h4>
-                                        <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">Lembretes de
-                                            contas a pagar</p>
-                                    </div>
-                                    <i class="fa-solid fa-chevron-right" style="color: var(--text-muted);"></i>
+                                <i class="fa-solid fa-chevron-right" style="color: var(--text-muted);"></i>
+                            </div>
+                            <div class="settings-item" id="btn-menu-devices"
+                                style="display: flex; align-items: center; padding: 16px 24px; border-bottom: 1px solid var(--border); cursor: pointer; transition: 0.2s;">
+                                <div class="settings-icon"
+                                    style="width: 40px; height: 40px; border-radius: 50%; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--primary); margin-right: 16px;">
+                                    <i class="fa-solid fa-laptop"></i>
                                 </div>
-                                <div class="settings-item" id="btn-menu-report"
-                                    style="display: flex; align-items: center; padding: 16px 24px; border-bottom: 1px solid var(--border); cursor: pointer; transition: 0.2s;">
-                                    <div class="settings-icon"
-                                        style="width: 40px; height: 40px; border-radius: 50%; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--primary); margin-right: 16px;">
-                                        <i class="fa-solid fa-circle-info"></i>
-                                    </div>
-                                    <div class="settings-content" style="flex: 1;">
-                                        <h4 style="margin: 0; font-size: 1rem;">Reportar Problema</h4>
-                                        <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">Encontrou um
-                                            erro?</p>
-                                    </div>
-                                    <i class="fa-solid fa-chevron-right" style="color: var(--text-muted);"></i>
+                                <div class="settings-content" style="flex: 1;">
+                                    <h4 style="margin: 0; font-size: 1rem;">Dispositivos Conectados</h4>
+                                    <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">Gerencie as
+                                        sessões ativas</p>
                                 </div>
-                                <div class="settings-item" id="btn-menu-close-account"
-                                    style="display: flex; align-items: center; padding: 16px 24px; cursor: pointer; transition: 0.2s; background: var(--danger-bg, rgba(239, 68, 68, 0.05));">
-                                    <div class="settings-icon"
-                                        style="width: 40px; height: 40px; border-radius: 50%; background: transparent; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--danger); margin-right: 16px;">
-                                        <i class="fa-solid fa-triangle-exclamation"></i>
-                                    </div>
-                                    <div class="settings-content" style="flex: 1;">
-                                        <h4 style="margin: 0; font-size: 1rem; color: var(--danger);">Encerrar Conta
-                                        </h4>
-                                        <p style="margin: 0; font-size: 0.85rem; color: var(--danger); opacity: 0.8;">
-                                            Ação irreversível</p>
-                                    </div>
-                                    <i class="fa-solid fa-chevron-right" style="color: var(--danger);"></i>
+                                <i class="fa-solid fa-chevron-right" style="color: var(--text-muted);"></i>
+                            </div>
+                            <div class="settings-item" id="btn-menu-notifications"
+                                style="display: flex; align-items: center; padding: 16px 24px; border-bottom: 1px solid var(--border); cursor: pointer; transition: 0.2s;">
+                                <div class="settings-icon"
+                                    style="width: 40px; height: 40px; border-radius: 50%; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--primary); margin-right: 16px;">
+                                    <i class="fa-solid fa-bell"></i>
                                 </div>
+                                <div class="settings-content" style="flex: 1;">
+                                    <h4 style="margin: 0; font-size: 1rem;">Notificações</h4>
+                                    <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">Lembretes de
+                                        contas a pagar</p>
+                                </div>
+                                <i class="fa-solid fa-chevron-right" style="color: var(--text-muted);"></i>
+                            </div>
+                            <div class="settings-item" id="btn-menu-report"
+                                style="display: flex; align-items: center; padding: 16px 24px; border-bottom: 1px solid var(--border); cursor: pointer; transition: 0.2s;">
+                                <div class="settings-icon"
+                                    style="width: 40px; height: 40px; border-radius: 50%; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--primary); margin-right: 16px;">
+                                    <i class="fa-solid fa-circle-info"></i>
+                                </div>
+                                <div class="settings-content" style="flex: 1;">
+                                    <h4 style="margin: 0; font-size: 1rem;">Reportar Problema</h4>
+                                    <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted);">Encontrou um
+                                        erro?</p>
+                                </div>
+                                <i class="fa-solid fa-chevron-right" style="color: var(--text-muted);"></i>
+                            </div>
+                            <div class="settings-item" id="btn-menu-close-account"
+                                style="display: flex; align-items: center; padding: 16px 24px; cursor: pointer; transition: 0.2s; background: var(--danger-bg, rgba(239, 68, 68, 0.05));">
+                                <div class="settings-icon"
+                                    style="width: 40px; height: 40px; border-radius: 50%; background: transparent; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--danger); margin-right: 16px;">
+                                    <i class="fa-solid fa-triangle-exclamation"></i>
+                                </div>
+                                <div class="settings-content" style="flex: 1;">
+                                    <h4 style="margin: 0; font-size: 1rem; color: var(--danger);">Encerrar Conta</h4>
+                                    <p style="margin: 0; font-size: 0.85rem; color: var(--danger); opacity: 0.8;">Ação
+                                        irreversível</p>
+                                </div>
+                                <i class="fa-solid fa-chevron-right" style="color: var(--danger);"></i>
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
         </main>
     </div>
 
-    <!-- Modal for New Transaction -->
+    <!-- ==================== MODAIS ==================== -->
+
+    <!-- Modal Nova Transação -->
     <div class="modal-overlay" id="transaction-modal">
         <div class="modal" style="transition: max-width 0.3s ease;">
             <div class="modal-header">
                 <h2>Nova Transação</h2>
                 <button class="close-modal" id="close-modal"><i class="fa-solid fa-xmark"></i></button>
             </div>
-
-            <!-- Tabs de Seleção de Modo -->
             <div class="modal-tabs" id="tx-modal-tabs"
                 style="display: flex; gap: 12px; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
                 <button type="button" class="tab-btn active" id="tab-tx-single"
                     style="background: none; border: none; border-bottom: 2px solid var(--primary); padding: 6px 12px; color: var(--text-main); cursor: pointer; font-weight: 600; font-family: inherit; font-size: 0.95rem;">Individual</button>
                 <button type="button" class="tab-btn" id="tab-tx-bulk"
                     style="background: none; border: none; padding: 6px 12px; color: var(--text-muted); cursor: pointer; font-weight: 600; font-family: inherit; font-size: 0.95rem;">Em
-                    Lote (Várias)</button>
+                    Lote</button>
             </div>
-
             <form id="form-transaction">
-                <!-- Modo Individual -->
                 <div id="single-tx-container">
                     <div class="form-group">
                         <label>Tipo</label>
@@ -616,11 +585,9 @@
                             <input type="radio" id="type-income" name="type" value="income">
                             <label for="type-income" class="type-btn income-btn"><i class="fa-solid fa-arrow-up"></i>
                                 Receita</label>
-
                             <input type="radio" id="type-expense" name="type" value="expense" checked>
                             <label for="type-expense" class="type-btn expense-btn"><i
-                                    class="fa-solid fa-arrow-down"></i>
-                                Despesa</label>
+                                    class="fa-solid fa-arrow-down"></i> Despesa</label>
                         </div>
                     </div>
                     <div class="form-group">
@@ -640,17 +607,12 @@
                             <input type="date" id="date">
                         </div>
                     </div>
-
-                    <!-- Forms de Pagamento Avançados (Novo) -->
                     <div class="form-group row" style="margin-top: -8px;">
                         <div class="form-group-half w-100">
                             <label for="payment-method">Forma de Pagamento / Banco</label>
-                            <select id="payment-method">
-                                <!-- Povoado por JS -->
-                            </select>
+                            <select id="payment-method"></select>
                         </div>
                     </div>
-
                     <div class="form-group row" id="installments-container" style="display: none; margin-top: -8px;">
                         <div class="form-group-half w-100">
                             <label for="installments">Parcelas (Vezes)</label>
@@ -670,17 +632,13 @@
                             </select>
                         </div>
                     </div>
-
                     <div class="form-group">
                         <label for="category">Categoria</label>
                         <select id="category">
                             <option value="" disabled selected>Selecione</option>
-                            <!-- Povoado por JS -->
                         </select>
                     </div>
                 </div>
-
-                <!-- Modo Em Lote (Várias por dia) -->
                 <div id="bulk-tx-container" style="display: none;">
                     <div class="form-group row">
                         <div class="form-group-half" style="width: 100%;">
@@ -697,23 +655,17 @@
                                 </button>
                             </div>
                             <small style="color: var(--text-muted); display: block; margin-top: 4px;">
-                                <i class="fa-regular fa-circle-info"></i>
-                                Cada linha pode ter sua própria data. Use os botões acima para preencher em massa.
+                                <i class="fa-regular fa-circle-info"></i> Cada linha pode ter sua própria data.
                             </small>
                         </div>
                     </div>
-
                     <div id="bulk-rows-container"
-                        style="display: flex; flex-direction: column; gap: 8px; margin-top: 16px; max-height: 400px; overflow-y: auto; padding-right: 4px;">
-                        <!-- Linhas serão adicionadas dinamicamente -->
-                    </div>
-
+                        style="display: flex; flex-direction: column; gap: 8px; margin-top: 16px;"></div>
                     <button type="button" class="btn btn-outline" id="btn-add-bulk-row"
-                        style="border-style: dashed; justify-content: center; padding: 12px; width: 100%; margin-top: 12px; transition: all 0.2s ease;">
+                        style="border-style: dashed; justify-content: center; padding: 12px; width: 100%; margin-top: 12px;">
                         <i class="fa-solid fa-plus"></i> Adicionar Mais Uma Transação
                     </button>
                 </div>
-
                 <div class="modal-footer" style="margin-top: 24px;">
                     <button type="button" class="btn btn-secondary" id="btn-cancel">Cancelar</button>
                     <button type="submit" class="btn btn-primary">Salvar</button>
@@ -722,7 +674,7 @@
         </div>
     </div>
 
-    <!-- Modal for New Bank -->
+    <!-- Modal Novo Banco -->
     <div class="modal-overlay" id="bank-modal">
         <div class="modal">
             <div class="modal-header">
@@ -742,7 +694,7 @@
                         <input type="number" id="bank-balance" step="0.01" value="0.00" required>
                     </div>
                     <small style="color: var(--text-muted); display:block; margin-top: 4px;">Este saldo será a base para
-                        o cálculo do extrato desta conta.</small>
+                        o cálculo do extrato.</small>
                 </div>
                 <div class="form-group">
                     <label for="bank-color">Cor Principal</label>
@@ -757,7 +709,7 @@
         </div>
     </div>
 
-    <!-- Modal for New Goal -->
+    <!-- Modal Nova Meta -->
     <div class="modal-overlay" id="goal-modal">
         <div class="modal">
             <div class="modal-header">
@@ -798,7 +750,7 @@
         </div>
     </div>
 
-    <!-- Modal for New Fixed Transaction -->
+    <!-- Modal Nova Transação Fixa -->
     <div class="modal-overlay" id="fixed-transaction-modal">
         <div class="modal">
             <div class="modal-header">
@@ -812,7 +764,6 @@
                         <input type="radio" id="fixed-type-income" name="fixed-type" value="income" checked>
                         <label for="fixed-type-income" class="type-btn income-btn"><i class="fa-solid fa-arrow-up"></i>
                             Receita</label>
-
                         <input type="radio" id="fixed-type-expense" name="fixed-type" value="expense">
                         <label for="fixed-type-expense" class="type-btn expense-btn"><i
                                 class="fa-solid fa-arrow-down"></i> Despesa</label>
@@ -834,15 +785,12 @@
                         <label for="fixed-category">Categoria</label>
                         <select id="fixed-category" required>
                             <option value="" disabled selected>Selecione</option>
-                            <!-- Povoado por JS -->
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="fixed-payment-method">Forma de Pagamento / Banco</label>
-                    <select id="fixed-payment-method" required>
-                        <!-- Povoado por JS -->
-                    </select>
+                    <select id="fixed-payment-method" required></select>
                 </div>
                 <div class="form-group"
                     style="background-color: var(--hover-bg); padding: 16px; border-radius: 8px; border: 1px solid var(--border);">
@@ -854,8 +802,7 @@
                     </label>
                     <p
                         style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; margin-bottom: 12px; margin-left: 26px;">
-                        Se ativado, lançaremos essa transação na data certa para você. Se desativado, você poderá usar
-                        um botão para lançar manualmente quando quiser.
+                        Se ativado, lançaremos essa transação na data certa para você.
                     </p>
                     <div id="fixed-day-container"
                         style="margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border);">
@@ -873,7 +820,7 @@
         </div>
     </div>
 
-    <!-- Modal for New Credit Card -->
+    <!-- Modal Novo Cartão -->
     <div class="modal-overlay" id="card-modal">
         <div class="modal">
             <div class="modal-header">
@@ -920,7 +867,6 @@
                         <input type="number" id="card-due" min="1" max="31" placeholder="Ex: 12" required>
                     </div>
                 </div>
-
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" id="btn-cancel-card">Cancelar</button>
                     <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save"></i> Salvar
@@ -930,7 +876,7 @@
         </div>
     </div>
 
-    <!-- Modal for New Category -->
+    <!-- Modal Nova Categoria -->
     <div class="modal-overlay" id="category-modal">
         <div class="modal">
             <div class="modal-header">
@@ -945,10 +891,7 @@
                 </div>
                 <div class="form-group">
                     <label>Ícone</label>
-                    <div id="category-icons-grid"
-                        style="display: grid; grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); gap: 8px; margin-top: 8px;">
-                        <!-- JS renders icons here -->
-                    </div>
+                    <div id="category-icons-grid" class="icon-picker"></div>
                     <input type="hidden" id="category-icon" required>
                 </div>
                 <div class="modal-footer">
@@ -961,7 +904,7 @@
         </div>
     </div>
 
-    <!-- Modal for Card Payment -->
+    <!-- Modal Pagamento de Fatura -->
     <div class="modal-overlay" id="card-payment-modal">
         <div class="modal">
             <div class="modal-header">
@@ -997,9 +940,7 @@
                 <div class="form-group row">
                     <div class="form-group-half">
                         <label for="card-payment-source-bank">Conta de Origem (Saída)</label>
-                        <select id="card-payment-source-bank" required>
-                            <!-- Povoado por JS -->
-                        </select>
+                        <select id="card-payment-source-bank" required></select>
                     </div>
                     <div class="form-group-half">
                         <label for="card-payment-date">Data de Pagamento</label>
@@ -1015,7 +956,7 @@
         </div>
     </div>
 
-    <!-- Modal for New Investment -->
+    <!-- Modal Novo Investimento -->
     <div class="modal-overlay" id="investment-modal">
         <div class="modal">
             <div class="modal-header">
@@ -1034,7 +975,6 @@
                         <input type="text" id="invest-institution" placeholder="Ex: Nubank, XP, Inter" required>
                     </div>
                 </div>
-
                 <div class="form-group row">
                     <div class="form-group-half">
                         <label for="invest-type">Tipo</label>
@@ -1049,7 +989,6 @@
                         <input type="date" id="invest-date" required>
                     </div>
                 </div>
-
                 <div class="form-group row">
                     <div class="form-group-half">
                         <label for="invest-amount">Valor Aplicado</label>
@@ -1063,8 +1002,6 @@
                         <input type="date" id="invest-due-date">
                     </div>
                 </div>
-
-                <!-- Campos Exclusivos de Renda Fixa -->
                 <div id="fixed-income-fields"
                     style="background: var(--bg-secondary); padding: 12px; border-radius: 8px; border: 1px dashed var(--border); margin-bottom: 16px;">
                     <h4 style="margin-bottom: 12px; font-size: 0.9rem; color: var(--text-main);">Parâmetros de Renda
@@ -1087,8 +1024,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Campos de Edição e Aportes -->
                 <div id="edit-investment-fields"
                     style="display: none; background: rgba(16, 185, 129, 0.1); padding: 12px; border-radius: 8px; border: 1px dashed #10b981; margin-bottom: 16px;">
                     <h4 style="margin-bottom: 12px; font-size: 0.9rem; color: #10b981;"><i
@@ -1108,7 +1043,6 @@
                     <small style="color: var(--text-muted); display: block; margin-top: 8px;">* O <b>Saldo Atual</b>
                         substitui o cálculo automático de rendimento.</small>
                 </div>
-
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" id="btn-cancel-investment">Cancelar</button>
                     <button type="submit" class="btn btn-primary" style="background: #10b981"><i
@@ -1118,9 +1052,155 @@
         </div>
     </div>
 
-    <!-- Modals de Configurações -->
+    <!-- Modal Aporte em Metas -->
+    <div class="modal-overlay" id="goal-contribution-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Adicionar Aporte à Meta</h2>
+                <button class="close-modal" id="close-goal-contribution-modal"><i
+                        class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="form-goal-contribution">
+                <div class="form-group">
+                    <label for="goal-contribution-amount">Valor do Aporte</label>
+                    <div class="input-icon">
+                        <span>R$</span>
+                        <input type="number" id="goal-contribution-amount" step="0.01" min="0.01" placeholder="0,00"
+                            required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Origem do Valor</label>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px;">
+                        <label
+                            style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; transition: all 0.2s; background: var(--bg-body); text-align: center;"
+                            id="contribution-option-source">
+                            <input type="radio" name="contribution-source" value="source" checked>
+                            <i class="fa-solid fa-arrow-right-arrow-left"
+                                style="font-size: 1.5rem; color: var(--primary);"></i>
+                            <div>
+                                <span style="font-weight: 500; display: block;">Banco ou Cartão</span>
+                                <p style="margin: 0; font-size: 0.75rem; color: var(--text-muted);">Debitar da conta</p>
+                            </div>
+                        </label>
+                        <label
+                            style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; transition: all 0.2s; background: var(--bg-body); text-align: center;"
+                            id="contribution-option-none">
+                            <input type="radio" name="contribution-source" value="none">
+                            <i class="fa-solid fa-circle-plus" style="font-size: 1.5rem; color: var(--success);"></i>
+                            <div>
+                                <span style="font-weight: 500; display: block;">Não alterar</span>
+                                <p style="margin: 0; font-size: 0.75rem; color: var(--text-muted);">Apenas adicionar</p>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group" id="contribution-source-select-container" style="display: block;">
+                    <label for="contribution-source-select">Selecione a conta ou cartão de origem</label>
+                    <select id="contribution-source-select" class="form-input" style="width: 100%; padding: 10px 12px;">
+                        <option value="" disabled selected>Selecione uma conta ou cartão...</option>
+                    </select>
+                </div>
+                <div class="form-group" id="contribution-category-container" style="display: block;">
+                    <label for="contribution-category">Categoria da transação</label>
+                    <select id="contribution-category" class="form-input" style="width: 100%; padding: 10px 12px;">
+                        <option value="Investimentos">Investimentos</option>
+                        <option value="Metas">Metas</option>
+                        <option value="Outros">Outros</option>
+                    </select>
+                </div>
+                <input type="hidden" id="contribution-goal-id">
+                <input type="hidden" id="contribution-goal-current">
+                <input type="hidden" id="contribution-goal-max">
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="btn-cancel-contribution">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" style="background: var(--success);">
+                        <i class="fa-solid fa-hand-holding-dollar"></i> Adicionar Aporte
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-    <!-- Modal: Dados Pessoais -->
+    <!-- Modal Transferência -->
+    <div class="modal-overlay" id="transfer-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Transferência entre Contas</h2>
+                <button class="close-modal" id="close-transfer-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="form-transfer">
+                <div class="form-group row">
+                    <div class="form-group-half">
+                        <label for="transfer-amount">Valor</label>
+                        <div class="input-icon">
+                            <span>R$</span>
+                            <input type="number" id="transfer-amount" step="0.01" min="0.01" required>
+                        </div>
+                    </div>
+                    <div class="form-group-half">
+                        <label for="transfer-date">Data</label>
+                        <input type="date" id="transfer-date" required>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="form-group-half">
+                        <label for="transfer-source-bank">Conta de Origem (Saiu)</label>
+                        <select id="transfer-source-bank" required></select>
+                    </div>
+                    <div class="form-group-half">
+                        <label for="transfer-dest-bank">Conta de Destino (Entrou)</label>
+                        <select id="transfer-dest-bank" required></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="transfer-description">Descrição (Opcional)</label>
+                    <input type="text" id="transfer-description" placeholder="Ex: Pix Nubank para Itaú">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="btn-cancel-transfer">Cancelar</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-arrow-right-arrow-left"></i>
+                        Realizar Transferência</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Compras Parceladas Pendentes -->
+    <div class="modal-overlay" id="installments-pending-modal">
+        <div class="modal" style="max-width: 850px; width: 95%;">
+            <div class="modal-header">
+                <h2>Compras Parceladas Pendentes</h2>
+                <button class="close-modal" id="close-installments-pending-modal"><i
+                        class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body" style="padding-top: 16px;">
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                        <thead>
+                            <tr
+                                style="border-bottom: 2px solid var(--border); color: var(--text-muted); font-size: 0.9rem;">
+                                <th style="padding: 12px 8px;">Descrição</th>
+                                <th style="padding: 12px 8px;">Banco/Cartão</th>
+                                <th style="padding: 12px 8px;">Categoria</th>
+                                <th style="padding: 12px 8px;">Progresso</th>
+                                <th style="padding: 12px 8px;">Próxima Parcela</th>
+                                <th style="padding: 12px 8px;">Saldo Restante</th>
+                                <th style="padding: 12px 8px;">Total Compra</th>
+                            </tr>
+                        </thead>
+                        <tbody id="installments-pending-tbody" style="font-size: 0.95rem; color: var(--text-main);">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer" style="margin-top: 20px;">
+                <button type="button" class="btn btn-secondary" id="btn-close-pending-modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals de Configurações -->
     <div class="modal-overlay" id="modal-settings-personal">
         <div class="modal">
             <div class="modal-header">
@@ -1156,7 +1236,6 @@
         </div>
     </div>
 
-    <!-- Modal: Segurança -->
     <div class="modal-overlay" id="modal-settings-security">
         <div class="modal">
             <div class="modal-header">
@@ -1178,7 +1257,6 @@
         </div>
     </div>
 
-    <!-- Modal: Dispositivos -->
     <div class="modal-overlay" id="modal-settings-devices">
         <div class="modal">
             <div class="modal-header">
@@ -1202,7 +1280,6 @@
         </div>
     </div>
 
-    <!-- Modal: Notificações -->
     <div class="modal-overlay" id="modal-settings-notifications">
         <div class="modal">
             <div class="modal-header">
@@ -1232,7 +1309,6 @@
         </div>
     </div>
 
-    <!-- Modal: Reportar Problema -->
     <div class="modal-overlay" id="modal-settings-report">
         <div class="modal">
             <div class="modal-header">
@@ -1255,7 +1331,6 @@
         </div>
     </div>
 
-    <!-- Modal: Encerrar Conta -->
     <div class="modal-overlay" id="modal-settings-close-account">
         <div class="modal">
             <div class="modal-header">
@@ -1275,170 +1350,6 @@
                         style="background: var(--danger);"><i class="fa-solid fa-trash"></i> Sim, Apagar Tudo</button>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!-- Modal for Transfer -->
-    <div class="modal-overlay" id="transfer-modal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2>Transferência entre Contas</h2>
-                <button class="close-modal" id="close-transfer-modal"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <form id="form-transfer">
-                <div class="form-group row">
-                    <div class="form-group-half">
-                        <label for="transfer-amount">Valor</label>
-                        <div class="input-icon">
-                            <span>R$</span>
-                            <input type="number" id="transfer-amount" step="0.01" min="0.01" required>
-                        </div>
-                    </div>
-                    <div class="form-group-half">
-                        <label for="transfer-date">Data</label>
-                        <input type="date" id="transfer-date" required>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="form-group-half">
-                        <label for="transfer-source-bank">Conta de Origem (Saiu)</label>
-                        <select id="transfer-source-bank" required>
-                            <!-- Povoado por JS -->
-                        </select>
-                    </div>
-                    <div class="form-group-half">
-                        <label for="transfer-dest-bank">Conta de Destino (Entrou)</label>
-                        <select id="transfer-dest-bank" required>
-                            <!-- Povoado por JS -->
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="transfer-description">Descrição (Opcional)</label>
-                    <input type="text" id="transfer-description" placeholder="Ex: Pix Nubank para Itaú">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="btn-cancel-transfer">Cancelar</button>
-                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-arrow-right-arrow-left"></i>
-                        Realizar Transferência</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal de Compras Parceladas Pendentes -->
-    <div class="modal-overlay" id="installments-pending-modal">
-        <div class="modal" style="max-width: 850px; width: 95%;">
-            <div class="modal-header">
-                <h2>Compras Parceladas Pendentes</h2>
-                <button class="close-modal" id="close-installments-pending-modal"><i
-                        class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="modal-body" style="padding-top: 16px;">
-                <div style="overflow-x: auto;">
-                    <table style="width: 100%; border-collapse: collapse; text-align: left;">
-                        <thead>
-                            <tr
-                                style="border-bottom: 2px solid var(--border); color: var(--text-muted); font-size: 0.9rem;">
-                                <th style="padding: 12px 8px;">Descrição</th>
-                                <th style="padding: 12px 8px;">Banco/Cartão</th>
-                                <th style="padding: 12px 8px;">Categoria</th>
-                                <th style="padding: 12px 8px;">Progresso</th>
-                                <th style="padding: 12px 8px;">Próxima Parcela</th>
-                                <th style="padding: 12px 8px;">Saldo Restante</th>
-                                <th style="padding: 12px 8px;">Total Compra</th>
-                            </tr>
-                        </thead>
-                        <tbody id="installments-pending-tbody" style="font-size: 0.95rem; color: var(--text-main);">
-                            <!-- JS populated -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="modal-footer" style="margin-top: 20px;">
-                <button type="button" class="btn btn-secondary" id="btn-close-pending-modal">Fechar</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal para Aporte em Metas -->
-    <div class="modal-overlay" id="goal-contribution-modal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2>Adicionar Aporte à Meta</h2>
-                <button class="close-modal" id="close-goal-contribution-modal"><i
-                        class="fa-solid fa-xmark"></i></button>
-            </div>
-            <form id="form-goal-contribution">
-                <div class="form-group">
-                    <label for="goal-contribution-amount">Valor do Aporte</label>
-                    <div class="input-icon">
-                        <span>R$</span>
-                        <input type="number" id="goal-contribution-amount" step="0.01" min="0.01" placeholder="0,00"
-                            required>
-                    </div>
-                </div>
-
-                <!-- Opções lado a lado -->
-                <div class="form-group">
-                    <label>Origem do Valor</label>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px;">
-                        <!-- Opção 1 -->
-                        <label
-                            style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; transition: all 0.2s; background: var(--bg-body); text-align: center;"
-                            id="contribution-option-source">
-                            <input type="radio" name="contribution-source" value="source" checked>
-                            <i class="fa-solid fa-arrow-right-arrow-left"
-                                style="font-size: 1.5rem; color: var(--primary);"></i>
-                            <div>
-                                <span style="font-weight: 500; display: block;">Banco ou Cartão</span>
-                                <p style="margin: 0; font-size: 0.75rem; color: var(--text-muted);">Debitar da conta</p>
-                            </div>
-                        </label>
-
-                        <!-- Opção 2 -->
-                        <label
-                            style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; transition: all 0.2s; background: var(--bg-body); text-align: center;"
-                            id="contribution-option-none">
-                            <input type="radio" name="contribution-source" value="none">
-                            <i class="fa-solid fa-circle-plus" style="font-size: 1.5rem; color: var(--success);"></i>
-                            <div>
-                                <span style="font-weight: 500; display: block;">Não alterar</span>
-                                <p style="margin: 0; font-size: 0.75rem; color: var(--text-muted);">Apenas adicionar</p>
-                            </div>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Select de Banco/Cartão -->
-                <div class="form-group" id="contribution-source-select-container" style="display: block;">
-                    <label for="contribution-source-select">Selecione a conta ou cartão de origem</label>
-                    <select id="contribution-source-select" class="form-input" style="width: 100%; padding: 10px 12px;">
-                        <option value="" disabled selected>Selecione uma conta ou cartão...</option>
-                        <!-- Populado por JS -->
-                    </select>
-                </div>
-
-                <div class="form-group" id="contribution-category-container" style="display: block;">
-                    <label for="contribution-category">Categoria da transação</label>
-                    <select id="contribution-category" class="form-input" style="width: 100%; padding: 10px 12px;">
-                        <option value="Investimentos">Investimentos</option>
-                        <option value="Metas">Metas</option>
-                        <option value="Outros">Outros</option>
-                    </select>
-                </div>
-
-                <input type="hidden" id="contribution-goal-id">
-                <input type="hidden" id="contribution-goal-current">
-                <input type="hidden" id="contribution-goal-max">
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="btn-cancel-contribution">Cancelar</button>
-                    <button type="submit" class="btn btn-primary" style="background: var(--success);">
-                        <i class="fa-solid fa-hand-holding-dollar"></i> Adicionar Aporte
-                    </button>
-                </div>
-            </form>
         </div>
     </div>
 
