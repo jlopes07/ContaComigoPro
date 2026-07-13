@@ -174,35 +174,61 @@
                         <section class="transactions-section dashboard-grafico-card">
                             <div class="section-header">
                                 <h3>Distribuição de Despesas</h3>
+                                <!-- Cards Summary -->
+                                <section class="summary-cards">
+                                    <div class="card balance-card">
+                                        <div class="card-header">
+                                            <h3>Saldo Atual</h3>
+                                            <i class="fa-solid fa-wallet"></i>
+                                        </div>
+                                        <div class="amount" id="total-balance">R$ 0,00</div>
+                                    </div>
+
+                                    <div class="card chart-card" id="expense-chart-card"
+                                        style="padding: 16px; display: flex; flex-direction: column;">
+                                        <div class="card-header" style="margin-bottom: 12px;">
+                                            <h3>Despesas por Categoria</h3>
+                                            <i class="fa-solid fa-chart-pie"></i>
+                                        </div>
+                                        <div id="expense-chart-container"
+                                            style="flex: 1; min-height: 220px; display: flex; justify-content: center; align-items: center; position: relative;">
+                                            <canvas id="expense-chart"></canvas>
+                                        </div>
+                                        <div id="expense-chart-empty"
+                                            style="display: none; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: var(--text-muted); min-height: 220px;">
+                                            <i class="fa-solid fa-chart-pie" style="font-size: 2rem; opacity: 0.5;"></i>
+                                            <p style="margin: 0; font-size: 0.9rem;">Nenhuma despesa para exibir.</p>
+                                        </div>
+                                        <div
+                                            style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 12px;">
+                                            <span style="font-size: 0.8rem; color: var(--text-muted);">Período:</span>
+                                            <select id="chart-period" onchange="generateCategoryChart()"
+                                                style="padding: 4px 8px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg-body); color: var(--text-main); font-size: 0.8rem;">
+                                                <option value="7">Últimos 7 dias</option>
+                                                <option value="15">Últimos 15 dias</option>
+                                                <option value="30" selected>Últimos 30 dias</option>
+                                                <option value="60">Últimos 60 dias</option>
+                                                <option value="90">Últimos 90 dias</option>
+                                                <option value="all">Todo o período</option>
+                                            </select>
+                                            <input type="date" id="chart-date-start" onchange="generateCategoryChart()"
+                                                style="padding: 4px 8px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg-body); color: var(--text-main); font-size: 0.8rem; width: 130px;"
+                                                title="Data Inicial">
+                                            <span style="font-size: 0.8rem; color: var(--text-muted);">até</span>
+                                            <input type="date" id="chart-date-end" onchange="generateCategoryChart()"
+                                                style="padding: 4px 8px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg-body); color: var(--text-main); font-size: 0.8rem; width: 130px;"
+                                                title="Data Final">
+                                        </div>
+                                        <div class="chart-container">
+                                            <canvas id="category-chart"></canvas>
+                                        </div>
+                                        <div class="chart-legend" id="chart-legend">
+                                            <!-- Legenda gerada pelo JavaScript -->
+                                        </div>
+                                </section>
                             </div>
-                            <div
-                                style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 12px;">
-                                <span style="font-size: 0.8rem; color: var(--text-muted);">Período:</span>
-                                <select id="chart-period" onchange="generateCategoryChart()"
-                                    style="padding: 4px 8px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg-body); color: var(--text-main); font-size: 0.8rem;">
-                                    <option value="7">Últimos 7 dias</option>
-                                    <option value="15">Últimos 15 dias</option>
-                                    <option value="30" selected>Últimos 30 dias</option>
-                                    <option value="60">Últimos 60 dias</option>
-                                    <option value="90">Últimos 90 dias</option>
-                                    <option value="all">Todo o período</option>
-                                </select>
-                                <input type="date" id="chart-date-start" onchange="generateCategoryChart()"
-                                    style="padding: 4px 8px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg-body); color: var(--text-main); font-size: 0.8rem; width: 130px;"
-                                    title="Data Inicial">
-                                <span style="font-size: 0.8rem; color: var(--text-muted);">até</span>
-                                <input type="date" id="chart-date-end" onchange="generateCategoryChart()"
-                                    style="padding: 4px 8px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg-body); color: var(--text-main); font-size: 0.8rem; width: 130px;"
-                                    title="Data Final">
-                            </div>
-                            <div class="chart-container">
-                                <canvas id="category-chart"></canvas>
-                            </div>
-                            <div class="chart-legend" id="chart-legend">
-                                <!-- Legenda gerada pelo JavaScript -->
-                            </div>
-                        </section>
                     </div>
+                    </section>
 
                     <!-- Últimas Transações -->
                     <section class="transactions-section">
@@ -639,6 +665,16 @@
                         <label for="category">Categoria</label>
                         <select id="category">
                             <option value="" disabled selected>Selecione</option>
+                            <!-- Povoado por JS -->
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 8px;">
+                        <label for="transaction-goal">Vincular a uma Meta (Opcional)</label>
+                        <select id="transaction-goal"
+                            style="width: 100%; padding: 8px; border-radius: 6px; background: var(--bg-main); border: 1px solid var(--border); color: var(--text-main);">
+                            <option value="">Nenhuma Meta</option>
+                            <!-- Povoado por JS -->
                         </select>
                     </div>
                 </div>
@@ -1450,6 +1486,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
 
     <!-- Lógica do App -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script type="module" src="app.js"></script>
 </body>
 
