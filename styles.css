@@ -2545,6 +2545,68 @@ nav li.active a {
 }
 
 /* =============================================================================
+   SEÇÃO 31 — IMPORTAÇÃO DE EXTRATOS PDF
+   =============================================================================
+*/
+.pdf-dropzone {
+    border: 2px dashed var(--border);
+    border-radius: 8px;
+    padding: 32px 20px;
+    text-align: center;
+    background: var(--bg-card);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.pdf-dropzone:hover, .pdf-dropzone.dragover {
+    border-color: var(--primary);
+    background: var(--hover-bg);
+}
+
+.pdf-dropzone-icon {
+    font-size: 2.5rem;
+    color: var(--text-muted);
+    transition: color 0.3s ease;
+}
+
+.pdf-dropzone:hover .pdf-dropzone-icon, .pdf-dropzone.dragover .pdf-dropzone-icon {
+    color: var(--primary);
+}
+
+.pdf-dropzone-text {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.method-btn {
+    border: 2px solid var(--border) !important;
+}
+
+.method-btn:hover {
+    background: var(--hover-bg) !important;
+}
+
+.method-btn.active {
+    border-color: var(--primary) !important;
+    background: var(--bg-body) !important;
+}
+
+.method-btn.active i {
+    animation: pulse-icon 1.5s infinite alternate;
+}
+
+@keyframes pulse-icon {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.15); }
+}
+
+/* =============================================================================
    FIM DO ARQUIVO
    =============================================================================
 */

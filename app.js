@@ -225,12 +225,15 @@ auth.onAuthStateChanged((user) => {
         runDatabaseMigration().then(() => {
             runBankMigration().then(() => {
                 runCategoryMigration().then(() => {
-                    listenForTransactions();
-                    listenForGoals();
-                    listenForCategories();
-                    listenForCards();
-                    listenForBanks();
-                    listenForFixed();
+                    // Limpa duplicatas antes de iniciar os listeners
+                    cleanDuplicateCategories().then(() => {
+                        listenForTransactions();
+                        listenForGoals();
+                        listenForCategories();
+                        listenForCards();
+                        listenForBanks();
+                        listenForFixed();
+                    });
                 });
             });
             listenForInvestments();
@@ -1255,42 +1258,154 @@ let isSeedingCategories = false;
 async function seedCategories() {
     if (isSeedingCategories) return;
     isSeedingCategories = true;
-    try {
-        const existingSnap = await categoriesCollection.where('userId', '==', currentUser.uid).get();
-        const existingNames = new Set(existingSnap.docs.map(doc => doc.data().name.trim().toLowerCase()));
 
+    try {
+        console.log('Verificando categorias padrão...');
+
+        // Busca categorias existentes
+        const existingSnap = await categoriesCollection
+            .where('userId', '==', currentUser.uid)
+            .get();
+
+        // Cria um Set com os nomes existentes (normalizados)
+        const existingNames = new Set();
+        existingSnap.forEach(doc => {
+            const name = doc.data().name?.trim().toLowerCase();
+            if (name) existingNames.add(name);
+        });
+
+        console.log(`Categorias existentes: ${existingNames.size}`);
+
+        // Filtra apenas as que não existem
+        const categoriesToAdd = defaultCategories.filter(
+            cat => !existingNames.has(cat.name.trim().toLowerCase())
+        );
+
+        if (categoriesToAdd.length === 0) {
+            console.log('Todas as categorias padrão já existem.');
+            return;
+        }
+
+        console.log(`Adicionando ${categoriesToAdd.length} novas categorias...`);
+
+        // Adiciona em lote
         const batch = db.batch();
-        let addedCount = 0;
-        for (const cat of defaultCategories) {
-            if (!existingNames.has(cat.name.trim().toLowerCase())) {
-                const newDocRef = categoriesCollection.doc();
-                batch.set(newDocRef, { userId: currentUser.uid, ...cat });
-                addedCount++;
-            }
-        }
-        if (addedCount > 0) {
-            await batch.commit();
-        }
-    } catch (e) {
-        console.error("Erro ao semear categorias padrão:", e);
+        categoriesToAdd.forEach(cat => {
+            const docRef = categoriesCollection.doc();
+            batch.set(docRef, {
+                userId: currentUser.uid,
+                name: cat.name.trim(),
+                icon: cat.icon
+            });
+        });
+
+        await batch.commit();
+        console.log(`${categoriesToAdd.length} categorias adicionadas com sucesso!`);
+
+    } catch (error) {
+        console.error('Erro ao semear categorias:', error);
     } finally {
         isSeedingCategories = false;
     }
 }
 
-function listenForCategories() {
-    if (unsCategories) unsCategories();
-    unsCategories = categoriesCollection.where('userId', '==', currentUser.uid).onSnapshot(async snap => {
-        if (snap.empty && categoriesList.length === 0) {
-            seedCategories();
+async function cleanDuplicateCategories() {
+    try {
+        console.log('Limpando categorias duplicadas...');
+
+        const snap = await categoriesCollection
+            .where('userId', '==', currentUser.uid)
+            .get();
+
+        const nameMap = new Map();
+        const duplicates = [];
+
+        snap.forEach(doc => {
+            const data = doc.data();
+            const name = data.name?.trim();
+
+            if (!name) {
+                // Remove categorias sem nome
+                duplicates.push(doc.id);
+                return;
+            }
+
+            const key = name.toLowerCase();
+            if (nameMap.has(key)) {
+                // É uma duplicata
+                duplicates.push(doc.id);
+            } else {
+                nameMap.set(key, { id: doc.id, name, data });
+            }
+        });
+
+        if (duplicates.length === 0) {
+            console.log('Nenhuma categoria duplicada encontrada.');
             return;
         }
-        categoriesList = [];
-        snap.forEach(doc => categoriesList.push({ id: doc.id, ...doc.data() }));
-        categoriesList.sort((a, b) => a.name.localeCompare(b.name));
 
-        renderCategories();
-        populateCategorySelects();
+        console.log(`Encontradas ${duplicates.length} categorias duplicadas. Removendo...`);
+
+        // Remove as duplicatas em lote
+        const batch = db.batch();
+        duplicates.forEach(id => {
+            batch.delete(categoriesCollection.doc(id));
+        });
+        await batch.commit();
+
+        console.log(`${duplicates.length} categorias duplicadas removidas.`);
+
+    } catch (error) {
+        console.error('Erro ao limpar duplicatas:', error);
+    }
+}
+
+function listenForCategories() {
+    if (unsCategories) unsCategories();
+
+    // Flag para controlar se já estamos processando
+    let isProcessing = false;
+
+    unsCategories = categoriesCollection.where('userId', '==', currentUser.uid).onSnapshot(async snap => {
+        // Se já está processando, ignora
+        if (isProcessing) return;
+        isProcessing = true;
+
+        try {
+            // Primeiro, verifica se há dados
+            if (snap.empty) {
+                // Verifica se já existem categorias na lista
+                if (categoriesList.length === 0) {
+                    console.log('Nenhuma categoria encontrada, iniciando seed...');
+                    await seedCategories();
+                }
+                isProcessing = false;
+                return;
+            }
+
+            // Atualiza a lista de categorias
+            const newCategories = [];
+            snap.forEach(doc => {
+                const data = doc.data();
+                // Evita duplicatas pelo nome
+                const exists = newCategories.some(c => c.name === data.name);
+                if (!exists) {
+                    newCategories.push({ id: doc.id, ...data });
+                }
+            });
+
+            // Ordena e atualiza
+            categoriesList = newCategories.sort((a, b) => a.name.localeCompare(b.name));
+
+            // Renderiza
+            renderCategories();
+            populateCategorySelects();
+
+        } catch (error) {
+            console.error('Erro ao processar categorias:', error);
+        } finally {
+            isProcessing = false;
+        }
     });
 }
 
@@ -2980,6 +3095,10 @@ function populatePaymentMethodSelects() {
 
     paymentMethod.innerHTML = opts;
     if (fixedPaymentMethod) fixedPaymentMethod.innerHTML = opts;
+    const pdfDestSelect = document.getElementById('pdf-destination');
+    if (pdfDestSelect) {
+        pdfDestSelect.innerHTML = '<option value="" disabled selected>Selecione onde lançar</option>' + opts;
+    }
     const cardPaymentBankSelect = document.getElementById('card-payment-source-bank');
     if (cardPaymentBankSelect) {
         let bankOpts = '<option value="" disabled selected>Selecione</option>';
@@ -3280,12 +3399,109 @@ window.addBulkRow = () => {
     bulkRowsContainer.appendChild(rowDiv);
 };
 
+window.addBulkRowWithData = (data) => {
+    const bulkRowsContainer = document.getElementById('bulk-rows-container');
+    if (!bulkRowsContainer) return;
+
+    const rowId = 'bulk_row_' + Math.random().toString(36).substr(2, 9);
+    const rowDiv = document.createElement('div');
+    rowDiv.id = rowId;
+    rowDiv.className = 'bulk-row';
+
+    rowDiv.style.cssText = `
+        display: grid;
+        grid-template-columns: 100px 1fr 120px 130px 1fr 1.2fr 40px;
+        gap: 8px;
+        align-items: center;
+        background: var(--bg-body);
+        padding: 8px 12px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        margin-bottom: 8px;
+        transition: all 0.2s ease;
+    `;
+
+    let catOpts = '<option value="" disabled selected>Categoria</option>';
+    let hasCategory = false;
+    const targetCategory = data.category || 'Extrato PDF'; // <-- DEFINE A CATEGORIA PADRÃO AQUI
+
+    categoriesList.forEach(c => {
+        // Verifica se a categoria extraída ou a padrão existe na lista
+        const selected = (targetCategory && c.name === targetCategory) ? 'selected' : '';
+        if (selected) hasCategory = true;
+        catOpts += `<option value="${c.name}" ${selected}>${c.name}</option>`;
+    });
+
+    if (!hasCategory && targetCategory) {
+        // Remove a primeira opção "Selecione" e adiciona a nova categoria como selecionada
+        catOpts = `<option value="${targetCategory}" selected>${targetCategory}</option>` +
+            categoriesList.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+    }
+
+    let pmOpts = '<option value="" disabled selected>Banco/Cartão</option>';
+    if (banksList.length > 0) {
+        banksList.forEach(b => {
+            const selected = (data.paymentMethod && b.id === data.paymentMethod) ? 'selected' : '';
+            pmOpts += `<option value="${b.id}" ${selected}>🏦 ${b.name}</option>`;
+        });
+    }
+    if (cardsList.length > 0) {
+        cardsList.forEach(c => {
+            const selected = (data.paymentMethod && c.id === data.paymentMethod) ? 'selected' : '';
+            pmOpts += `<option value="${c.id}" ${selected}>💳 ${c.nickname}</option>`;
+        });
+    }
+
+    const typeExpenseSelected = data.type === 'expense' ? 'selected' : '';
+    const typeIncomeSelected = data.type === 'income' ? 'selected' : '';
+
+    rowDiv.innerHTML = `
+        <select class="bulk-row-type form-input" style="width: 100%; padding: 6px 8px; border-radius: 6px; background: var(--bg-main); border: 1px solid var(--border); color: var(--text-main); font-size: 0.85rem;" required>
+            <option value="expense" ${typeExpenseSelected}>Despesa</option>
+            <option value="income" ${typeIncomeSelected}>Receita</option>
+        </select>
+        
+        <input type="text" class="bulk-row-desc form-input" placeholder="Descrição" value="${data.description || ''}" style="width: 100%; padding: 6px 8px; border-radius: 6px; background: var(--bg-main); border: 1px solid var(--border); color: var(--text-main); font-size: 0.85rem;" required>
+        
+        <input type="text" class="bulk-row-amount form-input" placeholder="Valor" value="${data.amount ? data.amount.toFixed(2).replace('.', ',') : ''}" style="width: 100%; padding: 6px 8px; border-radius: 6px; background: var(--bg-main); border: 1px solid var(--border); color: var(--text-main); font-size: 0.85rem; text-align: right;" required>
+        
+        <input type="date" class="bulk-row-date form-input" value="${data.date || ''}" style="width: 100%; padding: 6px 8px; border-radius: 6px; background: var(--bg-main); border: 1px solid var(--border); color: var(--text-main); font-size: 0.85rem;">
+        
+        <select class="bulk-row-category form-input" style="width: 100%; padding: 6px 8px; border-radius: 6px; background: var(--bg-main); border: 1px solid var(--border); color: var(--text-main); font-size: 0.85rem;" required>
+            ${catOpts}
+        </select>
+        
+        <select class="bulk-row-pm form-input" style="width: 100%; padding: 6px 8px; border-radius: 6px; background: var(--bg-main); border: 1px solid var(--border); color: var(--text-main); font-size: 0.85rem;" required>
+            ${pmOpts}
+        </select>
+        
+        <button type="button" class="btn-icon" onclick="document.getElementById('${rowId}').remove()" title="Remover esta linha" style="color: var(--text-muted); padding: 4px; font-size: 1rem; transition: all 0.2s; display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 4px; border: none; background: transparent; cursor: pointer;">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    `;
+
+    const removeBtn = rowDiv.querySelector('.btn-icon');
+    removeBtn.addEventListener('mouseenter', () => {
+        removeBtn.style.color = 'var(--danger)';
+        removeBtn.style.background = 'var(--danger-bg)';
+    });
+    removeBtn.addEventListener('mouseleave', () => {
+        removeBtn.style.color = 'var(--text-muted)';
+        removeBtn.style.background = 'transparent';
+    });
+
+    bulkRowsContainer.appendChild(rowDiv);
+};
+
 function initBulkModeTabs() {
     const tabSingle = document.getElementById('tab-tx-single');
     const tabBulk = document.getElementById('tab-tx-bulk');
+    const tabPdf = document.getElementById('tab-tx-pdf');
     const singleTxContainer = document.getElementById('single-tx-container');
     const bulkTxContainer = document.getElementById('bulk-tx-container');
+    const pdfTxContainer = document.getElementById('pdf-tx-container');
     const modalBox = document.querySelector('#transaction-modal .modal');
+    const modalFooter = document.querySelector('#form-transaction .modal-footer');
 
     if (!tabSingle || !tabBulk) return;
 
@@ -3294,12 +3510,22 @@ function initBulkModeTabs() {
         tabSingle.classList.add('active');
         tabSingle.style.borderBottom = '2px solid var(--primary)';
         tabSingle.style.color = 'var(--text-main)';
+
         tabBulk.classList.remove('active');
         tabBulk.style.borderBottom = 'none';
         tabBulk.style.color = 'var(--text-muted)';
+
+        if (tabPdf) {
+            tabPdf.classList.remove('active');
+            tabPdf.style.borderBottom = 'none';
+            tabPdf.style.color = 'var(--text-muted)';
+        }
+
         if (singleTxContainer) singleTxContainer.style.display = 'block';
         if (bulkTxContainer) bulkTxContainer.style.display = 'none';
+        if (pdfTxContainer) pdfTxContainer.style.display = 'none';
         if (modalBox) modalBox.style.maxWidth = '500px';
+        if (modalFooter) modalFooter.style.display = 'flex';
     });
 
     tabBulk.addEventListener('click', () => {
@@ -3307,12 +3533,22 @@ function initBulkModeTabs() {
         tabBulk.classList.add('active');
         tabBulk.style.borderBottom = '2px solid var(--primary)';
         tabBulk.style.color = 'var(--text-main)';
+
         tabSingle.classList.remove('active');
         tabSingle.style.borderBottom = 'none';
         tabSingle.style.color = 'var(--text-muted)';
+
+        if (tabPdf) {
+            tabPdf.classList.remove('active');
+            tabPdf.style.borderBottom = 'none';
+            tabPdf.style.color = 'var(--text-muted)';
+        }
+
         if (singleTxContainer) singleTxContainer.style.display = 'none';
         if (bulkTxContainer) bulkTxContainer.style.display = 'block';
+        if (pdfTxContainer) pdfTxContainer.style.display = 'none';
         if (modalBox) modalBox.style.maxWidth = '800px';
+        if (modalFooter) modalFooter.style.display = 'flex';
 
         const bulkDate = document.getElementById('bulk-date');
         if (bulkDate && !bulkDate.value) {
@@ -3325,10 +3561,427 @@ function initBulkModeTabs() {
         }
     });
 
+    if (tabPdf) {
+        tabPdf.addEventListener('click', () => {
+            window.isBulkMode = false;
+            tabPdf.classList.add('active');
+            tabPdf.style.borderBottom = '2px solid var(--primary)';
+            tabPdf.style.color = 'var(--text-main)';
+
+            tabSingle.classList.remove('active');
+            tabSingle.style.borderBottom = 'none';
+            tabSingle.style.color = 'var(--text-muted)';
+
+            tabBulk.classList.remove('active');
+            tabBulk.style.borderBottom = 'none';
+            tabBulk.style.color = 'var(--text-muted)';
+
+            if (singleTxContainer) singleTxContainer.style.display = 'none';
+            if (bulkTxContainer) bulkTxContainer.style.display = 'none';
+            if (pdfTxContainer) pdfTxContainer.style.display = 'block';
+            if (modalBox) modalBox.style.maxWidth = '500px';
+            if (modalFooter) modalFooter.style.display = 'none';
+        });
+    }
+
     const btnAddBulkRow = document.getElementById('btn-add-bulk-row');
     if (btnAddBulkRow) {
         btnAddBulkRow.addEventListener('click', () => window.addBulkRow());
     }
+}
+
+// =============================================================================
+// SEÇÃO 21.1 — PARSER DE EXTRATO PDF (HEURÍSTICA & IA GEMINI)
+// =============================================================================
+
+async function extractTextFromPDF(file) {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = async function () {
+            try {
+                const typedarray = new Uint8Array(this.result);
+                const pdf = await pdfjsLib.getDocument({ data: typedarray }).promise;
+                let fullText = '';
+
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    const page = await pdf.getPage(i);
+                    const textContent = await page.getTextContent();
+                    const textItems = textContent.items;
+                    let lastY = -1;
+                    let pageText = '';
+
+                    for (let j = 0; j < textItems.length; j++) {
+                        const item = textItems[j];
+                        if (lastY !== -1 && Math.abs(item.transform[5] - lastY) > 5) {
+                            pageText += '\n';
+                        }
+                        pageText += item.str + ' ';
+                        lastY = item.transform[5];
+                    }
+                    fullText += pageText + '\n';
+                }
+                resolve(fullText);
+            } catch (err) {
+                reject(err);
+            }
+        };
+        reader.onerror = err => reject(err);
+        reader.readAsArrayBuffer(file);
+    });
+}
+
+function parsePDFTextHeuristic(text) {
+    const lines = text.split('\n');
+    const transactions = [];
+
+    const dateRegex = /\b(\d{2})\/(\d{2})(?:\/(\d{2,4}))?\b/;
+    const valueRegex = /(?:R\$\s*)?(-?\b\d{1,3}(?:\.\d{3})*,\d{2}\b|-?\b\d+,\d{2}\b)\s*([CDcd\-+])?/;
+
+    for (let line of lines) {
+        line = line.trim();
+        if (!line) continue;
+
+        const dateMatch = line.match(dateRegex);
+        if (!dateMatch) continue;
+
+        const valueMatch = line.match(valueRegex);
+        if (!valueMatch) continue;
+
+        const day = dateMatch[1];
+        const month = dateMatch[2];
+        let year = dateMatch[3] || new Date().getFullYear().toString();
+        if (year.length === 2) {
+            year = '20' + year;
+        }
+        const dateStr = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+
+        let valStr = valueMatch[1].replace(/\./g, '').replace(',', '.');
+        let amount = parseFloat(valStr);
+        if (isNaN(amount)) continue;
+
+        let type = 'expense';
+        const suffix = valueMatch[2];
+        const prefixMinus = valueMatch[1].startsWith('-');
+
+        if (prefixMinus || suffix === '-' || (suffix && suffix.toUpperCase() === 'D')) {
+            type = 'expense';
+        } else if (suffix === '+' || (suffix && suffix.toUpperCase() === 'C')) {
+            type = 'income';
+        } else {
+            const lowerLine = line.toLowerCase();
+            if (lowerLine.includes('recebido') || lowerLine.includes('depósito') || lowerLine.includes('credito') || lowerLine.includes('crédito') || lowerLine.includes('salário') || lowerLine.includes('estorno') || lowerLine.includes('transferência recebida') || lowerLine.includes('pix recebido')) {
+                type = 'income';
+            } else {
+                type = 'expense';
+            }
+        }
+
+        amount = Math.abs(amount);
+        if (amount === 0) continue;
+
+        let desc = line
+            .replace(dateMatch[0], '')
+            .replace(valueMatch[0], '')
+            .replace(/\s+/g, ' ')
+            .trim();
+
+        desc = desc.replace(/^[\s\-\|\,\.\:]+/, '').replace(/[\s\-\|\,\.\:]+$/, '').trim();
+
+        if (!desc) {
+            desc = 'Transação Extrato';
+        }
+
+        let category = '';
+        const lowerDesc = desc.toLowerCase();
+        if (lowerDesc.includes('mercado') || lowerDesc.includes('supermercado')) {
+            category = 'Alimentação';
+        } else if (lowerDesc.includes('posto') || lowerDesc.includes('combustivel') || lowerDesc.includes('uber')) {
+            category = 'Transporte';
+        } else if (lowerDesc.includes('farmacia') || lowerDesc.includes('drogaria') || lowerDesc.includes('medico')) {
+            category = 'Saúde';
+        } else if (lowerDesc.includes('aluguel') || lowerDesc.includes('condominio') || lowerDesc.includes('luz') || lowerDesc.includes('energia') || lowerDesc.includes('agua') || lowerDesc.includes('gás')) {
+            category = 'Moradia';
+        } else if (lowerDesc.includes('restaurante') || lowerDesc.includes('ifood') || lowerDesc.includes('padaria') || lowerDesc.includes('cafe')) {
+            category = 'Alimentação';
+        } else if (lowerDesc.includes('netflix') || lowerDesc.includes('spotify') || lowerDesc.includes('cinema') || lowerDesc.includes('show') || lowerDesc.includes('jogos')) {
+            category = 'Lazer';
+        } else {
+            category = 'Extrato PDF';
+        }
+
+        transactions.push({
+            date: dateStr,
+            description: desc,
+            amount: amount,
+            type: type,
+            category: category
+        });
+    }
+
+    return transactions;
+}
+
+async function parsePDFTextWithGemini(text, apiKey) {
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+
+    const prompt = `Analise o extrato bancário em texto abaixo e extraia todas as transações (receitas e despesas).
+Retorne APENAS um array JSON estruturado com o formato especificado no responseSchema. Não adicione nenhuma formatação markdown (como \`\`\`json) no texto de resposta se não for necessário, mas responda seguindo o schema de resposta JSON.
+
+Instruções importantes:
+- Identifique a data de cada transação. Se o ano não estiver especificado na linha, assuma o ano corrente (2026). Formate como AAAA-MM-DD.
+- Identifique a descrição de forma limpa e clara.
+- Identifique o valor (amount) como um número real estritamente positivo (ex: 123.45).
+- Identifique o tipo (type): 'expense' para despesas (saídas, débitos, pagamentos, transferências enviadas, pix enviado) e 'income' para receitas (entradas, créditos, depósitos, salários, estornos, pix recebido, transferências recebidas).
+- Classifique cada transação em uma das seguintes categorias padrão se aplicável (ou sugira uma categoria apropriada de mercado): Alimentação, Transporte, Saúde, Moradia, Lazer, Educação, Salário, Outros.
+
+Texto do extrato:
+${text}`;
+
+    const requestBody = {
+        contents: [{
+            parts: [{ text: prompt }]
+        }],
+        generationConfig: {
+            responseMimeType: "application/json",
+            responseSchema: {
+                type: "OBJECT",
+                properties: {
+                    transactions: {
+                        type: "ARRAY",
+                        description: "Lista de transações extraídas do extrato",
+                        items: {
+                            type: "OBJECT",
+                            properties: {
+                                date: { type: "STRING", description: "Data da transação no formato AAAA-MM-DD" },
+                                description: { type: "STRING", description: "Descrição limpa da transação" },
+                                amount: { type: "NUMBER", description: "Valor real absoluto positivo da transação" },
+                                type: { type: "STRING", enum: ["expense", "income"], description: "Tipo da transação: expense para saída/débito, income para entrada/crédito" },
+                                category: { type: "STRING", description: "Categoria sugerida para a transação" }
+                            },
+                            required: ["date", "description", "amount", "type"]
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestBody)
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        const errMsg = errorData.error?.message || `Status HTTP ${response.status}`;
+        throw new Error(`Erro na API do Gemini: ${errMsg}`);
+    }
+
+    const data = await response.json();
+    const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!responseText) {
+        throw new Error("Resposta vazia da API do Gemini.");
+    }
+
+    const parsedJson = JSON.parse(responseText.trim());
+    return parsedJson.transactions || [];
+}
+
+function initPdfImport() {
+    const dropzone = document.getElementById('pdf-dropzone');
+    const fileInput = document.getElementById('pdf-file-input');
+    const selectedFileDiv = document.getElementById('pdf-selected-file');
+    const filenameSpan = document.getElementById('pdf-filename');
+    const destinationSelect = document.getElementById('pdf-destination');
+    const btnProcess = document.getElementById('btn-process-pdf');
+    const loadingDiv = document.getElementById('pdf-loading');
+    const loadingStatus = document.getElementById('pdf-loading-status');
+    const keyContainer = document.getElementById('gemini-key-container');
+    const apiKeyInput = document.getElementById('pdf-gemini-key');
+    const saveKeyCheckbox = document.getElementById('save-gemini-key');
+
+    const radioHeuristic = document.getElementById('method-heuristic');
+    const radioAI = document.getElementById('method-ai');
+    const labelHeuristic = document.querySelector('label[for="method-heuristic"]');
+    const labelAI = document.querySelector('label[for="method-ai"]');
+
+    if (!dropzone || !fileInput || !btnProcess) return;
+
+    let selectedPdfFile = null;
+
+    // Load saved Gemini key
+    const savedKey = localStorage.getItem('gemini_api_key');
+    if (savedKey && apiKeyInput) {
+        apiKeyInput.value = savedKey;
+    }
+
+    // Toggle extraction methods UI
+    if (labelHeuristic && labelAI && radioHeuristic && radioAI) {
+        labelHeuristic.addEventListener('click', () => {
+            radioHeuristic.checked = true;
+            labelHeuristic.classList.add('active');
+            labelHeuristic.style.borderColor = 'var(--primary)';
+            labelHeuristic.style.background = 'var(--bg-body)';
+
+            labelAI.classList.remove('active');
+            labelAI.style.borderColor = 'var(--border)';
+            labelAI.style.background = 'var(--bg-card)';
+
+            if (keyContainer) keyContainer.style.display = 'none';
+        });
+
+        labelAI.addEventListener('click', () => {
+            radioAI.checked = true;
+            labelAI.classList.add('active');
+            labelAI.style.borderColor = 'var(--primary)';
+            labelAI.style.background = 'var(--bg-body)';
+
+            labelHeuristic.classList.remove('active');
+            labelHeuristic.style.borderColor = 'var(--border)';
+            labelHeuristic.style.background = 'var(--bg-card)';
+
+            if (keyContainer) keyContainer.style.display = 'block';
+        });
+    }
+
+    // Dropzone drag & drop handlers
+    dropzone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropzone.classList.add('dragover');
+    });
+
+    dropzone.addEventListener('dragleave', () => {
+        dropzone.classList.remove('dragover');
+    });
+
+    dropzone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropzone.classList.remove('dragover');
+        if (e.dataTransfer.files.length > 0) {
+            const file = e.dataTransfer.files[0];
+            if (file.type === 'application/pdf' || file.name.endsWith('.pdf')) {
+                selectedPdfFile = file;
+                filenameSpan.textContent = file.name;
+                selectedFileDiv.style.display = 'block';
+            } else {
+                alert('Apenas arquivos PDF são aceitos.');
+            }
+        }
+    });
+
+    // Dropzone click handlers
+    dropzone.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files.length > 0) {
+            const file = fileInput.files[0];
+            selectedPdfFile = file;
+            filenameSpan.textContent = file.name;
+            selectedFileDiv.style.display = 'block';
+        }
+    });
+
+    // Processing trigger
+    btnProcess.addEventListener('click', async () => {
+        if (!selectedPdfFile) {
+            alert('Por favor, selecione um arquivo PDF primeiro.');
+            return;
+        }
+
+        const destAccount = destinationSelect.value;
+        if (!destAccount) {
+            alert('Por favor, selecione um banco ou cartão de destino.');
+            return;
+        }
+
+        const useAI = radioAI.checked;
+        let apiKey = '';
+        if (useAI) {
+            apiKey = apiKeyInput.value.trim();
+            if (!apiKey) {
+                alert('Por favor, insira sua Chave de API do Gemini para continuar.');
+                return;
+            }
+            if (saveKeyCheckbox.checked) {
+                localStorage.setItem('gemini_api_key', apiKey);
+            } else {
+                localStorage.removeItem('gemini_api_key');
+            }
+        }
+
+        // Show loading and disable actions
+        loadingDiv.style.display = 'block';
+        btnProcess.disabled = true;
+        btnProcess.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Processando extrato...';
+
+        try {
+            loadingStatus.textContent = 'Lendo e extraindo texto do arquivo PDF...';
+            const pdfText = await extractTextFromPDF(selectedPdfFile);
+
+            loadingStatus.textContent = useAI ? 'Enviando texto para a Inteligência Artificial...' : 'Processando transações localmente...';
+
+            let extractedTxs = [];
+            if (useAI) {
+                extractedTxs = await parsePDFTextWithGemini(pdfText, apiKey);
+            } else {
+                extractedTxs = parsePDFTextHeuristic(pdfText);
+            }
+
+            if (extractedTxs.length === 0) {
+                alert('Nenhuma transação identificada no extrato. Tente utilizar a opção de Inteligência Artificial se o extrato for muito complexo.');
+                loadingDiv.style.display = 'none';
+                btnProcess.disabled = false;
+                btnProcess.innerHTML = '<i class="fa-solid fa-file-import"></i> Extrair Transações';
+                return;
+            }
+
+            // Clear existing bulk rows
+            const bulkRowsContainer = document.getElementById('bulk-rows-container');
+            if (bulkRowsContainer) {
+                bulkRowsContainer.innerHTML = '';
+            }
+
+            // Populate rows
+            extractedTxs.forEach(tx => {
+                tx.paymentMethod = destAccount;
+                window.addBulkRowWithData(tx);
+            });
+
+            // Trigger click on Bulk Tab to show the list to user
+            const tabBulk = document.getElementById('tab-tx-bulk');
+            if (tabBulk) {
+                tabBulk.click();
+            }
+
+            // Reset upload UI
+            selectedPdfFile = null;
+            fileInput.value = '';
+            selectedFileDiv.style.display = 'none';
+            loadingDiv.style.display = 'none';
+            btnProcess.disabled = false;
+            btnProcess.innerHTML = '<i class="fa-solid fa-file-import"></i> Extrair Transações';
+
+            if (typeof showMessage === 'function') {
+                showMessage(`${extractedTxs.length} transação(ões) extraída(s) com sucesso!`);
+            } else {
+                alert(`${extractedTxs.length} transações extraídas com sucesso! Revise os valores antes de salvar.`);
+            }
+
+        } catch (error) {
+            console.error(error);
+            alert(`Erro ao processar o extrato: ${error.message}`);
+            loadingDiv.style.display = 'none';
+            btnProcess.disabled = false;
+            btnProcess.innerHTML = '<i class="fa-solid fa-file-import"></i> Extrair Transações';
+        }
+    });
 }
 
 // =============================================================================
@@ -4318,6 +4971,7 @@ window.exportReportCSV = function () {
 };
 
 initBulkModeTabs();
+initPdfImport();
 
 // =============================================================================
 // SEÇÃO 29 — CÁLCULO DA FATURA DO CARTÃO
@@ -4670,6 +5324,78 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// =============================================================================
+// EXPOSIÇÃO GLOBAL PARA FUNÇÕES CHAMADAS VIA ONCLICK
+// =============================================================================
+
+// Funções de bancos
+window.renderBanks = renderBanks;
+window.editBank = editBank;
+window.deleteBank = deleteBank;
+window.expandBank = expandBank;
+window.filterBankExtract = filterBankExtract;
+window.generateBankReport = generateBankReport;
+window.setBankFilterToMonth = setBankFilterToMonth;
+window.clearBankFilters = clearBankFilters;
+window.openTransactionModalWithBank = openTransactionModalWithBank;
+
+// Funções de cartões
+window.renderCards = renderCards;
+window.editCard = editCard;
+window.deleteCard = deleteCard;
+window.toggleCardExtract = toggleCardExtract;
+window.closeCardExtract = closeCardExtract;
+window.filterCardExtract = filterCardExtract;
+window.navigateCardMonth = navigateCardMonth;
+window.resetCardMonth = resetCardMonth;
+window.generateCardReport = generateCardReport;
+window.launchCardFatura = launchCardFatura;
+
+// Funções de transações
+window.editTransaction = editTransaction;
+window.deleteTransaction = deleteTransaction;
+window.renderTransactions = renderTransactions;
+window.applyBulkDateToAllRows = applyBulkDateToAllRows;
+window.setBulkDateToToday = setBulkDateToToday;
+window.addBulkRow = addBulkRow;
+window.addBulkRowWithData = addBulkRowWithData;
+window.resetBulkMode = resetBulkMode;
+
+// Funções de metas
+window.addFundsToGoal = addFundsToGoal;
+window.deleteGoal = deleteGoal;
+
+// Funções de categorias
+window.editCategory = editCategory;
+window.deleteCategory = deleteCategory;
+window.selectCategoryIcon = selectCategoryIcon;
+window.renderCategories = renderCategories;
+
+// Funções de investimentos
+window.editInvestment = editInvestment;
+window.deleteInvestment = deleteInvestment;
+window.renderInvestments = renderInvestments;
+
+// Funções de transações fixas
+window.editFixedTransaction = editFixedTransaction;
+window.deleteFixedTransaction = deleteFixedTransaction;
+window.launchManualFixedTransaction = launchManualFixedTransaction;
+window.renderFixedTransactions = renderFixedTransactions;
+
+// Funções de relatórios
+window.generateReport = generateReport;
+window.handleReportTypeChange = handleReportTypeChange;
+window.populateReportBankSelect = populateReportBankSelect;
+window.printReport = printReport;
+window.exportReportCSV = exportReportCSV;
+
+// Funções utilitárias
+window.getInvoiceMonth = getInvoiceMonth;
+window.generateCategoryChart = generateCategoryChart;
+window.showPendingInstallmentsModal = showPendingInstallmentsModal;
+
+console.log('Funções expostas globalmente');
 
 // =============================================================================
 // FIM DO ARQUIVO
