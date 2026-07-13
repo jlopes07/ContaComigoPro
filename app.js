@@ -1012,8 +1012,38 @@ window.deleteTransaction = async (id) => {
     }
 };
 
+function populateGoalsSelect() {
+    const goalSelect = document.getElementById('transaction-goal');
+    if (!goalSelect) {
+        // Se o select não existir, cria ele no DOM
+        const categoryGroup = document.getElementById('category')?.closest('.form-group');
+        if (categoryGroup) {
+            const goalGroup = document.createElement('div');
+            goalGroup.className = 'form-group';
+            goalGroup.innerHTML = `
+                <label for="transaction-goal">Vincular à Meta (Opcional)</label>
+                <select id="transaction-goal" class="form-input">
+                    <option value="">Nenhuma</option>
+                </select>
+            `;
+            categoryGroup.parentNode.insertBefore(goalGroup, categoryGroup.nextSibling);
+        }
+    }
+
+    const select = document.getElementById('transaction-goal');
+    if (!select) return;
+
+    let options = '<option value="">Nenhuma</option>';
+    goalsList.forEach(g => {
+        const perc = g.targetValue > 0 ? ((g.currentValue / g.targetValue) * 100).toFixed(0) : 0;
+        options += `<option value="${g.id}">${g.name} (${perc}%)</option>`;
+    });
+
+    select.innerHTML = options;
+}
+
 // =============================================================================
-// SEÇÃO 12 — METAS
+// SEÇÃO 12 — METAS 
 // =============================================================================
 
 function listenForGoals() {
@@ -1023,6 +1053,7 @@ function listenForGoals() {
             goalsList = [];
             snap.forEach(doc => goalsList.push({ id: doc.id, ...doc.data() }));
             renderGoals();
+            populateGoalsSelect();
         }, e => console.error("Goal snapshot error:", e.message));
 }
 
@@ -1234,6 +1265,7 @@ function renderGoals() {
     `;
     });
 }
+
 
 // =============================================================================
 // SEÇÃO 13 — CATEGORIAS
@@ -1452,14 +1484,14 @@ function renderCategories() {
 
     categoriesList.forEach(c => {
         categoriesListGrid.innerHTML += `
-            <div class="category-ui" style="background:var(--bg-secondary); border: 1px solid var(--border); padding: 16px; border-radius: 12px; display:flex; align-items:center; justify-content:space-between; transition: 0.2s;">
-                <div style="display:flex; align-items:center; gap: 12px;">
-                    <div style="width: 40px; height: 40px; border-radius: 50%; background:var(--bg-main); color:var(--text-main); display:flex; align-items:center; justify-content:center; font-size: 1.2rem; border: 1px solid var(--border)">
+            <div class="category-ui category-list-item" style="background:var(--bg-secondary); border: 1px solid var(--border); padding: 8px; border-radius: 12px; display:flex; align-items:center; justify-content:space-between; transition: 0.2s; overflow: hidden;">
+                <div style="display:flex; align-items:center; gap: 12px; min-width: 0; flex: 1;">
+                    <div style="width: 20px; height: 20px; border-radius: 50%; background:var(--bg-main); color:var(--text-main); display:flex; align-items:center; justify-content:center; font-size: 0.8rem; border: 1px solid var(--border); flex-shrink: 0;">
                         <i class="fa-solid ${c.icon || 'fa-tag'}"></i>
                     </div>
-                    <span style="font-weight: 600;">${c.name}</span>
+                    <span style="font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1;">${c.name}</span>
                 </div>
-                <div style="display:flex; gap: 8px;">
+                <div style="display:flex; gap: 8px; flex-shrink: 0;">
                     <button class="btn-icon" onclick="window.editCategory('${c.id}')" title="Editar Categoria">
                         <i class="fa-solid fa-pen" style="color:var(--text-muted)"></i>
                     </button>
@@ -5365,6 +5397,7 @@ window.resetBulkMode = resetBulkMode;
 // Funções de metas
 window.addFundsToGoal = addFundsToGoal;
 window.deleteGoal = deleteGoal;
+window.populateGoalsSelect = populateGoalsSelect;
 
 // Funções de categorias
 window.editCategory = editCategory;
