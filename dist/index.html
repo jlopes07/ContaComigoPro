@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Chart.js para gráficos -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script type="module" crossorigin src="/assets/index-DACJCzaL.js"></script>
+  <script type="module" crossorigin src="/assets/index-BgSgDcIt.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/index-BmGwN__L.css">
 </head>
 
@@ -150,7 +150,7 @@
 
                 <!-- Dashboard com Saldo e Gráfico lado a lado -->
                 <div class="page-section active" id="page-dashboard">
-                    <div class="dashboard-grid">
+                    <div class="dashboard-grid"> <!-- ABRE dashboard-grid -->
                         <!-- Card de Saldo Total com Fatura do Cartão -->
                         <section class="summary-cards" style="grid-template-columns: 1fr; margin-bottom: 0;">
                             <div class="card balance-card dashboard-saldo-card">
@@ -173,11 +173,10 @@
 
                         <!-- Gráfico de Pizza com Filtro -->
                         <section class="transactions-section dashboard-grafico-card">
-                            <div class="section-header">
-                                <h3>Distribuição de Despesas</h3>
-                            </div>
+                            <h3>Distribuição de Despesas</h3>
+
                             <div
-                                style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 12px;">
+                                style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; margin-top: 8px;">
                                 <span style="font-size: 0.8rem; color: var(--text-muted);">Período:</span>
                                 <select id="chart-period" onchange="generateCategoryChart()"
                                     style="padding: 4px 8px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg-body); color: var(--text-main); font-size: 0.8rem;">
@@ -196,6 +195,7 @@
                                     style="padding: 4px 8px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg-body); color: var(--text-main); font-size: 0.8rem; width: 130px;"
                                     title="Data Final">
                             </div>
+
                             <div class="chart-container">
                                 <canvas id="category-chart"></canvas>
                             </div>
@@ -203,6 +203,7 @@
                                 <!-- Legenda gerada pelo JavaScript -->
                             </div>
                         </section>
+
                     </div>
 
                     <!-- Últimas Transações -->
@@ -578,7 +579,8 @@
                     style="background: none; border: none; padding: 6px 12px; color: var(--text-muted); cursor: pointer; font-weight: 600; font-family: inherit; font-size: 0.95rem;">Em
                     Lote</button>
                 <button type="button" class="tab-btn" id="tab-tx-pdf"
-                    style="background: none; border: none; padding: 6px 12px; color: var(--text-muted); cursor: pointer; font-weight: 600; font-family: inherit; font-size: 0.95rem;">Importar PDF</button>
+                    style="background: none; border: none; padding: 6px 12px; color: var(--text-muted); cursor: pointer; font-weight: 600; font-family: inherit; font-size: 0.95rem;">Importar
+                    PDF</button>
             </div>
             <form id="form-transaction">
                 <div id="single-tx-container">
@@ -639,6 +641,16 @@
                         <label for="category">Categoria</label>
                         <select id="category">
                             <option value="" disabled selected>Selecione</option>
+                            <!-- Povoado por JS -->
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 8px;">
+                        <label for="transaction-goal">Vincular a uma Meta (Opcional)</label>
+                        <select id="transaction-goal"
+                            style="width: 100%; padding: 8px; border-radius: 6px; background: var(--bg-main); border: 1px solid var(--border); color: var(--text-main);">
+                            <option value="">Nenhuma Meta</option>
+                            <!-- Povoado por JS -->
                         </select>
                     </div>
                 </div>
@@ -676,59 +688,81 @@
                             <i class="fa-solid fa-file-pdf pdf-dropzone-icon"></i>
                             <p class="pdf-dropzone-text">Arraste o PDF do extrato aqui ou clique para selecionar</p>
                             <input type="file" id="pdf-file-input" accept="application/pdf" style="display: none;">
-                            <div id="pdf-selected-file" style="display: none; margin-top: 8px; font-weight: 500; color: var(--primary);">
+                            <div id="pdf-selected-file"
+                                style="display: none; margin-top: 8px; font-weight: 500; color: var(--primary);">
                                 <i class="fa-solid fa-circle-check"></i> <span id="pdf-filename">extrato.pdf</span>
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="form-group row" style="margin-top: 12px;">
                         <div class="form-group-half w-100">
                             <label for="pdf-destination">Banco/Conta de Destino</label>
-                            <select id="pdf-destination" class="form-input" style="width: 100%; padding: 8px; border-radius: 6px; background: var(--bg-main); border: 1px solid var(--border); color: var(--text-main);"></select>
-                            <small style="color: var(--text-muted); display: block; margin-top: 4px;">As transações extraídas serão associadas a esta conta.</small>
+                            <select id="pdf-destination" class="form-input"
+                                style="width: 100%; padding: 8px; border-radius: 6px; background: var(--bg-main); border: 1px solid var(--border); color: var(--text-main);"></select>
+                            <small style="color: var(--text-muted); display: block; margin-top: 4px;">As transações
+                                extraídas serão associadas a esta conta.</small>
                         </div>
                     </div>
 
                     <div class="form-group" style="margin-top: 16px;">
                         <label>Método de Extração</label>
                         <div class="extraction-methods" style="display: flex; gap: 12px; margin-top: 8px;">
-                            <input type="radio" id="method-heuristic" name="extraction-method" value="heuristic" checked style="display: none;">
-                            <label for="method-heuristic" class="method-btn active" style="flex: 1; text-align: center; padding: 12px; border: 2px solid var(--primary); border-radius: 8px; cursor: pointer; font-weight: 500; font-size: 0.9rem; transition: 0.2s; display: flex; flex-direction: column; align-items: center; gap: 4px; background: var(--bg-body);">
+                            <input type="radio" id="method-heuristic" name="extraction-method" value="heuristic" checked
+                                style="display: none;">
+                            <label for="method-heuristic" class="method-btn active"
+                                style="flex: 1; text-align: center; padding: 12px; border: 2px solid var(--primary); border-radius: 8px; cursor: pointer; font-weight: 500; font-size: 0.9rem; transition: 0.2s; display: flex; flex-direction: column; align-items: center; gap: 4px; background: var(--bg-body);">
                                 <i class="fa-solid fa-bolt" style="font-size: 1.2rem; color: var(--warning);"></i>
                                 <span style="color: var(--text-main);">Leitura Local</span>
-                                <small style="font-weight: normal; font-size: 0.75rem; color: var(--text-muted);">Processamento rápido offline</small>
+                                <small
+                                    style="font-weight: normal; font-size: 0.75rem; color: var(--text-muted);">Processamento
+                                    rápido offline</small>
                             </label>
-                            
-                            <input type="radio" id="method-ai" name="extraction-method" value="ai" style="display: none;">
-                            <label for="method-ai" class="method-btn" style="flex: 1; text-align: center; padding: 12px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; font-weight: 500; font-size: 0.9rem; transition: 0.2s; display: flex; flex-direction: column; align-items: center; gap: 4px; background: var(--bg-card);">
-                                <i class="fa-solid fa-wand-magic-sparkles" style="font-size: 1.2rem; color: var(--primary);"></i>
+
+                            <input type="radio" id="method-ai" name="extraction-method" value="ai"
+                                style="display: none;">
+                            <label for="method-ai" class="method-btn"
+                                style="flex: 1; text-align: center; padding: 12px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; font-weight: 500; font-size: 0.9rem; transition: 0.2s; display: flex; flex-direction: column; align-items: center; gap: 4px; background: var(--bg-card);">
+                                <i class="fa-solid fa-wand-magic-sparkles"
+                                    style="font-size: 1.2rem; color: var(--primary);"></i>
                                 <span style="color: var(--text-main);">IA Inteligente (Gemini)</span>
-                                <small style="font-weight: normal; font-size: 0.75rem; color: var(--text-muted);">Processamento via Nuvem</small>
+                                <small
+                                    style="font-weight: normal; font-size: 0.75rem; color: var(--text-muted);">Processamento
+                                    via Nuvem</small>
                             </label>
                         </div>
                     </div>
 
-                    <div id="gemini-key-container" style="display: none; margin-top: 16px; padding: 16px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-body);">
+                    <div id="gemini-key-container"
+                        style="display: none; margin-top: 16px; padding: 16px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-body);">
                         <div class="form-group" style="margin-bottom: 8px;">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <label for="pdf-gemini-key">Chave de API do Gemini</label>
-                                <a href="https://aistudio.google.com/app/apikey" target="_blank" style="font-size: 0.8rem; color: var(--primary); text-decoration: none; font-weight: 500;"><i class="fa-solid fa-up-right-from-square"></i> Obter chave gratuita</a>
+                                <a href="https://aistudio.google.com/app/apikey" target="_blank"
+                                    style="font-size: 0.8rem; color: var(--primary); text-decoration: none; font-weight: 500;"><i
+                                        class="fa-solid fa-up-right-from-square"></i> Obter chave gratuita</a>
                             </div>
-                            <input type="password" id="pdf-gemini-key" class="form-input" placeholder="Insira sua API Key AIzaSy..." style="margin-top: 6px; width: 100%; padding: 8px; border-radius: 6px; background: var(--bg-main); border: 1px solid var(--border); color: var(--text-main);">
+                            <input type="password" id="pdf-gemini-key" class="form-input"
+                                placeholder="Insira sua API Key AIzaSy..."
+                                style="margin-top: 6px; width: 100%; padding: 8px; border-radius: 6px; background: var(--bg-main); border: 1px solid var(--border); color: var(--text-main);">
                         </div>
-                        <label style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--text-muted); cursor: pointer; user-select: none; margin-top: 8px;">
-                            <input type="checkbox" id="save-gemini-key" checked style="width: 16px; height: 16px; cursor: pointer;">
+                        <label
+                            style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--text-muted); cursor: pointer; user-select: none; margin-top: 8px;">
+                            <input type="checkbox" id="save-gemini-key" checked
+                                style="width: 16px; height: 16px; cursor: pointer;">
                             Salvar chave neste navegador
                         </label>
                     </div>
 
-                    <button type="button" id="btn-process-pdf" class="btn btn-primary w-100" style="margin-top: 18px; justify-content: center; height: 44px; font-weight: 600;">
+                    <button type="button" id="btn-process-pdf" class="btn btn-primary w-100"
+                        style="margin-top: 18px; justify-content: center; height: 44px; font-weight: 600;">
                         <i class="fa-solid fa-file-import"></i> Extrair Transações
                     </button>
-                    
-                    <div id="pdf-loading" style="display: none; text-align: center; margin-top: 16px; padding: 12px; border-radius: 8px; background: var(--bg-body); border: 1px solid var(--border);">
-                        <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 1.5rem; color: var(--primary); margin-bottom: 8px;"></i>
+
+                    <div id="pdf-loading"
+                        style="display: none; text-align: center; margin-top: 16px; padding: 12px; border-radius: 8px; background: var(--bg-body); border: 1px solid var(--border);">
+                        <i class="fa-solid fa-circle-notch fa-spin"
+                            style="font-size: 1.5rem; color: var(--primary); margin-bottom: 8px;"></i>
                         <p style="font-weight: 500; font-size: 0.9rem;" id="pdf-loading-status">Lendo arquivo PDF...</p>
                     </div>
                 </div>
@@ -1427,7 +1461,8 @@
     <!-- Biblioteca PDF.js para leitura de extratos -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
 
-    <!-- Lógica do App -->
+    <!-- Lógica do App -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 
 </html>

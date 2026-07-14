@@ -22,6 +22,17 @@
  * =============================================================================
  */
 
+import {
+    formatCurrency,
+    parseCurrencyInput,
+    formatMonthYear,
+    getCategoryIcon,
+    getPaymentMethodName,
+    parsePDFTextHeuristic,
+    calculateInvestmentYield,
+    calculateCardInvoice
+} from './utils.js';
+
 // =============================================================================
 // SEÇÃO 1 — CONFIGURAÇÃO DO FIREBASE
 // =============================================================================
@@ -54,16 +65,7 @@ const investmentsCollection = db.collection('investments');
 // SEÇÃO 2 — UTILITÁRIOS GLOBAIS
 // =============================================================================
 
-function parseCurrencyInput(value) {
-    if (!value) return 0;
-    let str = value.toString().trim();
-    if (str.includes(',')) {
-        str = str.replace(/\./g, '');
-        str = str.replace(',', '.');
-    }
-    const parsed = parseFloat(str);
-    return isNaN(parsed) ? 0 : parsed;
-}
+
 
 let currentCardFilter = {
     id: null,
@@ -1892,10 +1894,7 @@ formCardPayment.addEventListener('submit', async (e) => {
     }
 });
 
-function getCategoryIcon(catName) {
-    const c = categoriesList.find(x => x.name === catName);
-    return c ? c.icon : 'fa-tag';
-}
+
 
 function renderFixedTransactions() {
     transactionListFixed.innerHTML = '';
@@ -1925,7 +1924,7 @@ function renderFixedTransactions() {
                     <div class="tx-icon ${isInc ? 'income' : 'expense'}"><i class="fa-solid ${isInc ? 'fa-arrow-up' : 'fa-arrow-down'}"></i></div>
                     <div class="tx-details">
                         <p class="tx-title" style="display:flex; align-items:center;">${t.description} ${statusBadge}</p>
-                        <p class="tx-category"><i class="fa-solid ${getCategoryIcon(t.category)}"></i> ${t.category} | ${autoText}</p>
+                        <p class="tx-category"><i class="fa-solid ${getCategoryIcon(t.category, categoriesList)}"></i> ${t.category} | ${autoText}</p>
                     </div>
                 </div>
                 <div class="tx-right">
@@ -2297,12 +2296,7 @@ window.filterCardExtract = (id) => {
     }
 };
 
-function formatMonthYear(month) {
-    if (!month) return '';
-    const [year, monthNum] = month.split('-');
-    const months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-    return `${months[parseInt(monthNum) - 1]} ${year}`;
-}
+
 
 // =============================================================================
 // SEÇÃO 16 — RELATÓRIO DE CARTÃO
@@ -3103,7 +3097,7 @@ window.openTransactionModalWithBank = (bankId) => {
 // SEÇÃO 19 — INTERFACE GERAL
 // =============================================================================
 
-const formatCurrency = val => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
+
 const formatDate = str => { const p = str.split('-'); return p.length === 3 ? `${p[2]}/${p[1]}/${p[0]}` : str; };
 
 function populatePaymentMethodSelects() {
@@ -3180,7 +3174,7 @@ function updateAppUI() {
         totalExpenseElement.textContent = formatCurrency(totalExpense);
     }
 
-    const invoiceData = calculateCardInvoice();
+    const invoiceData = calculateCardInvoice(cardsList, transactions, formatCurrency);
     const invoiceElement = document.getElementById('total-card-invoice');
     const detailElement = document.getElementById('card-invoice-detail');
 
@@ -3286,7 +3280,7 @@ function renderTransactions(txs, containerId) {
                     <div class="tx-icon ${isInc ? 'income' : 'expense'}"><i class="fa-solid ${isInc ? 'fa-arrow-up' : 'fa-arrow-down'}"></i></div>
                     <div class="tx-details">
                         <p class="tx-title" style="display:flex; align-items:center; flex-wrap:wrap; gap: 8px;">${t.description} ${pmBadge}</p>
-                        <p class="tx-category"><i class="fa-solid ${getCategoryIcon(t.category)}"></i> ${t.category}</p>
+                        <p class="tx-category"><i class="fa-solid ${getCategoryIcon(t.category, categoriesList)}"></i> ${t.category}</p>
                     </div>
                 </div>
                 <div class="tx-right">
@@ -3664,96 +3658,7 @@ async function extractTextFromPDF(file) {
     });
 }
 
-function parsePDFTextHeuristic(text) {
-    const lines = text.split('\n');
-    const transactions = [];
 
-    const dateRegex = /\b(\d{2})\/(\d{2})(?:\/(\d{2,4}))?\b/;
-    const valueRegex = /(?:R\$\s*)?(-?\b\d{1,3}(?:\.\d{3})*,\d{2}\b|-?\b\d+,\d{2}\b)\s*([CDcd\-+])?/;
-
-    for (let line of lines) {
-        line = line.trim();
-        if (!line) continue;
-
-        const dateMatch = line.match(dateRegex);
-        if (!dateMatch) continue;
-
-        const valueMatch = line.match(valueRegex);
-        if (!valueMatch) continue;
-
-        const day = dateMatch[1];
-        const month = dateMatch[2];
-        let year = dateMatch[3] || new Date().getFullYear().toString();
-        if (year.length === 2) {
-            year = '20' + year;
-        }
-        const dateStr = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-
-        let valStr = valueMatch[1].replace(/\./g, '').replace(',', '.');
-        let amount = parseFloat(valStr);
-        if (isNaN(amount)) continue;
-
-        let type = 'expense';
-        const suffix = valueMatch[2];
-        const prefixMinus = valueMatch[1].startsWith('-');
-
-        if (prefixMinus || suffix === '-' || (suffix && suffix.toUpperCase() === 'D')) {
-            type = 'expense';
-        } else if (suffix === '+' || (suffix && suffix.toUpperCase() === 'C')) {
-            type = 'income';
-        } else {
-            const lowerLine = line.toLowerCase();
-            if (lowerLine.includes('recebido') || lowerLine.includes('depósito') || lowerLine.includes('credito') || lowerLine.includes('crédito') || lowerLine.includes('salário') || lowerLine.includes('estorno') || lowerLine.includes('transferência recebida') || lowerLine.includes('pix recebido')) {
-                type = 'income';
-            } else {
-                type = 'expense';
-            }
-        }
-
-        amount = Math.abs(amount);
-        if (amount === 0) continue;
-
-        let desc = line
-            .replace(dateMatch[0], '')
-            .replace(valueMatch[0], '')
-            .replace(/\s+/g, ' ')
-            .trim();
-
-        desc = desc.replace(/^[\s\-\|\,\.\:]+/, '').replace(/[\s\-\|\,\.\:]+$/, '').trim();
-
-        if (!desc) {
-            desc = 'Transação Extrato';
-        }
-
-        let category = '';
-        const lowerDesc = desc.toLowerCase();
-        if (lowerDesc.includes('mercado') || lowerDesc.includes('supermercado')) {
-            category = 'Alimentação';
-        } else if (lowerDesc.includes('posto') || lowerDesc.includes('combustivel') || lowerDesc.includes('uber')) {
-            category = 'Transporte';
-        } else if (lowerDesc.includes('farmacia') || lowerDesc.includes('drogaria') || lowerDesc.includes('medico')) {
-            category = 'Saúde';
-        } else if (lowerDesc.includes('aluguel') || lowerDesc.includes('condominio') || lowerDesc.includes('luz') || lowerDesc.includes('energia') || lowerDesc.includes('agua') || lowerDesc.includes('gás')) {
-            category = 'Moradia';
-        } else if (lowerDesc.includes('restaurante') || lowerDesc.includes('ifood') || lowerDesc.includes('padaria') || lowerDesc.includes('cafe')) {
-            category = 'Alimentação';
-        } else if (lowerDesc.includes('netflix') || lowerDesc.includes('spotify') || lowerDesc.includes('cinema') || lowerDesc.includes('show') || lowerDesc.includes('jogos')) {
-            category = 'Lazer';
-        } else {
-            category = 'Extrato PDF';
-        }
-
-        transactions.push({
-            date: dateStr,
-            description: desc,
-            amount: amount,
-            type: type,
-            category: category
-        });
-    }
-
-    return transactions;
-}
 
 async function parsePDFTextWithGemini(text, apiKey) {
     const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
@@ -4183,7 +4088,7 @@ window.showPendingInstallmentsModal = () => {
         tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 24px; color: var(--text-muted);"><i class="fa-solid fa-check-double" style="font-size: 1.5rem; margin-bottom: 8px; display: block;"></i> Nenhuma compra parcelada pendente!</td></tr>`;
     } else {
         pendingGroups.forEach(g => {
-            const pmName = getPaymentMethodName(g.paymentMethod);
+            const pmName = getPaymentMethodName(g.paymentMethod, banksList, cardsList);
             tbody.innerHTML += `
                 <tr style="border-bottom: 1px solid var(--border);">
                     <td style="padding: 12px 8px; font-weight: 500;">${g.description}</td>
@@ -4201,14 +4106,7 @@ window.showPendingInstallmentsModal = () => {
     installmentsPendingModal.classList.add('active');
 };
 
-function getPaymentMethodName(pmId) {
-    if (!pmId) return 'N/A';
-    const bank = banksList.find(b => b.id === pmId);
-    if (bank) return `🏦 ${bank.name}`;
-    const card = cardsList.find(c => c.id === pmId);
-    if (card) return `💳 ${card.nickname}`;
-    return pmId;
-}
+
 
 // =============================================================================
 // SEÇÃO 25 — FECHAR MODAIS
@@ -4298,50 +4196,7 @@ function listenForInvestments() {
         }, e => console.error("Investments snap error:", e));
 }
 
-function calculateInvestmentYield(inv, targetDate = new Date(), ignoreManual = false) {
-    let grossValue = inv.amount;
-    let taxAmount = 0;
 
-    const hasManualValue = inv.manualCurrentValue !== undefined && inv.manualCurrentValue !== null && inv.manualCurrentValue !== '';
-
-    if (!ignoreManual && hasManualValue) {
-        grossValue = parseFloat(inv.manualCurrentValue);
-    } else if (inv.type === 'fixed') {
-        const startDate = new Date(inv.date + 'T00:00:00');
-        const daysElapsed = Math.floor((targetDate - startDate) / (1000 * 60 * 60 * 24));
-
-        if (daysElapsed > 0) {
-            let annualRate = 0;
-            if (inv.rateType === 'cdi') {
-                annualRate = marketRates.cdi * (inv.rateValue / 100);
-            } else if (inv.rateType === 'selic') {
-                annualRate = marketRates.selic * (inv.rateValue / 100);
-            } else {
-                annualRate = inv.rateValue;
-            }
-
-            const dailyRate = Math.pow(1 + (annualRate / 100), 1 / 365) - 1;
-            grossValue = inv.amount * Math.pow(1 + dailyRate, daysElapsed);
-        }
-    }
-
-    const profit = grossValue - inv.amount;
-
-    if (profit > 0 && inv.type === 'fixed') {
-        const startDate = new Date(inv.date + 'T00:00:00');
-        const daysElapsed = Math.floor((targetDate - startDate) / (1000 * 60 * 60 * 24));
-
-        let taxRate = 0;
-        if (daysElapsed <= 180) taxRate = 0.225;
-        else if (daysElapsed <= 360) taxRate = 0.20;
-        else if (daysElapsed <= 720) taxRate = 0.175;
-        else taxRate = 0.15;
-
-        taxAmount = profit * taxRate;
-    }
-
-    return { gross: grossValue, tax: taxAmount, net: grossValue - taxAmount };
-}
 
 function renderInvestments() {
     const listGrid = document.getElementById('investments-list');
@@ -4362,7 +4217,7 @@ function renderInvestments() {
         totalInvested += inv.amount;
 
         const hasManualValue = inv.manualCurrentValue !== undefined && inv.manualCurrentValue !== null && inv.manualCurrentValue !== '';
-        let yieldData = calculateInvestmentYield(inv, new Date());
+        let yieldData = calculateInvestmentYield(inv, new Date(), marketRates);
         let yieldHtml = '';
 
         if (inv.type === 'fixed' || hasManualValue) {
@@ -4373,7 +4228,7 @@ function renderInvestments() {
             if (inv.type === 'fixed' && inv.dueDate) {
                 const targetDate = new Date(inv.dueDate + 'T00:00:00');
                 if (targetDate > new Date()) {
-                    const projYield = calculateInvestmentYield(inv, targetDate, true);
+                    const projYield = calculateInvestmentYield(inv, targetDate, marketRates, true);
                     projHtml = `
                         <div style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border);">
                             <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: bold;">Projeção no Vencimento</span>
@@ -5009,57 +4864,7 @@ initPdfImport();
 // SEÇÃO 29 — CÁLCULO DA FATURA DO CARTÃO
 // =============================================================================
 
-function calculateCardInvoice() {
-    const currentMonth = new Date().toISOString().slice(0, 7);
-    const currentYear = new Date().getFullYear();
-    const currentMonthNum = new Date().getMonth();
 
-    let totalInvoice = 0;
-    let cardDetails = [];
-
-    cardsList.forEach(card => {
-        const cardTransactions = transactions.filter(t => {
-            if (t.paymentMethod !== card.id) return false;
-            if (t.type !== 'expense') return false;
-            if (!t.date) return false;
-
-            const txDate = new Date(t.date);
-            return txDate.getFullYear() === currentYear &&
-                txDate.getMonth() === currentMonthNum;
-        });
-
-        const total = cardTransactions.reduce((acc, t) => acc + t.amount, 0);
-
-        if (total > 0) {
-            cardDetails.push({
-                name: card.nickname,
-                bank: card.bank,
-                total: total
-            });
-            totalInvoice += total;
-        }
-    });
-
-    cardDetails.sort((a, b) => b.total - a.total);
-
-    let details = '';
-    if (cardDetails.length === 0) {
-        details = 'Nenhum gasto no cartão este mês';
-    } else if (cardDetails.length === 1) {
-        details = `${cardDetails[0].name}: ${formatCurrency(cardDetails[0].total)}`;
-    } else {
-        const mainCard = cardDetails[0];
-        const otherCount = cardDetails.length - 1;
-        const otherTotal = cardDetails.slice(1).reduce((acc, c) => acc + c.total, 0);
-        details = `${mainCard.name}: ${formatCurrency(mainCard.total)} + ${otherCount} outro(s) cartão(es) (${formatCurrency(otherTotal)})`;
-    }
-
-    return {
-        total: totalInvoice,
-        details: details,
-        cards: cardDetails
-    };
-}
 
 // =============================================================================
 // SEÇÃO 30 — GRÁFICO DE PIZZA
