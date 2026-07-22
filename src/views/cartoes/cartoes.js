@@ -123,12 +123,18 @@ function renderExpandedCard(c, grid) {
                 </div>
             </div>
 
-            <!-- Filtros de Extrato de Cartão -->
+            <!-- Filtros de Extrato de Cartão com Navegação por Setas -->
             <div class="filter-container" style="background: var(--bg-body); padding: 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 16px;">
                 <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                    <div style="display: flex; align-items: center; gap: 6px;">
-                        <label for="cc-filter-month" style="font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">Mês da Fatura:</label>
-                        <input type="month" id="cc-filter-month" class="form-input" style="width: 150px; padding: 6px 10px; font-size: 0.85rem;" value="${savedMonth}" onchange="window.filterCardExtract('${c.id}')">
+                    <div style="display: flex; align-items: center; gap: 4px;">
+                        <label for="cc-filter-month" style="font-size: 0.85rem; color: var(--text-muted); font-weight: 500; margin-right: 4px;">Fatura:</label>
+                        <button type="button" class="btn-icon" onclick="window.navigateCardInvoiceMonth('${c.id}', -1)" title="Mês Anterior" style="padding: 4px 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-card); cursor: pointer;">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </button>
+                        <input type="month" id="cc-filter-month" class="form-input" style="width: 140px; padding: 6px 8px; font-size: 0.85rem;" value="${savedMonth}" onchange="window.filterCardExtract('${c.id}')">
+                        <button type="button" class="btn-icon" onclick="window.navigateCardInvoiceMonth('${c.id}', 1)" title="Próximo Mês" style="padding: 4px 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-card); cursor: pointer;">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
                     </div>
                     <input type="text" id="cc-filter-search" class="form-input" placeholder="Buscar no extrato..." value="${savedSearch}" oninput="window.filterCardExtract('${c.id}')" style="flex: 1; min-width: 160px; padding: 6px 10px; font-size: 0.85rem;">
                     <input type="date" id="cc-filter-start" class="form-input" title="Data Inicial" value="${savedStart}" onchange="window.filterCardExtract('${c.id}')" style="width: 130px; padding: 6px 10px; font-size: 0.85rem;">
@@ -168,6 +174,25 @@ window.clearCardFilters = (id) => {
     if (startInput) startInput.value = '';
     if (endInput) endInput.value = '';
 
+    window.filterCardExtract(id);
+};
+
+window.navigateCardInvoiceMonth = (id, offset) => {
+    const input = document.getElementById('cc-filter-month');
+    if (!input) return;
+    let val = input.value || new Date().toISOString().slice(0, 7);
+    let [year, month] = val.split('-').map(Number);
+
+    month += offset;
+    if (month > 12) {
+        month = 1;
+        year += 1;
+    } else if (month < 1) {
+        month = 12;
+        year -= 1;
+    }
+
+    input.value = `${year}-${String(month).padStart(2, '0')}`;
     window.filterCardExtract(id);
 };
 

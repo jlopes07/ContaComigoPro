@@ -92,7 +92,10 @@ export function renderView() {
 
         listGrid.innerHTML += `
             <div class="card" style="padding: 16px; position: relative;">
-                <button class="btn-icon" style="position: absolute; right: 8px; top: 8px;" onclick="window.deleteInvestment('${inv.id}')" title="Excluir"><i class="fa-solid fa-trash"></i></button>
+                <div style="position: absolute; right: 8px; top: 8px; display: flex; gap: 4px;">
+                    <button class="btn-icon" onclick="window.editInvestment('${inv.id}')" title="Editar"><i class="fa-solid fa-pen"></i></button>
+                    <button class="btn-icon" onclick="window.deleteInvestment('${inv.id}')" title="Excluir"><i class="fa-solid fa-trash" style="color: var(--danger);"></i></button>
+                </div>
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
                     <div>
                         <h4 style="margin: 0; font-size: 1.1rem;">${inv.name}</h4>

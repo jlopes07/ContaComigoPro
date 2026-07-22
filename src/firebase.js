@@ -20,6 +20,15 @@ if (!firebase.apps.length) {
 }
 
 export const db = firebase.firestore();
+try {
+    db.settings({
+        experimentalAutoDetectLongPolling: true,
+        ignoreUndefinedProperties: true
+    });
+} catch (e) {
+    // Configurações já inicializadas
+}
+
 export const auth = firebase.auth();
 
 export const transactionsCollection = db.collection('transactions');

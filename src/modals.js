@@ -118,7 +118,196 @@ function setupModalEvents() {
             if (modal) modal.classList.add('active');
         });
     }
+
+    const btnNewTransfer = document.getElementById('btn-new-transfer');
+    if (btnNewTransfer) {
+        btnNewTransfer.addEventListener('click', () => {
+            const form = document.getElementById('form-transfer');
+            if (form) form.reset();
+            const dateInput = document.getElementById('transfer-date');
+            if (dateInput) dateInput.value = new Date().toISOString().slice(0, 10);
+
+            populateTransferBankSelects();
+            const modal = document.getElementById('transfer-modal');
+            if (modal) modal.classList.add('active');
+        });
+    }
+
+    const btnNewCategory = document.getElementById('btn-new-category');
+    if (btnNewCategory) {
+        btnNewCategory.addEventListener('click', () => {
+            const form = document.getElementById('form-category');
+            if (form) form.reset();
+
+            const categoryId = document.getElementById('category-id');
+            const modalTitle = document.getElementById('category-modal-title');
+            const submitText = document.getElementById('category-submit-text');
+            const categoryIcon = document.getElementById('category-icon');
+
+            if (categoryId) categoryId.value = '';
+            if (modalTitle) modalTitle.textContent = "Nova Categoria";
+            if (submitText) submitText.textContent = "Salvar Categoria";
+            if (categoryIcon) categoryIcon.value = '';
+
+            renderCategoryIconsPicker();
+            const modal = document.getElementById('category-modal');
+            if (modal) modal.classList.add('active');
+        });
+    }
+
+    const btnNewInvestment = document.getElementById('btn-new-investment');
+    if (btnNewInvestment) {
+        btnNewInvestment.addEventListener('click', () => {
+            const form = document.getElementById('form-investment');
+            if (form) form.reset();
+
+            const investId = document.getElementById('invest-id');
+            const modalTitle = document.querySelector('#investment-modal h2');
+            const editFields = document.getElementById('edit-investment-fields');
+
+            if (investId) investId.value = '';
+            if (modalTitle) modalTitle.textContent = "Novo Investimento";
+            if (editFields) editFields.style.display = 'none';
+
+            const dateInput = document.getElementById('invest-date');
+            if (dateInput) dateInput.value = new Date().toISOString().slice(0, 10);
+            const modal = document.getElementById('investment-modal');
+            if (modal) modal.classList.add('active');
+        });
+    }
 }
+
+export function populateTransferBankSelects() {
+    const sourceSelect = document.getElementById('transfer-source-bank');
+    const destSelect = document.getElementById('transfer-dest-bank');
+    if (!sourceSelect || !destSelect) return;
+
+    let opts = '<option value="" disabled selected>Selecione a conta</option>';
+    state.banksList.forEach(b => {
+        opts += `<option value="${b.id}">🏦 ${b.name}</option>`;
+    });
+
+    sourceSelect.innerHTML = opts;
+    destSelect.innerHTML = opts;
+}
+
+const iconLibrary = [
+    'fa-utensils', 'fa-house', 'fa-car', 'fa-heart-pulse', 'fa-graduation-cap',
+    'fa-gamepad', 'fa-bag-shopping', 'fa-money-bill-wave', 'fa-chart-line',
+    'fa-plane', 'fa-gift', 'fa-receipt', 'fa-dumbbell', 'fa-basket-shopping',
+    'fa-wrench', 'fa-child', 'fa-paw', 'fa-briefcase', 'fa-credit-card', 'fa-ellipsis'
+];
+
+export function renderCategoryIconsPicker() {
+    const grid = document.getElementById('category-icons-grid');
+    if (!grid) return;
+    grid.innerHTML = iconLibrary.map(icon => `
+        <div class="icon-option" onclick="window.selectCategoryIcon('${icon}', this)" style="display:flex; justify-content:center; align-items:center; width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; transition: 0.2s;">
+            <i class="fa-solid ${icon}"></i>
+        </div>
+    `).join('');
+}
+
+window.selectCategoryIcon = (icon, el) => {
+    const input = document.getElementById('category-icon');
+    if (input) input.value = icon;
+    document.querySelectorAll('.icon-option').forEach(n => {
+        n.style.borderColor = 'var(--border)';
+        n.style.borderWidth = '1px';
+    });
+    if (el) {
+        el.style.borderColor = '#8b5cf6';
+        el.style.borderWidth = '2px';
+    }
+};
+
+window.editCategory = (id) => {
+    const category = state.categoriesList.find(c => c.id === id);
+    if (!category) return;
+
+    const modalTitle = document.getElementById('category-modal-title');
+    const categoryId = document.getElementById('category-id');
+    const categoryName = document.getElementById('category-name');
+    const categoryIcon = document.getElementById('category-icon');
+    const submitText = document.getElementById('category-submit-text');
+
+    if (modalTitle) modalTitle.textContent = "Editar Categoria";
+    if (categoryId) categoryId.value = category.id;
+    if (categoryName) categoryName.value = category.name;
+    if (categoryIcon) categoryIcon.value = category.icon || 'fa-tag';
+    if (submitText) submitText.textContent = "Atualizar Categoria";
+
+    renderCategoryIconsPicker();
+
+    setTimeout(() => {
+        const icons = document.querySelectorAll('#category-icons-grid .icon-option');
+        icons.forEach(el => {
+            if (el.querySelector('i')?.classList.contains(category.icon)) {
+                window.selectCategoryIcon(category.icon, el);
+            }
+        });
+    }, 50);
+
+    const modal = document.getElementById('category-modal');
+    if (modal) modal.classList.add('active');
+};
+
+window.deleteCategory = async (id) => {
+    if (!confirm('Deseja realmente excluir esta categoria?')) return;
+    try {
+        await categoriesCollection.doc(id).delete();
+        notifyStateChange('category-deleted');
+    } catch (err) {
+        alert('Erro ao excluir categoria: ' + err.message);
+    }
+};
+
+window.editInvestment = (id) => {
+    const inv = state.investmentsList.find(i => i.id === id);
+    if (!inv) return;
+
+    const modalTitle = document.querySelector('#investment-modal h2');
+    const investId = document.getElementById('invest-id');
+    const investName = document.getElementById('invest-name');
+    const investInstitution = document.getElementById('invest-institution');
+    const investType = document.getElementById('invest-type');
+    const investDate = document.getElementById('invest-date');
+    const investAmount = document.getElementById('invest-amount');
+    const investDueDate = document.getElementById('invest-due-date');
+    const investRateType = document.getElementById('invest-rate-type');
+    const investRateValue = document.getElementById('invest-rate-value');
+    const editFields = document.getElementById('edit-investment-fields');
+    const manualValue = document.getElementById('invest-manual-value');
+    const newAporte = document.getElementById('invest-new-aporte');
+
+    if (modalTitle) modalTitle.textContent = "Editar Investimento";
+    if (investId) investId.value = inv.id;
+    if (investName) investName.value = inv.name || '';
+    if (investInstitution) investInstitution.value = inv.institution || '';
+    if (investType) investType.value = inv.type || 'fixed';
+    if (investDate) investDate.value = inv.date || '';
+    if (investAmount) investAmount.value = inv.amount || '';
+    if (investDueDate) investDueDate.value = inv.dueDate || '';
+    if (investRateType) investRateType.value = inv.rateType || 'cdi';
+    if (investRateValue) investRateValue.value = inv.rateValue !== undefined ? inv.rateValue : '';
+
+    if (editFields) editFields.style.display = 'block';
+    if (manualValue) manualValue.value = inv.manualCurrentValue !== undefined && inv.manualCurrentValue !== null ? inv.manualCurrentValue : '';
+    if (newAporte) newAporte.value = '';
+
+    const modal = document.getElementById('investment-modal');
+    if (modal) modal.classList.add('active');
+};
+
+window.deleteInvestment = async (id) => {
+    if (!confirm('Deseja realmente excluir este investimento?')) return;
+    try {
+        await investmentsCollection.doc(id).delete();
+        notifyStateChange('investment-deleted');
+    } catch (err) {
+        alert('Erro ao excluir investimento: ' + err.message);
+    }
+};
 
 export function populatePaymentMethods() {
     const pmSelect = document.getElementById('payment-method');
@@ -324,6 +513,154 @@ function setupFormListeners() {
                 notifyStateChange('goal-saved');
             } catch (err) {
                 alert('Erro ao salvar meta: ' + err.message);
+            }
+        });
+    }
+
+    // Form Transferência
+    const formTransfer = document.getElementById('form-transfer');
+    if (formTransfer) {
+        formTransfer.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!state.currentUser) return;
+
+            const amount = parseCurrencyInput(document.getElementById('transfer-amount')?.value);
+            const dateStr = document.getElementById('transfer-date')?.value;
+            const sourceId = document.getElementById('transfer-source-bank')?.value;
+            const destId = document.getElementById('transfer-dest-bank')?.value;
+            const desc = document.getElementById('transfer-description')?.value.trim() || 'Transferência entre contas';
+
+            if (isNaN(amount) || amount <= 0) return alert('Valor inválido!');
+            if (!sourceId || !destId) return alert('Selecione as contas de origem e destino!');
+            if (sourceId === destId) return alert('A conta de origem não pode ser a mesma de destino!');
+
+            try {
+                const batch = db.batch();
+
+                const expenseRef = transactionsCollection.doc();
+                batch.set(expenseRef, {
+                    userId: state.currentUser.uid,
+                    type: 'expense',
+                    description: desc,
+                    amount: amount,
+                    category: 'Transferência',
+                    date: dateStr,
+                    paymentMethod: sourceId,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                const incomeRef = transactionsCollection.doc();
+                batch.set(incomeRef, {
+                    userId: state.currentUser.uid,
+                    type: 'income',
+                    description: desc,
+                    amount: amount,
+                    category: 'Transferência',
+                    date: dateStr,
+                    paymentMethod: destId,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                await batch.commit();
+
+                document.getElementById('transfer-modal')?.classList.remove('active');
+                formTransfer.reset();
+                notifyStateChange('transfer-completed');
+            } catch (err) {
+                alert('Erro ao realizar transferência: ' + err.message);
+            }
+        });
+    }
+
+    // Form Categoria
+    const formCategory = document.getElementById('form-category');
+    if (formCategory) {
+        formCategory.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!state.currentUser) return;
+
+            const name = document.getElementById('category-name')?.value.trim();
+            const icon = document.getElementById('category-icon')?.value || 'fa-tag';
+            const catId = document.getElementById('category-id')?.value;
+
+            if (!name) return alert('Insira um nome para a categoria!');
+
+            try {
+                if (catId) {
+                    await categoriesCollection.doc(catId).update({ name, icon });
+                } else {
+                    await categoriesCollection.add({
+                        userId: state.currentUser.uid,
+                        name,
+                        icon,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                }
+                document.getElementById('category-modal')?.classList.remove('active');
+                formCategory.reset();
+                notifyStateChange('category-saved');
+            } catch (err) {
+                alert('Erro ao salvar categoria: ' + err.message);
+            }
+        });
+    }
+
+    // Form Investimento
+    const formInvestment = document.getElementById('form-investment');
+    if (formInvestment) {
+        formInvestment.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!state.currentUser) return;
+
+            const name = document.getElementById('invest-name')?.value.trim();
+            const institution = document.getElementById('invest-institution')?.value.trim();
+            const type = document.getElementById('invest-type')?.value;
+            const date = document.getElementById('invest-date')?.value;
+            const amount = parseCurrencyInput(document.getElementById('invest-amount')?.value);
+            const dueDate = document.getElementById('invest-due-date')?.value || '';
+            const rateType = document.getElementById('invest-rate-type')?.value || 'cdi';
+            const rateValue = parseFloat(document.getElementById('invest-rate-value')?.value) || 0;
+            const investId = document.getElementById('invest-id')?.value;
+
+            if (!name || isNaN(amount) || amount <= 0) return alert('Preencha os campos obrigatórios!');
+
+            try {
+                const newAporte = parseCurrencyInput(document.getElementById('invest-new-aporte')?.value);
+                const manualValueRaw = document.getElementById('invest-manual-value')?.value;
+
+                let finalAmount = amount;
+                if (!isNaN(newAporte) && newAporte > 0) {
+                    finalAmount += newAporte;
+                }
+
+                const payload = {
+                    userId: state.currentUser.uid,
+                    name,
+                    institution,
+                    type,
+                    date,
+                    amount: finalAmount,
+                    dueDate,
+                    rateType,
+                    rateValue
+                };
+
+                if (manualValueRaw !== undefined && manualValueRaw !== null && manualValueRaw !== '') {
+                    payload.manualCurrentValue = parseCurrencyInput(manualValueRaw);
+                }
+
+                if (investId) {
+                    await investmentsCollection.doc(investId).update(payload);
+                } else {
+                    payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                    await investmentsCollection.add(payload);
+                }
+
+                document.getElementById('investment-modal')?.classList.remove('active');
+                formInvestment.reset();
+                notifyStateChange('investment-saved');
+            } catch (err) {
+                alert('Erro ao salvar investimento: ' + err.message);
             }
         });
     }

@@ -2617,3 +2617,43 @@ nav li.active a {
    FIM DO ARQUIVO
    =============================================================================
 */
+
+/* Estilos do Dropdown Multi-Select */
+.multi-select-dropdown {
+    width: 260px !important;
+    min-width: 260px !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+}
+
+.pm-filter-item {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 8px !important;
+    padding: 8px 10px !important;
+    margin: 2px 0 !important;
+    width: 100% !important;
+    cursor: pointer !important;
+    white-space: nowrap !important;
+    font-size: 0.85rem !important;
+    color: var(--text-main) !important;
+    border-radius: 6px !important;
+    box-sizing: border-box !important;
+}
+
+.pm-filter-item:hover {
+    background: var(--hover-bg) !important;
+}
+
+.pm-filter-checkbox {
+    width: 16px !important;
+    min-width: 16px !important;
+    max-width: 16px !important;
+    height: 16px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    cursor: pointer !important;
+    flex-shrink: 0 !important;
+    display: inline-block !important;
+}
