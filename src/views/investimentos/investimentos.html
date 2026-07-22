@@ -1,0 +1,35 @@
+<div class="page-section" id="page-investimentos">
+    <section class="summary-cards" style="margin-bottom: 24px;">
+        <div class="card balance-card">
+            <div class="card-header">
+                <h3>Total Investido</h3>
+                <i class="fa-solid fa-piggy-bank"></i>
+            </div>
+            <div class="amount" id="total-investments">R$ 0,00</div>
+        </div>
+        <div class="card income-card">
+            <div class="card-header">
+                <h3>Rendimento Bruto Est.</h3>
+                <i class="fa-solid fa-arrow-trend-up"></i>
+            </div>
+            <div class="amount" id="total-investments-yield">R$ 0,00</div>
+        </div>
+        <div class="card" style="background: var(--bg-secondary); border: 1px solid var(--border);">
+            <div class="card-header" style="color: var(--text-main);">
+                <h3>Taxas Atuais (API)</h3>
+                <i class="fa-solid fa-globe"></i>
+            </div>
+            <div class="amount" id="market-rates-display" style="font-size: 1.2rem; color: var(--text-main); margin-top: 8px;">
+                Carregando...
+            </div>
+        </div>
+    </section>
+    <section class="transactions-section">
+        <div class="section-header">
+            <h3>Meus Investimentos</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Acompanhe sua carteira e rendimentos</p>
+        </div>
+        <div class="investments-grid" id="investments-list" style="display: grid; grid-template-columns: 1fr; gap: 16px;">
+        </div>
+    </section>
+</div>

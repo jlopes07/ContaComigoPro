@@ -1,0 +1,60 @@
+<div class="page-section active" id="page-dashboard">
+    <div class="dashboard-grid">
+        <!-- Card de Saldo Total com Fatura do Cartão -->
+        <section class="summary-cards" style="grid-template-columns: 1fr; margin-bottom: 0;">
+            <div class="card balance-card dashboard-saldo-card">
+                <div class="card-header">
+                    <h3>Saldo Total</h3>
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
+                <div class="amount" id="total-balance">R$ 0,00</div>
+
+                <div class="card-invoice-info">
+                    <div class="invoice-row">
+                        <span class="invoice-label">💳 Fatura do Cartão (mês atual)</span>
+                        <span class="invoice-value" id="total-card-invoice">R$ 0,00</span>
+                    </div>
+                    <div class="invoice-detail" id="card-invoice-detail">Nenhum gasto no cartão este mês</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gráfico de Pizza com Filtro -->
+        <section class="transactions-section dashboard-grafico-card">
+            <h3>Distribuição de Despesas</h3>
+
+            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; margin-top: 8px;">
+                <span style="font-size: 0.8rem; color: var(--text-muted);">Período:</span>
+                <select id="chart-period" style="padding: 4px 8px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg-body); color: var(--text-main); font-size: 0.8rem;">
+                    <option value="7">Últimos 7 dias</option>
+                    <option value="15">Últimos 15 dias</option>
+                    <option value="30" selected>Últimos 30 dias</option>
+                    <option value="60">Últimos 60 dias</option>
+                    <option value="90">Últimos 90 dias</option>
+                    <option value="all">Todo o período</option>
+                </select>
+                <input type="date" id="chart-date-start" style="padding: 4px 8px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg-body); color: var(--text-main); font-size: 0.8rem; width: 130px;" title="Data Inicial">
+                <span style="font-size: 0.8rem; color: var(--text-muted);">até</span>
+                <input type="date" id="chart-date-end" style="padding: 4px 8px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg-body); color: var(--text-main); font-size: 0.8rem; width: 130px;" title="Data Final">
+            </div>
+
+            <div class="chart-container">
+                <canvas id="category-chart"></canvas>
+            </div>
+            <div class="chart-legend" id="chart-legend">
+                <!-- Legenda gerada pelo JavaScript -->
+            </div>
+        </section>
+    </div>
+
+    <!-- Últimas Transações -->
+    <section class="transactions-section">
+        <div class="section-header">
+            <h3>Últimas Transações</h3>
+            <a href="#" class="view-all" id="btn-view-all-tx">Ver todo o histórico</a>
+        </div>
+        <div class="transactions-list" id="transaction-list-recent">
+            <!-- O JavaScript preenche aqui -->
+        </div>
+    </section>
+</div>

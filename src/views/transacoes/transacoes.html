@@ -1,0 +1,49 @@
+<div class="page-section" id="page-transacoes">
+    <section class="transactions-section filter-container">
+        <div class="filters">
+            <input type="text" id="filter-search" class="form-input" placeholder="Buscar por descrição...">
+            <select id="filter-type" class="form-input">
+                <option value="all">Todas as transações</option>
+                <option value="income">Apenas Receitas</option>
+                <option value="expense">Apenas Despesas</option>
+            </select>
+            <input type="date" id="filter-date-start" class="form-input" title="Data Inicial">
+            <span style="display:flex;align-items:center;color:var(--text-muted);font-weight:bold;">a</span>
+            <input type="date" id="filter-date-end" class="form-input" title="Data Final">
+            <select id="filter-category" class="form-input" title="Filtrar por Categoria">
+                <option value="all">Todas Categ.</option>
+            </select>
+            <button id="btn-clear-filters" class="btn-icon" title="Limpar Filtros" style="padding: 0 16px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-body);">
+                <i class="fa-solid fa-eraser"></i>
+            </button>
+            <button id="btn-show-pending-installments" class="btn btn-outline" style="height: 38px; padding: 0 16px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-body); color: var(--text-main); font-weight: 500; font-size: 0.9rem;" title="Compras Parceladas Pendentes">
+                <i class="fa-solid fa-calendar-days" style="color: var(--primary);"></i> Parceladas Pendentes
+            </button>
+        </div>
+    </section>
+
+    <div class="summary-cards" style="gap: 16px; margin: 16px 0;">
+        <div class="card balance-card" style="padding: 16px;">
+            <div class="card-header" style="margin-bottom: 12px;">
+                <h3>Valor Filtrado</h3><i class="fa-solid fa-wallet"></i>
+            </div>
+            <div class="amount" id="filtered-balance" style="font-size: 1.5rem;">R$ 0,00</div>
+        </div>
+        <div class="card income-card" style="padding: 16px;">
+            <div class="card-header" style="margin-bottom: 12px;">
+                <h3>Receitas</h3><i class="fa-solid fa-arrow-up"></i>
+            </div>
+            <div class="amount" id="filtered-income" style="font-size: 1.5rem;">R$ 0,00</div>
+        </div>
+        <div class="card expense-card" style="padding: 16px;">
+            <div class="card-header" style="margin-bottom: 12px;">
+                <h3>Despesas</h3><i class="fa-solid fa-arrow-down"></i>
+            </div>
+            <div class="amount" id="filtered-expense" style="font-size: 1.5rem;">R$ 0,00</div>
+        </div>
+    </div>
+
+    <section class="transactions-section">
+        <div class="transactions-list" id="transaction-list-complete"></div>
+    </section>
+</div>
