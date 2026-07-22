@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Chart.js para gráficos -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script type="module" crossorigin src="/assets/index-Bf9tqZDu.js"></script>
+  <script type="module" crossorigin src="/assets/index-BZKSQWFW.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/index-BmGwN__L.css">
 </head>
 
@@ -116,6 +116,25 @@
                     </div>
                 </div>
                 <div class="header-actions">
+                    <!-- Botão de Notificações com Badge e Dropdown -->
+                    <div style="position: relative; margin-right: 8px;">
+                        <button id="notif-bell-btn" class="btn-icon" title="Notificações" style="position: relative; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg-card); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-main);">
+                            <i class="fa-solid fa-bell" style="font-size: 1.1rem;"></i>
+                            <span id="notif-badge" style="position: absolute; top: -2px; right: -2px; background: var(--danger); color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 0.7rem; font-weight: bold; display: none; align-items: center; justify-content: center;">0</span>
+                        </button>
+
+                        <div id="notif-dropdown" class="card" style="display: none; position: absolute; right: 0; top: 48px; width: 320px; z-index: 1000; padding: 0; box-shadow: 0 10px 25px rgba(0,0,0,0.15); border: 1px solid var(--border); overflow: hidden;">
+                            <div style="padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--bg-body); display: flex; justify-content: space-between; align-items: center;">
+                                <h4 style="margin: 0; font-size: 0.95rem;"><i class="fa-solid fa-bell" style="color: var(--primary);"></i> Notificações</h4>
+                            </div>
+                            <div id="notif-dropdown-content" style="max-height: 300px; overflow-y: auto;">
+                                <div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 0.85rem;">
+                                    Nenhuma notificação recente.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <button class="btn btn-primary" id="btn-new-transaction">
                         <i class="fa-solid fa-plus"></i> Nova Transação
                     </button>
@@ -896,6 +915,14 @@
                 <button class="close-modal" id="close-settings-personal"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <form id="form-settings-personal">
+                <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; gap: 8px;">
+                    <img id="settings-avatar-preview" src="https://ui-avatars.com/api/?name=User&background=6366f1&color=fff" alt="Avatar" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <label for="settings-avatar-file" class="btn btn-outline" style="font-size: 0.85rem; padding: 6px 14px; cursor: pointer;">
+                        <i class="fa-solid fa-camera"></i> Carregar Foto Local
+                    </label>
+                    <input type="file" id="settings-avatar-file" accept="image/*" style="display: none;">
+                </div>
+
                 <div class="form-group">
                     <label for="settings-name">Nome Completo</label>
                     <input type="text" id="settings-name" placeholder="Seu nome">
@@ -903,16 +930,10 @@
                 <div class="form-group">
                     <label for="settings-email">E-mail</label>
                     <input type="email" id="settings-email" placeholder="seu@email.com" required>
-                    <small style="color: var(--warning); display: block; margin-top: 4px;"><i
-                            class="fa-solid fa-circle-exclamation"></i> Alterar o e-mail pode exigir
-                        reautenticação.</small>
+                    <small style="color: var(--warning); display: block; margin-top: 4px;"><i class="fa-solid fa-circle-exclamation"></i> Alterar o e-mail pode exigir reautenticação.</small>
                 </div>
                 <div class="form-group">
-                    <label for="settings-phone">Telefone</label>
-                    <input type="text" id="settings-phone" placeholder="(11) 99999-9999">
-                </div>
-                <div class="form-group">
-                    <label for="settings-photo">URL da foto de perfil</label>
+                    <label for="settings-photo">URL da foto de perfil (Opcional)</label>
                     <input type="url" id="settings-photo" placeholder="https://...">
                 </div>
                 <div class="auth-message mb-3" id="settings-personal-msg"></div>

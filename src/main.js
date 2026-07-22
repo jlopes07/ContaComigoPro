@@ -6,10 +6,12 @@
  */
 
 import { auth, db, transactionsCollection, goalsCollection, categoriesCollection, cardsCollection, fixedTransactionsCollection, banksCollection, investmentsCollection } from './firebase.js';
-import { state, notifyStateChange } from './state.js';
+import { state, subscribeState, notifyStateChange } from './state.js';
 import { navigateTo } from './router.js';
 import { initModals, populatePaymentMethods, populateCategorySelects, populateGoalsSelect } from './modals.js';
 import { showMessage, defaultCategories } from './utils.js';
+import { registerCurrentSession } from './services/sessions.js';
+import { initNotifications } from './services/notifications.js';
 
 // Elementos do DOM do Auth Shell
 const authOverlay = document.getElementById('auth-overlay');
@@ -28,6 +30,13 @@ document.addEventListener('DOMContentLoaded', () => {
     setupAuthListeners();
     setupSidebarNavigation();
     initModals();
+    initNotifications();
+
+    subscribeState((reason) => {
+        if (reason === 'profile-updated') {
+            updateProfileUI();
+        }
+    });
 });
 
 function updateCurrentDate() {
@@ -51,6 +60,9 @@ function setupAuthListeners() {
             if (appWrapper) appWrapper.style.display = 'flex';
             updateProfileUI();
             updateCurrentDate();
+
+            // Registrar sessão do dispositivo atual no Firestore
+            registerCurrentSession(user.uid);
 
             // Inicia os listeners em tempo real das coleções Firestore
             startRealtimeListeners();
@@ -97,9 +109,10 @@ function setupAuthListeners() {
 
 function updateProfileUI() {
     if (!state.currentUser) return;
-    const defaultAv = `https://ui-avatars.com/api/?name=${state.currentUser.email}&background=6366f1&color=fff`;
+    const customAv = localStorage.getItem('contaComigo_customAvatar_' + state.currentUser.uid);
+    const defaultAv = `https://ui-avatars.com/api/?name=${encodeURIComponent(state.currentUser.displayName || state.currentUser.email)}&background=6366f1&color=fff`;
     const nm = state.currentUser.displayName || "Usuário Vazio";
-    const pt = state.currentUser.photoURL || defaultAv;
+    const pt = customAv || state.currentUser.photoURL || defaultAv;
 
     if (userNameEl) userNameEl.textContent = nm;
     if (userEmailEl) userEmailEl.textContent = state.currentUser.email;

@@ -1,4 +1,4 @@
-import{a as r,s as t}from"./index-Bf9tqZDu.js";function n(){a(),r(()=>{var e;(e=document.getElementById("page-categorias"))!=null&&e.classList.contains("active")&&a()})}function a(){const e=document.getElementById("categories-list");if(e){if(e.innerHTML="",t.categoriesList.length===0){e.innerHTML=`
+import{a as r,s as t}from"./index-BZKSQWFW.js";function n(){a(),r(()=>{var e;(e=document.getElementById("page-categorias"))!=null&&e.classList.contains("active")&&a()})}function a(){const e=document.getElementById("categories-list");if(e){if(e.innerHTML="",t.categoriesList.length===0){e.innerHTML=`
             <div class="empty-state w-100" style="grid-column: 1/-1;">
                 <i class="fa-solid fa-tags"></i>
                 <p>Nenhuma categoria cadastrada.</p>

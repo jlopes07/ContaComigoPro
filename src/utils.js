@@ -7,7 +7,7 @@
 
 export function parseCurrencyInput(value) {
     if (!value) return 0;
-    let str = value.toString().trim();
+    let str = value.toString().replace(/R\$\s?/gi, '').trim();
     if (str.includes(',')) {
         str = str.replace(/\./g, '');
         str = str.replace(',', '.');
