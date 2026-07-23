@@ -117,17 +117,23 @@
                 <div class="header-actions">
                     <!-- Botão de Notificações com Badge e Dropdown -->
                     <div style="position: relative; margin-right: 8px;">
-                        <button id="notif-bell-btn" class="btn-icon" title="Notificações" style="position: relative; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg-card); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-main);">
+                        <button id="notif-bell-btn" class="btn-icon" title="Notificações"
+                            style="position: relative; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg-card); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-main);">
                             <i class="fa-solid fa-bell" style="font-size: 1.1rem;"></i>
-                            <span id="notif-badge" style="position: absolute; top: -2px; right: -2px; background: var(--danger); color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 0.7rem; font-weight: bold; display: none; align-items: center; justify-content: center;">0</span>
+                            <span id="notif-badge"
+                                style="position: absolute; top: -2px; right: -2px; background: var(--danger); color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 0.7rem; font-weight: bold; display: none; align-items: center; justify-content: center;">0</span>
                         </button>
 
-                        <div id="notif-dropdown" class="card" style="display: none; position: absolute; right: 0; top: 48px; width: 320px; z-index: 1000; padding: 0; box-shadow: 0 10px 25px rgba(0,0,0,0.15); border: 1px solid var(--border); overflow: hidden;">
-                            <div style="padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--bg-body); display: flex; justify-content: space-between; align-items: center;">
-                                <h4 style="margin: 0; font-size: 0.95rem;"><i class="fa-solid fa-bell" style="color: var(--primary);"></i> Notificações</h4>
+                        <div id="notif-dropdown" class="card"
+                            style="display: none; position: absolute; right: 0; top: 48px; width: 320px; z-index: 1000; padding: 0; box-shadow: 0 10px 25px rgba(0,0,0,0.15); border: 1px solid var(--border); overflow: hidden;">
+                            <div
+                                style="padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--bg-body); display: flex; justify-content: space-between; align-items: center;">
+                                <h4 style="margin: 0; font-size: 0.95rem;"><i class="fa-solid fa-bell"
+                                        style="color: var(--primary);"></i> Notificações</h4>
                             </div>
                             <div id="notif-dropdown-content" style="max-height: 300px; overflow-y: auto;">
-                                <div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 0.85rem;">
+                                <div
+                                    style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 0.85rem;">
                                     Nenhuma notificação recente.
                                 </div>
                             </div>
@@ -432,14 +438,16 @@
                         <label for="goal-target">Qual o valor total?</label>
                         <div class="input-icon">
                             <span>R$</span>
-                            <input type="number" id="goal-target" step="0.01" min="1" placeholder="5000.00" required>
+                            <input type="text" id="goal-target" placeholder="0,00" required onfocus="this.select()"
+                                oninput="this.value = this.value.replace(/[^0-9,]/g, '')">
                         </div>
                     </div>
                     <div class="form-group-half">
                         <label for="goal-current">Já tem algum valor?</label>
                         <div class="input-icon">
                             <span>R$</span>
-                            <input type="number" id="goal-current" step="0.01" min="0" value="0" required>
+                            <input type="text" id="goal-current" placeholder="0,00" required onfocus="this.select()"
+                                oninput="this.value = this.value.replace(/[^0-9,]/g, '')">
                         </div>
                     </div>
                 </div>
@@ -915,8 +923,11 @@
             </div>
             <form id="form-settings-personal">
                 <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; gap: 8px;">
-                    <img id="settings-avatar-preview" src="https://ui-avatars.com/api/?name=User&background=6366f1&color=fff" alt="Avatar" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                    <label for="settings-avatar-file" class="btn btn-outline" style="font-size: 0.85rem; padding: 6px 14px; cursor: pointer;">
+                    <img id="settings-avatar-preview"
+                        src="https://ui-avatars.com/api/?name=User&background=6366f1&color=fff" alt="Avatar"
+                        style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <label for="settings-avatar-file" class="btn btn-outline"
+                        style="font-size: 0.85rem; padding: 6px 14px; cursor: pointer;">
                         <i class="fa-solid fa-camera"></i> Carregar Foto Local
                     </label>
                     <input type="file" id="settings-avatar-file" accept="image/*" style="display: none;">
@@ -929,7 +940,9 @@
                 <div class="form-group">
                     <label for="settings-email">E-mail</label>
                     <input type="email" id="settings-email" placeholder="seu@email.com" required>
-                    <small style="color: var(--warning); display: block; margin-top: 4px;"><i class="fa-solid fa-circle-exclamation"></i> Alterar o e-mail pode exigir reautenticação.</small>
+                    <small style="color: var(--warning); display: block; margin-top: 4px;"><i
+                            class="fa-solid fa-circle-exclamation"></i> Alterar o e-mail pode exigir
+                        reautenticação.</small>
                 </div>
                 <div class="form-group">
                     <label for="settings-photo">URL da foto de perfil (Opcional)</label>
