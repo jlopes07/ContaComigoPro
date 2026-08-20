@@ -13,8 +13,8 @@ import {
   ScrollView,
   SafeAreaView
 } from 'react-native';
-import { state, subscribeState } from '../services/state';
-import { formatCurrency } from '../utils/utils';
+import { state, subscribeState } from '../../../src/state.js';
+import { formatCurrency } from '../../../src/utils.js';
 import LIGHT_THEME from '../constants/theme';
 
 export default function RelatoriosScreen() {

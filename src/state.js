@@ -1,64 +1,39 @@
 /**
  * =============================================================================
  * CONTA COMIGO PRO — state.js
- * Estado global centralizado da aplicação
+ * Gerenciador de Estado Reativo Único (Compartilhado entre Web e Mobile)
  * =============================================================================
  */
 
 export const state = {
     currentUser: null,
     transactions: [],
-    goalsList: [],
-    fixedTransactionsList: [],
-    cardsList: [],
-    categoriesList: [],
     banksList: [],
+    cardsList: [],
+    goalsList: [],
+    categoriesList: [],
+    fixedTransactionsList: [],
     investmentsList: [],
-
-    // Unsubscribes do Firestore
-    unsTx: null,
-    unsGoals: null,
-    unsCategories: null,
-    unsFixed: null,
-    unsCards: null,
-    unsBanks: null,
-    unsInvestments: null,
-
-    // Tema
-    isDarkMode: localStorage.getItem('contaComigo_darkMode') === 'true',
-
-    // Filtros e IDs de edição
-    currentCardFilter: {
-        id: null,
-        search: '',
-        startDate: '',
-        endDate: '',
-        month: ''
-    },
-    currentBankFilter: {
-        id: null,
-        startDate: '',
-        endDate: ''
-    },
+    currentBankFilter: { id: null },
     editingTransactionId: null,
-    editingGroupId: null,
     editingFixedId: null,
-    launchingFixedId: null,
-    launchingCardId: null,
     editingCardId: null,
-    expandedCardId: null,
-
-    // Callbacks de atualização de views
-    listeners: new Set()
+    editingBankId: null,
+    editingGoalId: null,
+    editingCategoryId: null,
+    editingInvestmentId: null,
 };
 
-export function subscribeState(callback) {
-    state.listeners.add(callback);
-    return () => state.listeners.delete(callback);
+const listeners = [];
+
+export function subscribeState(fn) {
+    listeners.push(fn);
+    return () => {
+        const index = listeners.indexOf(fn);
+        if (index > -1) listeners.splice(index, 1);
+    };
 }
 
-export function notifyStateChange(reason) {
-    state.listeners.forEach(cb => {
-        try { cb(reason); } catch (e) { console.error('Erro no listener de estado:', e); }
-    });
+export function notifyStateChange(reason = 'general') {
+    listeners.forEach(fn => fn(reason));
 }

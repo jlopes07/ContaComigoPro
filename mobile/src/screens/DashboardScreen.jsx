@@ -16,8 +16,8 @@ import {
   SafeAreaView,
   StatusBar
 } from 'react-native';
-import { state, subscribeState } from '../services/state';
-import { formatCurrency, formatDate, getCategoryIcon } from '../utils/utils';
+import { state, subscribeState } from '../../../src/state.js';
+import { formatCurrency, formatDate, getCategoryIcon } from '../../../src/utils.js';
 import LIGHT_THEME from '../constants/theme';
 
 export default function DashboardScreen({ navigation }) {

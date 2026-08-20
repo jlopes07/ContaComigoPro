@@ -13,7 +13,7 @@ import {
   FlatList,
   SafeAreaView
 } from 'react-native';
-import { state, subscribeState } from '../services/state';
+import { state, subscribeState } from '../../../src/state.js';
 import LIGHT_THEME from '../constants/theme';
 
 export default function CategoriasScreen() {

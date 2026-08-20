@@ -1,64 +1,88 @@
 /**
  * =============================================================================
  * CONTA COMIGO PRO — utils.js
- * Funções Utilitárias Globais
+ * Utilitários de Formatação Únicos (Compartilhados entre Web e Mobile)
  * =============================================================================
  */
 
+export const defaultCategories = [
+    'Alimentação',
+    'Transporte',
+    'Moradia',
+    'Saúde',
+    'Educação',
+    'Lazer',
+    'Compras',
+    'Salário',
+    'Investimentos',
+    'Outros'
+];
+
 export function parseCurrencyInput(value) {
-    if (!value) return 0;
-    let str = value.toString().replace(/R\$\s?/gi, '').trim();
-    if (str.includes(',')) {
-        str = str.replace(/\./g, '');
-        str = str.replace(',', '.');
-    }
-    const parsed = parseFloat(str);
-    return isNaN(parsed) ? 0 : parsed;
+    if (!value && value !== 0) return 0;
+    if (typeof value === 'number') return value;
+
+    let str = String(value).replace(/R\$\s?/gi, '').trim();
+    str = str.replace(/\./g, '').replace(',', '.');
+    const num = parseFloat(str);
+    return isNaN(num) ? 0 : num;
 }
 
-export function formatCurrency(val) {
-    const num = Number(val) || 0;
-    return num.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+export function formatCurrency(amount) {
+    const num = parseFloat(amount) || 0;
+    return num.toLocaleString('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+    });
 }
 
-export function formatDate(dateStr) {
-    if (!dateStr) return '';
-    const parts = dateStr.split('-');
+export function formatDate(dateString) {
+    if (!dateString) return '';
+    const parts = dateString.split('-');
     if (parts.length === 3) {
         return `${parts[2]}/${parts[1]}/${parts[0]}`;
     }
-    return dateStr;
+    return dateString;
 }
 
-export const defaultCategories = [
-    { name: 'Alimentação', icon: 'fa-utensils', type: 'expense', color: '#ef4444' },
-    { name: 'Moradia', icon: 'fa-house', type: 'expense', color: '#f59e0b' },
-    { name: 'Transporte', icon: 'fa-car', type: 'expense', color: '#3b82f6' },
-    { name: 'Saúde', icon: 'fa-heart-pulse', type: 'expense', color: '#10b981' },
-    { name: 'Educação', icon: 'fa-graduation-cap', type: 'expense', color: '#8b5cf6' },
-    { name: 'Lazer', icon: 'fa-gamepad', type: 'expense', color: '#ec4899' },
-    { name: 'Compras', icon: 'fa-bag-shopping', type: 'expense', color: '#6366f1' },
-    { name: 'Salário', icon: 'fa-money-bill-wave', type: 'income', color: '#10b981' },
-    { name: 'Investimentos', icon: 'fa-chart-line', type: 'income', color: '#0ea5e9' },
-    { name: 'Outros', icon: 'fa-ellipsis', type: 'expense', color: '#64748b' }
-];
-
 export function getCategoryIcon(categoryName) {
-    const found = defaultCategories.find(c => c.name.toLowerCase() === (categoryName || '').toLowerCase());
-    return found ? found.icon : 'fa-tag';
+    const map = {
+        'Alimentação': 'fa-utensils',
+        'Transporte': 'fa-car',
+        'Moradia': 'fa-house',
+        'Saúde': 'fa-heart-pulse',
+        'Educação': 'fa-graduation-cap',
+        'Lazer': 'fa-gamepad',
+        'Compras': 'fa-bag-shopping',
+        'Salário': 'fa-money-bill-wave',
+        'Investimentos': 'fa-chart-line',
+        'Viagem': 'fa-plane',
+        'Presentes': 'fa-gift',
+        'Transferência': 'fa-arrow-right-arrow-left'
+    };
+    return map[categoryName] || 'fa-tag';
 }
 
 export function getCategoryColor(categoryName) {
-    const found = defaultCategories.find(c => c.name.toLowerCase() === (categoryName || '').toLowerCase());
-    return found ? found.color : '#6366f1';
+    const map = {
+        'Alimentação': '#f59e0b',
+        'Transporte': '#3b82f6',
+        'Moradia': '#10b981',
+        'Saúde': '#ef4444',
+        'Educação': '#8b5cf6',
+        'Lazer': '#ec4899',
+        'Compras': '#6366f1',
+        'Salário': '#059669',
+        'Investimentos': '#10b981',
+        'Outros': '#6b7280'
+    };
+    return map[categoryName] || '#3b82f6';
 }
 
-export function showMessage(msg, isError = false) {
-    const authMessage = document.getElementById('auth-message');
-    if (authMessage) {
-        authMessage.textContent = msg;
-        authMessage.style.color = isError ? 'var(--danger)' : 'var(--primary)';
-    } else {
+export function showMessage(msg, type = 'info') {
+    if (typeof window !== 'undefined' && window.alert) {
         alert(msg);
+    } else {
+        console.log(`[${type.toUpperCase()}] ${msg}`);
     }
 }
