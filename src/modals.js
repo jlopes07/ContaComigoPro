@@ -114,6 +114,10 @@ function setupModalEvents() {
         btnNewBank.addEventListener('click', () => {
             const form = document.getElementById('form-bank');
             if (form) form.reset();
+            const bankId = document.getElementById('bank-id');
+            if (bankId) bankId.value = '';
+            const title = document.querySelector('#bank-modal h2');
+            if (title) title.textContent = "Nova Conta Bancária";
             const modal = document.getElementById('bank-modal');
             if (modal) modal.classList.add('active');
         });
@@ -431,6 +435,7 @@ function setupFormListeners() {
             e.preventDefault();
             if (!state.currentUser) return;
 
+            const id = document.getElementById('bank-id')?.value;
             const name = document.getElementById('bank-name')?.value.trim();
             const balance = parseCurrencyInput(document.getElementById('bank-balance')?.value);
             const color = document.getElementById('bank-color')?.value || '#0ea5e9';
@@ -438,15 +443,23 @@ function setupFormListeners() {
             if (!name) return alert('Insira um nome válido para a conta!');
 
             try {
-                await banksCollection.add({
-                    userId: state.currentUser.uid,
-                    name,
-                    balance,
-                    color,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
+                if (id) {
+                    await banksCollection.doc(id).update({ name, balance, color });
+                } else {
+                    await banksCollection.add({
+                        userId: state.currentUser.uid,
+                        name,
+                        balance,
+                        color,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                }
                 document.getElementById('bank-modal')?.classList.remove('active');
                 formBank.reset();
+                const bankIdEl = document.getElementById('bank-id');
+                if (bankIdEl) bankIdEl.value = '';
+                const title = document.querySelector('#bank-modal h2');
+                if (title) title.textContent = "Nova Conta Bancária";
                 notifyStateChange('bank-saved');
             } catch (err) {
                 alert('Erro ao salvar conta: ' + err.message);
@@ -1422,6 +1435,26 @@ window.deleteTransaction = async (id) => {
             alert('Erro ao excluir: ' + err.message);
         }
     }
+};
+
+window.editBank = (id) => {
+    const b = state.banksList.find(x => x.id === id);
+    if (!b) return;
+
+    const setVal = (elId, val) => {
+        const el = document.getElementById(elId);
+        if (el) el.value = val ?? '';
+    };
+    setVal('bank-id', b.id);
+    setVal('bank-name', b.name);
+    setVal('bank-balance', b.balance || 0);
+    setVal('bank-color', b.color || '#0ea5e9');
+
+    const title = document.querySelector('#bank-modal h2');
+    if (title) title.textContent = "Editar Conta Bancária";
+
+    const modal = document.getElementById('bank-modal');
+    if (modal) modal.classList.add('active');
 };
 
 window.deleteBank = async (id) => {
