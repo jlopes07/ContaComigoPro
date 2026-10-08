@@ -8,6 +8,7 @@
 import { auth, db, transactionsCollection, goalsCollection, categoriesCollection, cardsCollection, fixedTransactionsCollection, banksCollection, investmentsCollection } from './firebase.js';
 import { state, notifyStateChange } from './state.js';
 import { parseCurrencyInput, formatCurrency, showMessage } from './utils.js';
+import { extractTextFromPDF, parsePDFTextHeuristic } from './services/pdfParser.js';
 
 window.isBulkMode = false;
 
@@ -1024,6 +1025,7 @@ function initPdfImport() {
         try {
             if (loadingStatus) loadingStatus.textContent = 'Lendo e extraindo texto do arquivo PDF...';
             const pdfText = await extractTextFromPDF(selectedPdfFile);
+            console.log('[Importar PDF] Texto extraído:\n' + pdfText);
 
             if (loadingStatus) loadingStatus.textContent = useAI ? 'Enviando texto para a IA...' : 'Processando transações localmente...';
 
@@ -1080,136 +1082,8 @@ function initPdfImport() {
     });
 }
 
-async function extractTextFromPDF(file) {
-    if (typeof window.pdfjsLib === 'undefined') {
-        throw new Error("Biblioteca PDF.js não foi carregada. Verifique sua conexão à internet.");
-    }
-    window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
-
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = async function () {
-            try {
-                const typedarray = new Uint8Array(this.result);
-                const pdf = await window.pdfjsLib.getDocument({ data: typedarray }).promise;
-                let fullText = '';
-
-                for (let i = 1; i <= pdf.numPages; i++) {
-                    const page = await pdf.getPage(i);
-                    const textContent = await page.getTextContent();
-                    const textItems = textContent.items;
-                    let lastY = -1;
-                    let pageText = '';
-
-                    for (let j = 0; j < textItems.length; j++) {
-                        const item = textItems[j];
-                        if (lastY !== -1 && Math.abs(item.transform[5] - lastY) > 5) {
-                            pageText += '\n';
-                        }
-                        pageText += item.str + ' ';
-                        lastY = item.transform[5];
-                    }
-                    fullText += pageText + '\n';
-                }
-                resolve(fullText);
-            } catch (err) {
-                reject(err);
-            }
-        };
-        reader.onerror = err => reject(err);
-        reader.readAsArrayBuffer(file);
-    });
-}
-
-function parsePDFTextHeuristic(text) {
-    const lines = text.split('\n');
-    const transactions = [];
-
-    const dateRegex = /\b(\d{2})\/(\d{2})(?:\/(\d{2,4}))?\b/;
-    const valueRegex = /(?:R\$\s*)?(-?\b\d{1,3}(?:\.\d{3})*,\d{2}\b|-?\b\d+,\d{2}\b)\s*([CDcd\-+])?/;
-
-    for (let line of lines) {
-        line = line.trim();
-        if (!line) continue;
-
-        const dateMatch = line.match(dateRegex);
-        if (!dateMatch) continue;
-
-        const valueMatch = line.match(valueRegex);
-        if (!valueMatch) continue;
-
-        const day = dateMatch[1];
-        const month = dateMatch[2];
-        let year = dateMatch[3] || new Date().getFullYear().toString();
-        if (year.length === 2) {
-            year = '20' + year;
-        }
-        const dateStr = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-
-        let valStr = valueMatch[1].replace(/\./g, '').replace(',', '.');
-        let amount = parseFloat(valStr);
-        if (isNaN(amount)) continue;
-
-        let type = 'expense';
-        const suffix = valueMatch[2];
-        const prefixMinus = valueMatch[1].startsWith('-');
-
-        if (prefixMinus || suffix === '-' || (suffix && suffix.toUpperCase() === 'D')) {
-            type = 'expense';
-        } else if (suffix === '+' || (suffix && suffix.toUpperCase() === 'C')) {
-            type = 'income';
-        } else {
-            const lowerLine = line.toLowerCase();
-            if (lowerLine.includes('recebido') || lowerLine.includes('depósito') || lowerLine.includes('credito') || lowerLine.includes('crédito') || lowerLine.includes('salário') || lowerLine.includes('estorno') || lowerLine.includes('transferência recebida') || lowerLine.includes('pix recebido')) {
-                type = 'income';
-            } else {
-                type = 'expense';
-            }
-        }
-
-        amount = Math.abs(amount);
-        if (amount === 0) continue;
-
-        let desc = line
-            .replace(dateMatch[0], '')
-            .replace(valueMatch[0], '')
-            .replace(/\s+/g, ' ')
-            .trim();
-
-        desc = desc.replace(/^[\s\-\|\,\.\:]+/, '').replace(/[\s\-\|\,\.\:]+$/, '').trim();
-
-        if (!desc) {
-            desc = 'Transação Extrato';
-        }
-
-        let category = 'Outros';
-        const lowerDesc = desc.toLowerCase();
-        if (lowerDesc.includes('mercado') || lowerDesc.includes('supermercado')) {
-            category = 'Alimentação';
-        } else if (lowerDesc.includes('posto') || lowerDesc.includes('combustivel') || lowerDesc.includes('uber')) {
-            category = 'Transporte';
-        } else if (lowerDesc.includes('farmacia') || lowerDesc.includes('drogaria') || lowerDesc.includes('medico')) {
-            category = 'Saúde';
-        } else if (lowerDesc.includes('aluguel') || lowerDesc.includes('condominio') || lowerDesc.includes('luz') || lowerDesc.includes('energia') || lowerDesc.includes('agua') || lowerDesc.includes('gás')) {
-            category = 'Moradia';
-        } else if (lowerDesc.includes('restaurante') || lowerDesc.includes('ifood') || lowerDesc.includes('padaria') || lowerDesc.includes('cafe')) {
-            category = 'Alimentação';
-        }
-
-        transactions.push({
-            date: dateStr,
-            description: desc,
-            amount: amount,
-            type: type,
-            category: category
-        });
-    }
-
-    return transactions;
-}
-
 async function parsePDFTextWithGemini(text, apiKey) {
-    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
     const prompt = `Analise o extrato bancário em texto abaixo e extraia todas as transações (receitas e despesas).
 Retorne APENAS um array JSON estruturado com o formato especificado no responseSchema.
