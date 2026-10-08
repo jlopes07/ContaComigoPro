@@ -470,16 +470,24 @@ function setupFormListeners() {
             if (!nickname || !bank || isNaN(limit) || limit <= 0) return alert('Campos inválidos!');
 
             try {
-                await cardsCollection.add({
+                const payload = {
                     userId: state.currentUser.uid,
                     nickname,
                     bank,
                     limit,
                     closingDay,
                     dueDay
-                });
+                };
+                if (state.editingCardId) {
+                    await cardsCollection.doc(state.editingCardId).update(payload);
+                } else {
+                    await cardsCollection.add(payload);
+                }
                 document.getElementById('card-modal')?.classList.remove('active');
                 formCard.reset();
+                state.editingCardId = null;
+                const title = document.querySelector('#card-modal h2');
+                if (title) title.textContent = "Novo Cartão de Crédito";
                 notifyStateChange('card-saved');
             } catch (err) {
                 alert('Erro ao salvar cartão: ' + err.message);
@@ -1425,6 +1433,29 @@ window.deleteBank = async (id) => {
             alert('Erro ao excluir conta: ' + err.message);
         }
     }
+};
+
+window.editCard = (id) => {
+    const c = state.cardsList.find(x => x.id === id);
+    if (!c) return;
+
+    state.editingCardId = id;
+
+    const setVal = (elId, val) => {
+        const el = document.getElementById(elId);
+        if (el) el.value = val ?? '';
+    };
+    setVal('card-nickname', c.nickname);
+    setVal('card-bank', c.bank);
+    setVal('card-limit', c.limit);
+    setVal('card-closing', c.closingDay);
+    setVal('card-due', c.dueDay);
+
+    const title = document.querySelector('#card-modal h2');
+    if (title) title.textContent = "Editar Cartão";
+
+    const modal = document.getElementById('card-modal');
+    if (modal) modal.classList.add('active');
 };
 
 window.deleteCard = async (id) => {
